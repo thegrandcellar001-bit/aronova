@@ -1,5 +1,3 @@
 # Aronova
 
-## Deployment
-
-Deployed link: [Aronova](https://aronova.vercel.app/)
+Live link: [Aronova](https://aronova.vercel.app/)
