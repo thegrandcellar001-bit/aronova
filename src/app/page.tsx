@@ -5,6 +5,8 @@ import Header from "@/components/homepage/Header";
 import Reviews from "@/components/homepage/Reviews";
 import { Product } from "@/types/product.types";
 import { Review } from "@/types/review.types";
+import SecondaryBanner from "@/components/homepage/SecondaryBanner";
+import CategoryHighlights from "@/components/homepage/CategoryHighlights";
 
 export const newArrivalsData: Product[] = [
   {
@@ -219,6 +221,8 @@ export default function Home() {
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
         </div>
+        <SecondaryBanner />
+        <CategoryHighlights />
         <div className="mb-[50px] sm:mb-20">
           <ProductListSec
             title="top selling"

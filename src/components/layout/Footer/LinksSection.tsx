@@ -6,106 +6,38 @@ import { cn } from "@/lib/utils";
 const footerLinksData: FooterLinks[] = [
   {
     id: 1,
-    title: "company",
+    title: "Discover",
     children: [
-      {
-        id: 11,
-        label: "about",
-        url: "#",
-      },
-      {
-        id: 12,
-        label: "features",
-        url: "#",
-      },
-      {
-        id: 13,
-        label: "works",
-        url: "#",
-      },
-      {
-        id: 14,
-        label: "career",
-        url: "#",
-      },
+      { id: 11, label: "Shop", url: "/discover" },
+      { id: 12, label: "Editions", url: "/editions" },
+      { id: 13, label: "Archive", url: "/archive" },
     ],
   },
   {
     id: 2,
-    title: "help",
+    title: "Learn",
     children: [
-      {
-        id: 21,
-        label: "customer support",
-        url: "#",
-      },
-      {
-        id: 22,
-        label: "delivery details",
-        url: "#",
-      },
-      {
-        id: 23,
-        label: "terms & conditions",
-        url: "#",
-      },
-      {
-        id: 24,
-        label: "privacy policy",
-        url: "#",
-      },
+      { id: 21, label: "Stories", url: "/stories" },
+      { id: 22, label: "Provenance", url: "/provenance" },
+      { id: 23, label: "Curators", url: "/about#curators" },
     ],
   },
   {
     id: 3,
-    title: "faq",
+    title: "Support",
     children: [
-      {
-        id: 31,
-        label: "account",
-        url: "#",
-      },
-      {
-        id: 32,
-        label: "manage deliveries",
-        url: "#",
-      },
-      {
-        id: 33,
-        label: "orders",
-        url: "#",
-      },
-      {
-        id: 34,
-        label: "payments",
-        url: "#",
-      },
+      { id: 31, label: "Concierge", url: "/concierge" },
+      { id: 32, label: "Shipping & Returns", url: "/returns" },
+      { id: 33, label: "FAQ", url: "/faq" },
     ],
   },
   {
     id: 4,
-    title: "resources",
+    title: "Company",
     children: [
-      {
-        id: 41,
-        label: "Free eBooks",
-        url: "#",
-      },
-      {
-        id: 42,
-        label: "development tutorial",
-        url: "#",
-      },
-      {
-        id: 43,
-        label: "How to - Blog",
-        url: "#",
-      },
-      {
-        id: 44,
-        label: "youtube playlist",
-        url: "#",
-      },
+      { id: 41, label: "About", url: "/about" },
+      { id: 42, label: "Careers", url: "/careers" },
+      { id: 43, label: "Partnerships", url: "/partnerships" },
     ],
   },
 ];
@@ -123,7 +55,7 @@ const LinksSection = () => {
               href={link.url}
               key={link.id}
               className={cn([
-                link.id !== 41 && link.id !== 43 && "capitalize",
+                "capitalize",
                 "text-black/60 text-sm md:text-base mb-4 w-fit",
               ])}
             >

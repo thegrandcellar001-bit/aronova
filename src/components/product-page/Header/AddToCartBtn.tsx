@@ -30,7 +30,7 @@ const AddToCartBtn = ({ data }: { data: Product & { quantity: number } }) => {
         )
       }
     >
-      Add to Cart
+      Add to Your Collection
     </button>
   );
 };

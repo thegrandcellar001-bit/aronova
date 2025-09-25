@@ -31,8 +31,11 @@ export default function CartPage() {
                 "font-bold text-[32px] md:text-[40px] text-black uppercase mb-5 md:mb-6",
               ])}
             >
-              your cart
+              Your Discoveries
             </h2>
+            <p className="text-black/60 mb-5">
+              Every piece here is curated and authenticated. We’ve reserved it for you.
+            </p>
             <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
               <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
                 {cart?.items.map((product, idx, arr) => (
@@ -102,8 +105,16 @@ export default function CartPage() {
                   type="button"
                   className="text-sm md:text-base font-medium bg-black rounded-full w-full py-4 h-[54px] md:h-[60px] group"
                 >
-                  Go to Checkout{" "}
+                  Complete Discovery →{" "}
                   <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-sm md:text-base font-medium rounded-full w-full py-4 h-[54px] md:h-[60px]"
+                  asChild
+                >
+                  <Link href="/discover">Continue Browsing →</Link>
                 </Button>
               </div>
             </div>
@@ -111,9 +122,9 @@ export default function CartPage() {
         ) : (
           <div className="flex items-center flex-col text-gray-300 mt-32">
             <TbBasketExclamation strokeWidth={1} className="text-6xl" />
-            <span className="block mb-4">Your shopping cart is empty.</span>
-            <Button className="rounded-full w-24" asChild>
-              <Link href="/shop">Shop</Link>
+            <span className="block mb-4">No discoveries yet.</span>
+            <Button className="rounded-full" asChild>
+              <Link href="/discover">Discover</Link>
             </Button>
           </div>
         )}
