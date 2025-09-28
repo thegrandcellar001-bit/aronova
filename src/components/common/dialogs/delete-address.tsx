@@ -21,7 +21,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { useState } from "react";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/hooks/use-toast";
 import api from "@/lib/axios";
 
 interface DeleteAddressDialogProps {

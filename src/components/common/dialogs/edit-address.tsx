@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/useToast";
+import { useToast } from "@/hooks/use-toast";
 import api from "@/lib/axios";
 import {
   Select,
