@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputTextProps>(
     return (
       <input
         className={cn(
-          "input-control w-full py-3 pr-4 outline-none placeholder:font-normal placeholder:text-sm",
+          "input-control w-full py-3 pr-4 outline-hidden placeholder:font-normal placeholder:text-sm",
           className ?? ""
         )}
         autoComplete="off"

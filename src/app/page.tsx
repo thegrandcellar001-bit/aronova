@@ -219,7 +219,7 @@ export default function Home() {
           viewAllLink="/shop#new-arrivals"
         />
         <div className="max-w-frame mx-auto px-4 xl:px-0">
-          <hr className="h-[1px] border-t-black/10 my-10 sm:my-16" />
+          <hr className="h-px border-t-black/10 my-10 sm:my-16" />
         </div>
         <SecondaryBanner />
         <CategoryHighlights />

@@ -142,7 +142,7 @@ const CountryDropdownComponent = (
   );
 
   const triggerClasses = cn(
-    "flex h-12 w-full items-center justify-between whitespace-nowrap rounded-lg border border-gray-300 bg-white px-3 ring-offset-background focus:outline-none focus-visible:ring-1 focus-visible:ring-gray-300 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 transition-colors duration-200",
+    "flex h-12 w-full items-center justify-between whitespace-nowrap rounded-lg border border-gray-300 bg-white px-3 ring-offset-background focus:outline-hidden focus-visible:ring-1 focus-visible:ring-gray-300 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 transition-colors duration-200",
     textSizeClasses[textSize],
     slim && "gap-1 w-min",
     inline && "rounded-r-none border-r-0 gap-1 pr-1 w-min",
@@ -168,7 +168,7 @@ const CountryDropdownComponent = (
         {...props}
       >
         {selectedCountries.length > 0 ? (
-          <div className="flex items-center flex-grow gap-2 overflow-hidden">
+          <div className="flex items-center grow gap-2 overflow-hidden">
             {multiple ? (
               <span className="overflow-hidden text-ellipsis whitespace-nowrap">
                 {selectedCountries.length} selected
@@ -214,7 +214,7 @@ const CountryDropdownComponent = (
       <PopoverContent
         collisionPadding={10}
         side="bottom"
-        className="min-w-[--radix-popper-anchor-width] p-0"
+        className="min-w-(--radix-popper-anchor-width) p-0"
       >
         <Command
           className="w-full max-h-[200px] sm:max-h-[270px]"
@@ -251,7 +251,7 @@ const CountryDropdownComponent = (
                       role="option"
                       aria-selected={isSelected}
                     >
-                      <div className="flex flex-grow space-x-2 overflow-hidden">
+                      <div className="flex grow space-x-2 overflow-hidden">
                         <div className="inline-flex items-center justify-center w-5 h-5 shrink-0 overflow-hidden rounded-full">
                           <CircleFlag
                             countryCode={option.alpha2.toLowerCase()}
