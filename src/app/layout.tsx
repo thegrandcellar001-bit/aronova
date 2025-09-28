@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import "../../public/css/all.css";
 import "@/styles/globals.css";
 import { satoshi } from "@/styles/fonts";
 import TopBanner from "@/components/layout/Banner/TopBanner";

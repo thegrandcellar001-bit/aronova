@@ -13,6 +13,7 @@ import Image from "next/image";
 import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
+import { FaUserCircle } from "react-icons/fa";
 
 const data: NavMenu = [
   {
@@ -145,15 +146,8 @@ const TopNavbar = () => {
             />
           </Link>
           <CartBtn />
-          <Link href="/#signin" className="p-1">
-            <Image
-              priority
-              src="/icons/user.svg"
-              height={100}
-              width={100}
-              alt="user"
-              className="max-w-[22px] max-h-[22px]"
-            />
+          <Link href="/login" className="p-1">
+            <i className="far fa-user-circle text-xl"></i>
           </Link>
         </div>
       </div>

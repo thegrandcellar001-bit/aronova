@@ -16,11 +16,12 @@ const data: Product[] = [
   ...relatedProductData,
 ];
 
-export default function ProductPage({
-  params,
-}: {
-  params: { slug: string[] };
-}) {
+export default async function ProductPage(
+  props: {
+    params: Promise<{ slug: string[] }>;
+  }
+) {
+  const params = await props.params;
   const productData = data.find(
     (product) => product.id === Number(params.slug[0])
   );
