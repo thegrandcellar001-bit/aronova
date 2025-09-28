@@ -72,13 +72,18 @@ export default function ShopPage() {
             </div>
             <hr className="border-t-black/10" />
             <Pagination className="justify-between">
-              <PaginationPrevious href="#" className="border border-black/10" />
+              <PaginationPrevious
+                href="#"
+                className="border border-black/10"
+                size="sm"
+              />
               <PaginationContent>
                 <PaginationItem>
                   <PaginationLink
                     href="#"
                     className="text-black/50 font-medium text-sm"
                     isActive
+                    size="sm"
                   >
                     1
                   </PaginationLink>
@@ -87,6 +92,7 @@ export default function ShopPage() {
                   <PaginationLink
                     href="#"
                     className="text-black/50 font-medium text-sm"
+                    size="sm"
                   >
                     2
                   </PaginationLink>
@@ -95,6 +101,7 @@ export default function ShopPage() {
                   <PaginationLink
                     href="#"
                     className="text-black/50 font-medium text-sm"
+                    size="sm"
                   >
                     3
                   </PaginationLink>
@@ -106,6 +113,7 @@ export default function ShopPage() {
                   <PaginationLink
                     href="#"
                     className="text-black/50 font-medium text-sm"
+                    size="sm"
                   >
                     8
                   </PaginationLink>
@@ -114,6 +122,7 @@ export default function ShopPage() {
                   <PaginationLink
                     href="#"
                     className="text-black/50 font-medium text-sm"
+                    size="sm"
                   >
                     9
                   </PaginationLink>
@@ -122,13 +131,18 @@ export default function ShopPage() {
                   <PaginationLink
                     href="#"
                     className="text-black/50 font-medium text-sm"
+                    size="sm"
                   >
                     10
                   </PaginationLink>
                 </PaginationItem>
               </PaginationContent>
 
-              <PaginationNext href="#" className="border border-black/10" />
+              <PaginationNext
+                href="#"
+                className="border border-black/10"
+                size="sm"
+              />
             </Pagination>
           </div>
         </div>

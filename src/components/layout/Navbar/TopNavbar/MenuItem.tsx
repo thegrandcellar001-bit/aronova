@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
+const menuItemClassName = "font-normal px-3";
+
 type MenuItemProps = {
   label: string;
   url?: string;
@@ -15,11 +17,11 @@ type MenuItemProps = {
 export function MenuItem({ label, url }: MenuItemProps) {
   return (
     <NavigationMenuItem>
-      <Link href={url ?? "/"} legacyBehavior passHref>
+      <Link href={url ?? "/"} passHref legacyBehavior>
         <NavigationMenuLink
-          className={cn([navigationMenuTriggerStyle(), "font-normal px-3"])}
+          className={cn(navigationMenuTriggerStyle(), "font-normal px-3")}
         >
-          {label}
+          <a>{label}</a>
         </NavigationMenuLink>
       </Link>
     </NavigationMenuItem>
