@@ -26,7 +26,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       <Link
         href={`/shop/product/${data.id}/${data.name.split(" ").join("-")}`}
         className="bg-[#F0EEED] rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
-      >
+        legacyBehavior>
         <Image
           src={data.srcUrl}
           width={124}
@@ -41,7 +41,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           <Link
             href={`/shop/product/${data.id}/${data.name.split(" ").join("-")}`}
             className="text-black font-bold text-base xl:text-xl"
-          >
+            legacyBehavior>
             {data.name}
           </Link>
           <Button

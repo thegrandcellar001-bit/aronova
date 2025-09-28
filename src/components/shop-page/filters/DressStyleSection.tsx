@@ -46,7 +46,7 @@ const DressStyleSection = () => {
                 key={idx}
                 href={dStyle.slug}
                 className="flex items-center justify-between py-2"
-              >
+                legacyBehavior>
                 {dStyle.title} <MdKeyboardArrowRight />
               </Link>
             ))}

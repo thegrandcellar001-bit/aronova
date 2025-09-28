@@ -135,7 +135,7 @@ const TopNavbar = () => {
           />
         </InputGroup>
         <div className="flex items-center">
-          <Link href="/search" className="block md:hidden mr-[14px] p-1">
+          <Link href="/search" className="block md:hidden mr-[14px] p-1" legacyBehavior>
             <Image
               priority
               src="/icons/search-black.svg"
@@ -146,7 +146,7 @@ const TopNavbar = () => {
             />
           </Link>
           <CartBtn />
-          <Link href="/login" className="p-1">
+          <Link href="/login" className="p-1" legacyBehavior>
             <i className="far fa-user-circle text-xl"></i>
           </Link>
         </div>

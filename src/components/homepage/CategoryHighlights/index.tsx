@@ -13,7 +13,11 @@ const CategoryHighlights = () => {
     <section className="max-w-frame mx-auto px-4 xl:px-0 my-10 sm:my-16">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {items.map((item) => (
-          <Link key={item.title} href={item.href} className="block border border-black/10 rounded-[16px] p-5 hover:bg-[#F9F9F9] transition-all">
+          <Link
+            key={item.title}
+            href={item.href}
+            className="block border border-black/10 rounded-[16px] p-5 hover:bg-[#F9F9F9] transition-all"
+            legacyBehavior>
             <h3 className="text-lg font-medium mb-2">{item.title}</h3>
             <p className="text-black/60 text-sm">{item.desc}</p>
           </Link>

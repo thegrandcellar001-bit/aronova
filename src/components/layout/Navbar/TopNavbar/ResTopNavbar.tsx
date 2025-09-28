@@ -47,7 +47,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
             <React.Fragment key={item.id}>
               {item.type === "MenuItem" && (
                 <SheetClose asChild>
-                  <Link href={item.url ?? "/"} className="mb-4">
+                  <Link href={item.url ?? "/"} className="mb-4" legacyBehavior>
                     {item.label}
                   </Link>
                 </SheetClose>
@@ -66,7 +66,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
                             asChild
                             className="w-fit py-2 text-base"
                           >
-                            <Link href={itemChild.url ?? "/"}>
+                            <Link href={itemChild.url ?? "/"} legacyBehavior>
                               {itemChild.label}
                             </Link>
                           </SheetClose>

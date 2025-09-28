@@ -38,7 +38,7 @@ const CategoriesSection = () => {
           key={idx}
           href={category.slug}
           className="flex items-center justify-between py-2"
-        >
+          legacyBehavior>
           {category.title} <MdKeyboardArrowRight />
         </Link>
       ))}
