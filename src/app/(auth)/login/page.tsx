@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="flex items-center justify-between mt-10">
+    <div className="flex items-center justify-between mt-10 max-w-frame mx-auto">
       {/* Left side (login form) */}
       <div className="flex flex-col gap-4 flex-1">
         <div className="flex items-center justify-center mb-10">

@@ -85,6 +85,7 @@ export function LoginForm({
           Login to your account below
         </p>
       </div>
+
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label htmlFor="email">E-mail address</Label>
@@ -99,6 +100,7 @@ export function LoginForm({
             required
           />
         </div>
+
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
@@ -130,10 +132,11 @@ export function LoginForm({
             </a>
           </div>
         </div>
+
         <Button
           type="submit"
           className="w-full cursor-pointer bg-primary hover:border-2 hover:border-primary hover:bg-transparent hover:text-primary text-white"
-          disabled={loading}
+          disabled={loading || !email || !password}
         >
           {loading ? "Loading..." : "Login"}
         </Button>
