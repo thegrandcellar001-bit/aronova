@@ -4,10 +4,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CountryDropdown } from "@/components/common/country-dropdown";
 import { toast } from "sonner";
+import axios from "axios";
+import { login } from "@/lib/features/auth/authSlice";
+import { useRouter } from "next/navigation";
+import { decodeJwt } from "jose";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 
 export function RegisterForm({
   className,
@@ -15,6 +19,10 @@ export function RegisterForm({
 }: React.ComponentProps<"form">) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -31,15 +39,40 @@ export function RegisterForm({
   const handleSubmit = async () => {
     setLoading(true);
 
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match");
+    try {
+      const response = await axios.post("/customer/register", formData);
+
+      if (response.status !== 201) {
+        console.error("Registration failed:", response);
+        toast.error("Registration failed. Please check your details.");
+        setLoading(false);
+        return;
+      }
+
+      const { token } = response.data;
+
+      dispatch(
+        login({
+          user: decodeJwt(token),
+          token,
+        })
+      );
+      router.push("/shop");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error("Registration failed. Please check your details.");
       setLoading(false);
       return;
+    } finally {
+      setLoading(false);
     }
-
-    toast.success("Registration functionality to be implemented");
-    setLoading(false);
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/shop");
+    }
+  }, [isAuthenticated, router]);
 
   return (
     <form className={cn("flex flex-col gap-4", className)} {...props}>
@@ -52,20 +85,6 @@ export function RegisterForm({
 
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="email">E-mail address</Label>
-          <Input
-            id="email"
-            type="email"
-            className="h-[44px]"
-            placeholder="m@example.com"
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
-          />
-        </div>
-
-        <div className="grid gap-3">
           <Label htmlFor="fullName">Name</Label>
           <Input
             id="fullName"
@@ -74,6 +93,20 @@ export function RegisterForm({
             placeholder="John Doe"
             onChange={(e) =>
               setFormData({ ...formData, fullName: e.target.value })
+            }
+            required
+          />
+        </div>
+
+        <div className="grid gap-3">
+          <Label htmlFor="email">E-mail address</Label>
+          <Input
+            id="email"
+            type="email"
+            className="h-[44px]"
+            placeholder="example@aronova.com"
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
             }
             required
           />

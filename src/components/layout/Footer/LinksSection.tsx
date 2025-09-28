@@ -58,7 +58,7 @@ const LinksSection = () => {
                 "capitalize",
                 "text-black/60 text-sm md:text-base mb-4 w-fit",
               ])}
-              legacyBehavior>
+            >
               {link.label}
             </Link>
           ))}

@@ -17,13 +17,12 @@ type MenuItemProps = {
 export function MenuItem({ label, url }: MenuItemProps) {
   return (
     <NavigationMenuItem>
-      <Link href={url ?? "/"} passHref legacyBehavior>
-        <NavigationMenuLink
-          className={cn(navigationMenuTriggerStyle(), "font-normal px-3")}
-        >
-          <a>{label}</a>
-        </NavigationMenuLink>
-      </Link>
+      <NavigationMenuLink
+        asChild
+        className={cn(navigationMenuTriggerStyle(), "font-normal px-3")}
+      >
+        <Link href={url ?? "/"}>{label}</Link>
+      </NavigationMenuLink>
     </NavigationMenuItem>
   );
 }

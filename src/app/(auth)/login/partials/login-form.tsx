@@ -11,7 +11,7 @@ import { decodeJwt } from "jose";
 import axios from "@/lib/axios";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { login, logout } from "@/lib/features/auth/authSlice";
+import { login } from "@/lib/features/auth/authSlice";
 import { toast } from "sonner";
 
 export function LoginForm({
@@ -20,12 +20,11 @@ export function LoginForm({
 }: React.ComponentProps<"form">) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const togglePasswordVisibility = () => {
@@ -41,6 +40,7 @@ export function LoginForm({
         email,
         password,
       });
+
       if (response.status !== 200) {
         console.error("Login failed:", response);
         toast.error("Login failed. Please check your credentials.");
@@ -48,7 +48,7 @@ export function LoginForm({
         return;
       }
 
-      const { user, token } = response.data;
+      const { token } = response.data;
 
       dispatch(
         login({

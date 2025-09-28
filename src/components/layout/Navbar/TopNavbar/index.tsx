@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { integralCF } from "@/styles/fonts";
 import Link from "next/link";
@@ -13,7 +15,8 @@ import Image from "next/image";
 import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
-import { FaUserCircle } from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { Button } from "@/components/ui/button";
 
 const data: NavMenu = [
   {
@@ -85,6 +88,9 @@ const data: NavMenu = [
 ];
 
 const TopNavbar = () => {
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
   return (
     <nav className="sticky top-0 bg-white z-20">
       <div className="flex relative max-w-frame mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
@@ -118,14 +124,7 @@ const TopNavbar = () => {
         </NavigationMenu>
         <InputGroup className="hidden md:flex bg-[#F0F0F0] mr-3 lg:mr-10">
           <InputGroup.Text>
-            <Image
-              priority
-              src="/icons/search.svg"
-              height={20}
-              width={20}
-              alt="search"
-              className="min-w-5 min-h-5"
-            />
+            <i className="fas fa-search text-lg text-gray-400"></i>
           </InputGroup.Text>
           <InputGroup.Input
             type="search"
@@ -135,20 +134,21 @@ const TopNavbar = () => {
           />
         </InputGroup>
         <div className="flex items-center">
-          <Link href="/search" className="block md:hidden mr-[14px] p-1" legacyBehavior>
-            <Image
-              priority
-              src="/icons/search-black.svg"
-              height={100}
-              width={100}
-              alt="search"
-              className="max-w-[22px] max-h-[22px]"
-            />
+          <Link href="/search" className="block md:hidden mr-[14px] p-1">
+            <i className="fas fa-search text-xl"></i>
           </Link>
           <CartBtn />
-          <Link href="/login" className="p-1" legacyBehavior>
-            <i className="far fa-user-circle text-xl"></i>
-          </Link>
+          {isAuthenticated ? (
+            <Link href="/account" className="p-1">
+              <i className="far fa-user-circle text-xl"></i>
+            </Link>
+          ) : (
+            <Button className="rounded-full cursor-pointer">
+              <Link href="/login">
+                <i className="far fa-sign-in"></i> Login
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
     </nav>
