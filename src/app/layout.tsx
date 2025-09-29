@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={satoshi.className}>
-        <HolyLoader color="#868686" />
+        <HolyLoader color="#C9A227" />
         <TopBanner />
         <Providers>
           <TopNavbar />

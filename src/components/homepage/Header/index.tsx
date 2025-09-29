@@ -19,7 +19,7 @@ const Header = () => {
             transition={{ duration: 0.6 }}
             className={cn([
               integralCF.className,
-              "text-4xl lg:text-[64px] lg:leading-[64px] mb-5 lg:mb-8",
+              "text-4xl text-secondary lg:text-[64px] lg:leading-[64px] mb-5 lg:mb-8",
             ])}
           >
             Discover What Matters.
@@ -41,7 +41,7 @@ const Header = () => {
           >
             <Link
               href="/discover"
-              className="w-full md:w-52 mb-5 md:mb-12 inline-block text-center bg-black hover:bg-black/80 transition-all text-white px-14 py-4 rounded-full hover:animate-pulse"
+              className="w-fit mb-5 md:mb-12 inline-block text-center bg-secondary hover:bg-secondary/80 transition-all text-white px-14 py-4 rounded-full hover:animate-pulse"
             >
               Explore the Edit →
             </Link>
