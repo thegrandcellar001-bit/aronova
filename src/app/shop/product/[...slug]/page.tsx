@@ -4,9 +4,9 @@ import {
   topSellingData,
 } from "@/app/page";
 import ProductListSec from "@/components/common/ProductListSec";
-import BreadcrumbProduct from "@/components/product-page/BreadcrumbProduct";
-import Header from "@/components/product-page/Header";
-import Tabs from "@/components/product-page/Tabs";
+import BreadcrumbProduct from "./partials/breadcrumb";
+import Header from "./partials/header";
+import Tabs from "./partials/tabs";
 import { Product } from "@/types/product.types";
 import { notFound } from "next/navigation";
 
@@ -16,11 +16,9 @@ const data: Product[] = [
   ...relatedProductData,
 ];
 
-export default async function ProductPage(
-  props: {
-    params: Promise<{ slug: string[] }>;
-  }
-) {
+export default async function ProductPage(props: {
+  params: Promise<{ slug: string[] }>;
+}) {
   const params = await props.params;
   const productData = data.find(
     (product) => product.id === Number(params.slug[0])

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { PiTrashFill } from "react-icons/pi";
 import Image from "next/image";
 import Link from "next/link";
 import CartCounter from "@/components/ui/CartCounter";
@@ -26,7 +25,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       <Link
         href={`/shop/product/${data.id}/${data.name.split(" ").join("-")}`}
         className="bg-[#F0EEED] rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
-        legacyBehavior>
+      >
         <Image
           src={data.srcUrl}
           width={124}
@@ -41,7 +40,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
           <Link
             href={`/shop/product/${data.id}/${data.name.split(" ").join("-")}`}
             className="text-black font-bold text-base xl:text-xl"
-            legacyBehavior>
+          >
             {data.name}
           </Link>
           <Button
@@ -58,7 +57,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
               )
             }
           >
-            <PiTrashFill className="text-xl md:text-2xl text-red-600" />
+            <i className="far fa-trash text-lg text-red-600 cursor-pointer" />
           </Button>
         </div>
         <div className="-mt-1">

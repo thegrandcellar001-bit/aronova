@@ -28,13 +28,14 @@ export default function CartPage() {
             <h2
               className={cn([
                 integralCF.className,
-                "font-bold text-[32px] md:text-[40px] text-black uppercase mb-5 md:mb-6",
+                "font-bold text-[32px] md:text-[40px] uppercase mb-1",
               ])}
             >
               Your Discoveries
             </h2>
             <p className="text-black/60 mb-5">
-              Every piece here is curated and authenticated. We’ve reserved it for you.
+              Every piece here is curated and authenticated. We’ve reserved it
+              for you.
             </p>
             <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
               <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
@@ -96,16 +97,18 @@ export default function CartPage() {
                   </InputGroup>
                   <Button
                     type="button"
-                    className="bg-black rounded-full w-full max-w-[119px] h-[48px]"
+                    variant="secondary"
+                    className="text-white rounded-full w-full max-w-[119px] h-[48px] cursor-pointer"
                   >
                     Apply
                   </Button>
                 </div>
                 <Button
                   type="button"
-                  className="text-sm md:text-base font-medium bg-black rounded-full w-full py-4 h-[54px] md:h-[60px] group"
+                  variant="secondary"
+                  className="text-sm md:text-base text-white font-medium rounded-full w-full py-4 h-[54px] md:h-[60px] group"
                 >
-                  Complete Discovery →{" "}
+                  Complete Discovery{" "}
                   <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
                 </Button>
                 <Button

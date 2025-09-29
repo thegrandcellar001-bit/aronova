@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { integralCF } from "@/styles/fonts";
 import React from "react";
@@ -8,6 +10,7 @@ import LinksSection from "./LinksSection";
 import Image from "next/image";
 import NewsLetterSection from "./NewsLetterSection";
 import LayoutSpacing from "./LayoutSpacing";
+import { usePathname } from "next/navigation";
 
 const socialsData: SocialNetworks[] = [
   {
@@ -56,14 +59,18 @@ const paymentBadgesData: PaymentBadge[] = [
 ];
 
 const Footer = () => {
+  const pathname = usePathname();
+
   return (
     <footer className="mt-10">
-      <div className="relative">
-        <div className="absolute bottom-0 w-full h-1/2 bg-[#F0F0F0]"></div>
-        <div className="px-4">
-          <NewsLetterSection />
+      {pathname === "/" && (
+        <div className="relative">
+          <div className="absolute bottom-0 w-full h-1/2 bg-[#F0F0F0]"></div>
+          <div className="px-4">
+            <NewsLetterSection />
+          </div>
         </div>
-      </div>
+      )}
       <div className="pt-8 md:pt-[50px] bg-[#F0F0F0] px-4 pb-4">
         <div className="max-w-frame mx-auto">
           <nav className="lg:grid lg:grid-cols-12 mb-8">
@@ -74,9 +81,16 @@ const Footer = () => {
                   "text-[28px] lg:text-[32px] mb-6",
                 ])}
               >
-                Aronova
+                <Image
+                  priority
+                  src="/icons/logo.png"
+                  height={32}
+                  width={150}
+                  alt="Aronova"
+                  className="inline-block mr-3"
+                />
               </h1>
-              <p className="text-black/60 text-sm mb-9">
+              <p className="text-black/60 text-md mb-9">
                 Curated. Certified. Yours.
               </p>
               <div className="flex items-center">

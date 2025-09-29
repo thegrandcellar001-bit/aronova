@@ -102,7 +102,7 @@ const TopNavbar = () => {
             href="/"
             className={cn([
               integralCF.className,
-              "text-2xl lg:text-[32px] mb-2 mr-3 lg:mr-10",
+              "text-2xl text-secondary lg:text-[32px] mb-2 mr-3 lg:mr-10",
             ])}
           >
             Aronova
@@ -133,18 +133,26 @@ const TopNavbar = () => {
             className="bg-transparent placeholder:text-black/40"
           />
         </InputGroup>
-        <div className="flex items-center">
+        <div className="flex items-center gap-x-3">
           <Link href="/search" className="block md:hidden mr-[14px] p-1">
             <i className="fas fa-search text-xl"></i>
           </Link>
           <CartBtn />
+          <Link href="/wishlist" className="p-1 ">
+            <i className="far fa-heart text-2xl text-secondary"></i>
+          </Link>
           {isAuthenticated ? (
-            <Link href="/account" className="p-1">
-              <i className="far fa-user-circle text-xl"></i>
-            </Link>
+            <>
+              <Link href="/account" className="p-1">
+                <i className="far fa-user-circle text-2xl"></i>
+              </Link>
+            </>
           ) : (
-            <Button className="rounded-full cursor-pointer">
-              <Link href="/login">
+            <Button
+              className="rounded-full cursor-pointer"
+              variant={"secondary"}
+            >
+              <Link href="/login" className="text-white">
                 <i className="far fa-sign-in"></i> Login
               </Link>
             </Button>

@@ -36,7 +36,13 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
         <SheetHeader className="mb-10">
           <SheetTitle asChild>
             <SheetClose asChild>
-              <Link href="/" className={cn([integralCF.className, "text-2xl"]) }>
+              <Link
+                href="/"
+                className={cn([
+                  integralCF.className,
+                  "text-2xl text-secondary",
+                ])}
+              >
                 Aronova
               </Link>
             </SheetClose>
@@ -47,7 +53,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
             <React.Fragment key={item.id}>
               {item.type === "MenuItem" && (
                 <SheetClose asChild>
-                  <Link href={item.url ?? "/"} className="mb-4" legacyBehavior>
+                  <Link href={item.url ?? "/"} className="mb-4">
                     {item.label}
                   </Link>
                 </SheetClose>
@@ -66,7 +72,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
                             asChild
                             className="w-fit py-2 text-base"
                           >
-                            <Link href={itemChild.url ?? "/"} legacyBehavior>
+                            <Link href={itemChild.url ?? "/"}>
                               {itemChild.label}
                             </Link>
                           </SheetClose>
