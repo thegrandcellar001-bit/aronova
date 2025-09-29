@@ -149,7 +149,7 @@ const TopNavbar = () => {
             </>
           ) : (
             <Button
-              className="rounded-full cursor-pointer"
+              className="rounded-full cursor-pointer hidden md:block"
               variant={"secondary"}
             >
               <Link href="/login" className="text-white">
