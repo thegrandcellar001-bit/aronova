@@ -4,7 +4,7 @@ import {
   topSellingData,
 } from "@/app/page";
 import ProductListSec from "@/components/common/ProductListSec";
-import BreadcrumbProduct from "./partials/breadcrumb";
+import BreadcrumbProduct from "./partials/product-breadcrumb";
 import Header from "./partials/header";
 import Tabs from "./partials/tabs";
 import { Product } from "@/types/product.types";

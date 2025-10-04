@@ -1,7 +1,7 @@
 "use client";
 
-import BreadcrumbCart from "@/components/cart-page/BreadcrumbCart";
-import ProductCard from "@/components/cart-page/ProductCard";
+import BreadcrumbCart from "./partials/cart-breadcrumb";
+import ProductCard from "./partials/cart-product";
 import { Button } from "@/components/ui/button";
 import InputGroup from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
@@ -13,8 +13,10 @@ import React from "react";
 import { RootState } from "@/lib/store";
 import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CartPage() {
+  const router = useRouter();
   const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
     (state: RootState) => state.carts
   );
@@ -104,11 +106,11 @@ export default function CartPage() {
                   </Button>
                 </div>
                 <Button
-                  type="button"
+                  onClick={() => router.push("/checkout")}
                   variant="secondary"
-                  className="text-sm md:text-base text-white font-medium rounded-full w-full py-4 h-[54px] md:h-[60px] group"
+                  className="text-sm md:text-base text-white font-medium rounded-full w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
                 >
-                  Complete Discovery{" "}
+                  Checkout{" "}
                   <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
                 </Button>
                 <Button

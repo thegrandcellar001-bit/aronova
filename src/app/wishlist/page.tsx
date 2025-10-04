@@ -8,8 +8,8 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Product } from "@/types/product.types";
-import ProductCard from "./partials/ProductCard";
-import BreadcrumbWishlist from "./partials/breadcrumb";
+import ProductCard from "./partials/wishlist-product";
+import BreadcrumbWishlist from "./partials/wishlist-breadcrumb";
 
 export default function CartPage() {
   const wishlistData: Product[] = [

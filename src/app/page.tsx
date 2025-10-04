@@ -1,12 +1,12 @@
 import ProductListSec from "@/components/common/ProductListSec";
-import Brands from "@/components/homepage/Brands";
-import DressStyle from "@/components/homepage/DressStyle";
-import Header from "@/components/homepage/Header";
-import Reviews from "@/components/homepage/Reviews";
+import Brands from "./partials/home/brands";
+import DressStyle from "./partials/home/dress-style";
+import Header from "./partials/home/header";
+import Reviews from "./partials/home/reviews";
 import { Product } from "@/types/product.types";
 import { Review } from "@/types/review.types";
-import SecondaryBanner from "@/components/homepage/SecondaryBanner";
-import CategoryHighlights from "@/components/homepage/CategoryHighlights";
+import SecondaryBanner from "./partials/home/secondary-banner";
+import CategoryHighlights from "./partials/home/category-highlights";
 
 export const newArrivalsData: Product[] = [
   {

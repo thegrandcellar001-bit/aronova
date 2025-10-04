@@ -8,6 +8,10 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
+export const auth = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
+
 api.interceptors.request.use((config) => {
   const state = store.getState();
   const token = state.auth.token;
@@ -35,7 +39,6 @@ api.interceptors.response.use(
         if (res.status === 200) {
           const { token } = res.data;
 
-          // ✅ Refresh only updates token
           store.dispatch(setToken(token));
 
           originalRequest.headers.Authorization = `Bearer ${token}`;

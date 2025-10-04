@@ -11,12 +11,12 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { MenuItem } from "./MenuItem";
-import Image from "next/image";
 import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { Button } from "@/components/ui/button";
+import { UserAvatar } from "./user-avatar";
 
 const data: NavMenu = [
   {
@@ -81,8 +81,8 @@ const data: NavMenu = [
   {
     id: 6,
     type: "MenuItem",
-    label: "Concierge",
-    url: "/concierge",
+    label: "Contact Us",
+    url: "/contact",
     children: [],
   },
 ];
@@ -142,11 +142,7 @@ const TopNavbar = () => {
             <i className="far fa-heart text-2xl text-secondary"></i>
           </Link>
           {isAuthenticated ? (
-            <>
-              <Link href="/account" className="p-1">
-                <i className="far fa-user-circle text-2xl"></i>
-              </Link>
-            </>
+            <UserAvatar />
           ) : (
             <Button
               className="rounded-full cursor-pointer hidden md:block"

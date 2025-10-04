@@ -8,11 +8,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { decodeJwt } from "jose";
-import axios from "@/lib/axios";
+import { auth } from "@/lib/axios";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { login } from "@/lib/features/auth/authSlice";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
+import { Field, FieldSeparator } from "@/components/ui/field";
+import { Spinner } from "@/components/ui/spinner";
 
 export function LoginForm({
   className,
@@ -26,24 +28,24 @@ export function LoginForm({
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { toastSuccess, toastError } = useToast();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async () => {
     setLoading(true);
-    e.preventDefault();
 
     try {
-      const response = await axios.post("/customer/login", {
+      const response = await auth.post("/customer/login", {
         email,
         password,
       });
 
       if (response.status !== 200) {
         console.error("Login failed:", response);
-        toast.error("Login failed. Please check your credentials.");
+        toastError("Login failed. Please check your credentials.");
         setLoading(false);
         return;
       }
@@ -56,15 +58,22 @@ export function LoginForm({
           token,
         })
       );
+
+      toastSuccess("Login successful!");
+
       router.push("/shop");
     } catch (error) {
       console.error("Login failed:", error);
-      toast.error("Login failed. Please check your credentials.");
+      toastError("Login failed. Please check your credentials.");
       setLoading(false);
       return;
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/customer/auth/google`;
   };
 
   useEffect(() => {
@@ -74,11 +83,7 @@ export function LoginForm({
   }, [isAuthenticated, router]);
 
   return (
-    <form
-      className={cn("flex flex-col gap-6", className)}
-      {...props}
-      onSubmit={handleSubmit}
-    >
+    <form className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Already a member?</h1>
         <p className="text-muted-foreground text-md text-balance">
@@ -138,9 +143,25 @@ export function LoginForm({
           variant="secondary"
           className="w-full cursor-pointer bg-secondary hover:border-2 hover:border-secondary hover:bg-transparent hover:text-secondary text-white"
           disabled={loading || !email || !password}
+          onClick={handleSubmit}
         >
-          {loading ? "Loading..." : "Login"}
+          {loading ? <Spinner /> : "Login"}
         </Button>
+
+        <Field>
+          <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
+            Or continue with
+          </FieldSeparator>
+          <Button
+            variant="outline"
+            type="button"
+            className="cursor-pointer mt-2"
+            onClick={handleGoogleLogin}
+          >
+            <i className="fab fa-google mr-2"></i>
+            Login with Google
+          </Button>
+        </Field>
       </div>
     </form>
   );

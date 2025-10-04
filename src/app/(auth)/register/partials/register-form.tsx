@@ -7,11 +7,12 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { CountryDropdown } from "@/components/common/country-dropdown";
 import { toast } from "sonner";
-import axios from "axios";
 import { login } from "@/lib/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { decodeJwt } from "jose";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { useToast } from "@/hooks/use-toast";
+import { auth } from "@/lib/axios";
 
 export function RegisterForm({
   className,
@@ -20,6 +21,7 @@ export function RegisterForm({
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const { toastSuccess, toastError } = useToast();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -40,7 +42,7 @@ export function RegisterForm({
     setLoading(true);
 
     try {
-      const response = await axios.post("/customer/register", formData);
+      const response = await auth.post("/customer/register", formData);
 
       if (response.status !== 201) {
         console.error("Registration failed:", response);
@@ -57,15 +59,22 @@ export function RegisterForm({
           token,
         })
       );
+
+      toastSuccess("Registration successful!");
+
       router.push("/shop");
     } catch (error) {
       console.error("Registration failed:", error);
-      toast.error("Registration failed. Please check your details.");
+      toastError("Registration failed. Please check your details.");
       setLoading(false);
       return;
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/customer/auth/google`;
   };
 
   useEffect(() => {
@@ -75,8 +84,8 @@ export function RegisterForm({
   }, [isAuthenticated, router]);
 
   return (
-    <form className={cn("flex flex-col gap-4", className)} {...props}>
-      <div className="flex flex-col items-center text-center">
+    <form className={cn("flex flex-col gap-6", className)} {...props}>
+      <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Create an account</h1>
         <p className="text-muted-foreground text-sm text-balance">
           Fill in the form below to create a new account
@@ -139,6 +148,7 @@ export function RegisterForm({
             </a>
           </div>
         </div>
+
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="confirm-password">Confirm Password</Label>
