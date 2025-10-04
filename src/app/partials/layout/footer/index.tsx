@@ -84,8 +84,8 @@ const Footer = () => {
                 <Image
                   priority
                   src="/icons/logo.png"
-                  height={32}
-                  width={150}
+                  height={30}
+                  width={75}
                   alt="Aronova"
                   className="inline-block mr-3"
                 />

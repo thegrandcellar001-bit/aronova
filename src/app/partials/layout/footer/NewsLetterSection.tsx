@@ -7,11 +7,11 @@ import React from "react";
 
 const NewsLetterSection = () => {
   return (
-    <div className="relative grid grid-cols-1 md:grid-cols-2 py-9 md:py-11 px-6 md:px-16 max-w-frame mx-auto bg-secondary rounded-[20px]">
+    <div className="relative grid grid-cols-1 md:grid-cols-2 py-9 md:py-11 px-6 md:px-16 max-w-frame mx-auto bg-primary rounded-[20px]">
       <p
         className={cn([
           integralCF.className,
-          "font-bold text-[32px] md:text-[40px] text-white mb-9 md:mb-0",
+          "font-bold text-[32px] md:text-[40px] text-secondary mb-9 md:mb-0",
         ])}
       >
         STAY UP TO DATE ABOUT OUR LATEST OFFERS
@@ -37,7 +37,7 @@ const NewsLetterSection = () => {
             />
           </InputGroup>
           <Button
-            variant="default"
+            variant="outline"
             className="text-sm sm:text-base font-medium bg-white text-black h-12 rounded-full px-4 py-3 cursor-pointer"
             aria-label="Subscribe to Newsletter"
             type="button"
