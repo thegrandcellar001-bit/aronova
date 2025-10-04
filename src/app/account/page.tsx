@@ -9,9 +9,34 @@ import Sidebar from "./partials/sidebar";
 import { useAppSelector } from "@/lib/hooks/redux";
 import BreadcrumbAccount from "./partials/account-breadcrumb";
 import { CountryDropdown } from "@/components/common/country-dropdown";
+import AuthGuard from "@/lib/auth-guard";
+import api from "@/lib/axios";
+import { useEffect, useRef, useState } from "react";
 
 export default function Page() {
   const { user } = useAppSelector((state) => state.auth);
+  const [editProfile, setEditProfile] = useState(false);
+  const editProfileElem = useRef<HTMLDivElement>(null);
+
+  const splitName = () => {
+    if (user?.name) {
+      const names = user.name.split(" ");
+      return {
+        firstName: names[0],
+        lastName: names.length > 1 ? names.slice(1).join(" ") : "",
+      };
+    }
+    return { firstName: "", lastName: "" };
+  };
+
+  const [accountFormData, setAccountFormData] = useState({
+    firstName: splitName().firstName,
+    lastName: splitName().lastName,
+    email: user?.email,
+    country: "NG",
+  });
+
+  const [passwordFormData, setPasswordFormData] = useState({});
 
   const address = {
     id: "1",
@@ -24,166 +49,245 @@ export default function Page() {
     isDefault: true,
   };
 
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get("/customer/profile");
+      console.log("User data:", response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
-    <main>
-      <section className="px-6 max-w-7xl mx-auto">
-        <BreadcrumbAccount />
-        <div className="flex flex-col md:flex-row items-start justify-between gap-6 mt-10">
-          <Sidebar />
+    <AuthGuard>
+      <main>
+        <section className="px-6 max-w-7xl mx-auto">
+          <BreadcrumbAccount />
+          <div className="flex flex-col md:flex-row items-start justify-between gap-6 mt-10">
+            <Sidebar />
 
-          <div className="flex flex-col gap-y-4 flex-1">
-            <h3 className="font-bold text-2xl md:text-3xl">
-              Hello, {user?.name}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-              <div className="border rounded-md p-4">
-                <h2 className="font-medium text-md border-b pb-2">
-                  <i className="far fa-user mr-1"></i> Account Details
-                </h2>
-                <div className="mt-2 space-y-1">
-                  <p className="text-md">{user?.name}</p>
-                  <p className="text-gray-500">{user?.email}</p>
-                </div>
-              </div>
-              <div className="border rounded-md p-4">
-                <h2 className="font-medium text-md border-b pb-2">
-                  <i className="far fa-address-book mr-1"></i> Address Book
-                </h2>
-                <div className="mt-2 space-y-1">
-                  <p className="font-medium">Your default shipping address:</p>
-                  <div
-                    key={address.id}
-                    className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
+            <div className="flex flex-col gap-y-4 flex-1">
+              <h3 className="font-bold text-2xl md:text-3xl">
+                Hello, {user?.name}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                <div className="border rounded-md p-4">
+                  <h2 className="font-medium text-md border-b pb-2">
+                    <i className="far fa-user mr-1"></i> Account Details
+                  </h2>
+                  <div className="mt-2 space-y-1">
+                    <p className="text-md">{user?.name}</p>
+                    <p className="text-gray-500">{user?.email}</p>
+                  </div>
+                  <Button
+                    className="mt-4 cursor-pointer"
+                    variant={"default"}
+                    size={"lg"}
+                    onClick={() => {
+                      setEditProfile(!editProfile);
+                      editProfileElem.current?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }}
                   >
-                    <div className="space-y-1">
-                      <h4 className="font-medium text-lg">{address.name}</h4>
-                      <p className="space-x-4">
-                        <i className="far fa-phone text-md mr-1"></i>{" "}
-                        {address.phone}
-                        {address.additionalPhone && (
-                          <> / {address.additionalPhone}</>
+                    Change your details
+                  </Button>
+                </div>
+                <div className="border rounded-md p-4">
+                  <h2 className="font-medium text-md border-b pb-2">
+                    <i className="far fa-address-book mr-1"></i> Address Book
+                  </h2>
+                  <div className="mt-2 space-y-1">
+                    <p className="font-medium">
+                      Your default shipping address:
+                    </p>
+                    <div
+                      key={address.id}
+                      className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
+                    >
+                      <div className="space-y-1">
+                        <h4 className="font-medium text-lg">{address.name}</h4>
+                        <p className="space-x-4">
+                          <i className="far fa-phone text-md mr-1"></i>{" "}
+                          {address.phone}
+                          {address.additionalPhone && (
+                            <> / {address.additionalPhone}</>
+                          )}
+                        </p>
+                        <p>
+                          <i className="far fa-address-card text-md mr-1"></i>{" "}
+                          {address.address}
+                        </p>
+                        <p>
+                          <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
+                          {address.lga}, {address.state}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-x-2 mt-4 md:mt-0">
+                        {address.isDefault && (
+                          <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded ml-auto">
+                            Default
+                          </span>
                         )}
-                      </p>
-                      <p>
-                        <i className="far fa-address-card text-md mr-1"></i>{" "}
-                        {address.address}
-                      </p>
-                      <p>
-                        <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
-                        {address.lga}, {address.state}
-                      </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-x-2 mt-4 md:mt-0">
-                      {address.isDefault && (
-                        <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded ml-auto">
-                          Default
-                        </span>
-                      )}
+                  </div>
+                </div>
+
+                <div className="border rounded-md p-4 col-span-full">
+                  <h2 className="font-medium text-md border-b pb-2">
+                    <i className="far fa-credit-card mr-1"></i> Payment Method
+                  </h2>
+                  <div className="mt-2 space-y-1">
+                    <p className="font-medium">Your default payment method:</p>
+                    <div className="grid gap-1.5 font-normal border rounded-md p-4 mt-3">
+                      <p className="text-sm leading-none font-medium">
+                        Pay with Cards, Bank Transfer or USSD
+                      </p>
+                      <p className="text-muted-foreground text-sm">
+                        Prepay for your order with the above methods, you will
+                        be redirected to the payment gateway to complete your
+                        purchase.
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="border rounded-md p-4 col-span-full">
-                <h2 className="font-medium text-md border-b pb-2">
-                  <i className="far fa-credit-card mr-1"></i> Payment Method
-                </h2>
-                <div className="mt-2 space-y-1">
-                  <p className="font-medium">Your default payment method:</p>
-                  <div className="grid gap-1.5 font-normal border rounded-md p-4 mt-3">
-                    <p className="text-sm leading-none font-medium">
-                      Pay with Cards, Bank Transfer or USSD
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                      Prepay for your order with the above methods, you will be
-                      redirected to the payment gateway to complete your
-                      purchase.
-                    </p>
-                  </div>
-                </div>
+              <div ref={editProfileElem}>
+                {editProfile && (
+                  <Tabs defaultValue="account" className="w-full">
+                    <TabsList className="w-full">
+                      <TabsTrigger value="account" className="w-full h-8">
+                        Account
+                      </TabsTrigger>
+                      <TabsTrigger value="password" className="w-full h-8">
+                        Password
+                      </TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="account" className="mt-4">
+                      <h3 className="font-medium text-lg">Edit Your Profile</h3>
+                      <div className="grid grid-cols-2 gap-x-3 mt-6">
+                        <div className="space-y-3">
+                          <Label htmlFor="first-name">First name</Label>
+                          <Input
+                            className="h-12"
+                            placeholder="First name"
+                            value={accountFormData.firstName}
+                            onChange={(e) =>
+                              setAccountFormData({
+                                ...accountFormData,
+                                firstName: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <Label htmlFor="last-name">Last name</Label>
+                          <Input
+                            className="h-12"
+                            placeholder="Last name"
+                            value={accountFormData.lastName}
+                            onChange={(e) =>
+                              setAccountFormData({
+                                ...accountFormData,
+                                lastName: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 gap-y-3 mt-4">
+                        <div className="space-y-3">
+                          <Label htmlFor="email-address">E-mail address</Label>
+                          <Input
+                            className="h-12"
+                            placeholder="E-mail address"
+                            value={accountFormData.email}
+                            onChange={(e) =>
+                              setAccountFormData({
+                                ...accountFormData,
+                                email: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        <div className="grid gap-3">
+                          <label className="text-sm font-medium flex items-center gap-2">
+                            Select your country
+                          </label>
+                          <CountryDropdown
+                            value={accountFormData.country}
+                            onChange={(country) => {
+                              if (!Array.isArray(country)) {
+                                setAccountFormData({
+                                  ...accountFormData,
+                                  country: country.alpha2,
+                                });
+                              }
+                            }}
+                            placeholder="Select your country"
+                            textSize="sm"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-x-4 mt-6">
+                        <Button className="cursor-pointer" variant={"default"}>
+                          Save Changes
+                        </Button>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="password" className="mt-4">
+                      <h3 className="font-medium text-lg">
+                        Change Your Password
+                      </h3>
+                      <div className="grid grid-cols-1 gap-y-3 mt-4">
+                        <div className="space-y-3">
+                          <Label htmlFor="currentPassword">
+                            Current Password
+                          </Label>
+                          <Input
+                            className="h-12"
+                            placeholder="Current Password"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-x-3 mt-4">
+                        <div className="space-y-3">
+                          <Label htmlFor="newPassword">New Password</Label>
+                          <Input className="h-12" placeholder="New Password" />
+                        </div>
+                        <div className="space-y-3">
+                          <Label htmlFor="confirmPassword">
+                            Confirm Password
+                          </Label>
+                          <Input
+                            className="h-12"
+                            placeholder="Confirm Password"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-x-4 mt-6">
+                        <Button className="cursor-pointer" variant={"default"}>
+                          Save Changes
+                        </Button>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                )}
               </div>
             </div>
-
-            <Tabs defaultValue="account" className="w-full">
-              <TabsList className="w-full">
-                <TabsTrigger value="account" className="w-full h-8">
-                  Account
-                </TabsTrigger>
-                <TabsTrigger value="password" className="w-full h-8">
-                  Password
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="account" className="mt-4">
-                <h3 className="font-medium text-lg">Edit Your Profile</h3>
-                <div className="grid grid-cols-2 gap-x-3 mt-6">
-                  <div className="space-y-3">
-                    <Label htmlFor="first-name">First name</Label>
-                    <Input className="h-12" placeholder="First name" />
-                  </div>
-                  <div className="space-y-3">
-                    <Label htmlFor="last-name">Last name</Label>
-                    <Input className="h-12" placeholder="Last name" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-y-3 mt-4">
-                  <div className="space-y-3">
-                    <Label htmlFor="email-address">E-mail address</Label>
-                    <Input className="h-12" placeholder="E-mail address" />
-                  </div>
-
-                  <div className="grid gap-3">
-                    <label className="text-sm font-medium flex items-center gap-2">
-                      Select your country
-                    </label>
-                    <CountryDropdown
-                      // value={formData.country}
-                      // onChange={(country) => {
-                      //   if (!Array.isArray(country)) {
-                      //     setFormData({ ...formData, country: country.alpha2 });
-                      //   }
-                      // }}
-                      placeholder="Select your country"
-                      textSize="sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end gap-x-4 mt-6">
-                  <Button className="cursor-pointer" variant={"default"}>
-                    Save Changes
-                  </Button>
-                </div>
-              </TabsContent>
-              <TabsContent value="password" className="mt-4">
-                <h3 className="font-medium text-lg">Change Your Password</h3>
-                <div className="grid grid-cols-1 gap-y-3 mt-4">
-                  <div className="space-y-3">
-                    <Label htmlFor="currentPassword">Current Password</Label>
-                    <Input className="h-12" placeholder="Current Password" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-x-3 mt-4">
-                  <div className="space-y-3">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <Input className="h-12" placeholder="New Password" />
-                  </div>
-                  <div className="space-y-3">
-                    <Label htmlFor="confirmPassword">Confirm Password</Label>
-                    <Input className="h-12" placeholder="Confirm Password" />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end gap-x-4 mt-6">
-                  <Button className="cursor-pointer" variant={"default"}>
-                    Save Changes
-                  </Button>
-                </div>
-              </TabsContent>
-            </Tabs>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </AuthGuard>
   );
 }

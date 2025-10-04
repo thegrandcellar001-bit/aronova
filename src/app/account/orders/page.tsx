@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useAppSelector } from "@/lib/hooks/redux";
 import BreadcrumbOrder from "./partials/orders-breadcrumb";
+import AuthGuard from "@/lib/auth-guard";
 
 export default function Page() {
   const { user } = useAppSelector((state) => state.auth);
@@ -62,130 +63,132 @@ export default function Page() {
   ];
 
   return (
-    <main>
-      <section className="px-6 max-w-7xl mx-auto">
-        <BreadcrumbOrder />
-        <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
-          <Sidebar />
-          <div className="flex flex-col gap-y-4 flex-1">
-            <Tabs defaultValue="account" className="w-full">
-              <TabsList className="w-full">
-                <TabsTrigger value="account">
-                  Ongoing / Delivered (
-                  {
-                    orders.filter(
-                      (order) =>
-                        order.orderStatus === "shipped" ||
-                        order.orderStatus === "delivered" ||
-                        order.orderStatus === "processing"
-                    ).length
-                  }
-                  )
-                </TabsTrigger>
-                <TabsTrigger value="password">
-                  Cancelled / Returned (
-                  {
-                    orders.filter(
-                      (order) =>
-                        order.orderStatus === "cancelled" ||
-                        order.orderStatus === "returned"
-                    ).length
-                  }
-                  )
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="account" className="mt-4">
-                <div className="flex flex-col gap-3">
-                  {orders
-                    .filter(
-                      (order) =>
-                        order.orderStatus === "shipped" ||
-                        order.orderStatus === "delivered" ||
-                        order.orderStatus === "processing"
+    <AuthGuard>
+      <main>
+        <section className="px-6 max-w-7xl mx-auto">
+          <BreadcrumbOrder />
+          <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
+            <Sidebar />
+            <div className="flex flex-col gap-y-4 flex-1">
+              <Tabs defaultValue="account" className="w-full">
+                <TabsList className="w-full">
+                  <TabsTrigger value="account">
+                    Ongoing / Delivered (
+                    {
+                      orders.filter(
+                        (order) =>
+                          order.orderStatus === "shipped" ||
+                          order.orderStatus === "delivered" ||
+                          order.orderStatus === "processing"
+                      ).length
+                    }
                     )
-                    .map((order, index) => (
-                      <div
-                        key={index}
-                        className="border p-4 rounded-md mt-4 flex items-center gap-x-4"
-                      >
-                        <Image
-                          src={order.image || ""}
-                          alt={order.title || ""}
-                          className="rounded-lg"
-                          width={110}
-                          height={110}
-                        />
-                        <div className="space-y-1.5">
-                          {order.title}
-                          <div className="text-sm text-muted-foreground">
-                            Order No: {order.orderNo}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            <Badge
-                              variant={
-                                order.orderStatus === "delivered" ||
-                                order.orderStatus === "shipped"
-                                  ? "default"
-                                  : "secondary"
-                              }
-                              className="rounded-sm font-semibold"
-                            >
-                              {order.orderStatus?.toUpperCase()}
-                            </Badge>
-                          </div>
-                          <div>On: {order.orderDate}</div>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="password" className="mt-4">
-                <div className="flex flex-col gap-3">
-                  {orders
-                    .filter(
-                      (order) =>
-                        order.orderStatus === "cancelled" ||
-                        order.orderStatus === "returned"
+                  </TabsTrigger>
+                  <TabsTrigger value="password">
+                    Cancelled / Returned (
+                    {
+                      orders.filter(
+                        (order) =>
+                          order.orderStatus === "cancelled" ||
+                          order.orderStatus === "returned"
+                      ).length
+                    }
                     )
-                    .map((order, index) => (
-                      <div
-                        key={index}
-                        className="border p-4 rounded-md mt-4 flex items-center gap-x-4"
-                      >
-                        <Image
-                          src={order.image || ""}
-                          alt={order.title || ""}
-                          className="rounded-lg"
-                          width={110}
-                          height={110}
-                        />
-                        <div className="space-y-1.5">
-                          {order.title}
-                          <div className="text-sm text-muted-foreground">
-                            Order No: {order.orderNo}
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="account" className="mt-4">
+                  <div className="flex flex-col gap-3">
+                    {orders
+                      .filter(
+                        (order) =>
+                          order.orderStatus === "shipped" ||
+                          order.orderStatus === "delivered" ||
+                          order.orderStatus === "processing"
+                      )
+                      .map((order, index) => (
+                        <div
+                          key={index}
+                          className="border p-4 rounded-md mt-4 flex items-center gap-x-4"
+                        >
+                          <Image
+                            src={order.image || ""}
+                            alt={order.title || ""}
+                            className="rounded-lg"
+                            width={110}
+                            height={110}
+                          />
+                          <div className="space-y-1.5">
+                            {order.title}
+                            <div className="text-sm text-muted-foreground">
+                              Order No: {order.orderNo}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              <Badge
+                                variant={
+                                  order.orderStatus === "delivered" ||
+                                  order.orderStatus === "shipped"
+                                    ? "default"
+                                    : "secondary"
+                                }
+                                className="rounded-sm font-semibold"
+                              >
+                                {order.orderStatus?.toUpperCase()}
+                              </Badge>
+                            </div>
+                            <div>On: {order.orderDate}</div>
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            <Badge
-                              variant={
-                                order.orderStatus === "cancelled"
-                                  ? "destructive"
-                                  : "outline"
-                              }
-                              className="rounded-sm font-semibold"
-                            >
-                              {order.orderStatus?.toUpperCase()}
-                            </Badge>
-                          </div>
-                          <div>On: {order.orderDate}</div>
                         </div>
-                      </div>
-                    ))}
-                </div>
-              </TabsContent>
-            </Tabs>
+                      ))}
+                  </div>
+                </TabsContent>
+                <TabsContent value="password" className="mt-4">
+                  <div className="flex flex-col gap-3">
+                    {orders
+                      .filter(
+                        (order) =>
+                          order.orderStatus === "cancelled" ||
+                          order.orderStatus === "returned"
+                      )
+                      .map((order, index) => (
+                        <div
+                          key={index}
+                          className="border p-4 rounded-md mt-4 flex items-center gap-x-4"
+                        >
+                          <Image
+                            src={order.image || ""}
+                            alt={order.title || ""}
+                            className="rounded-lg"
+                            width={110}
+                            height={110}
+                          />
+                          <div className="space-y-1.5">
+                            {order.title}
+                            <div className="text-sm text-muted-foreground">
+                              Order No: {order.orderNo}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              <Badge
+                                variant={
+                                  order.orderStatus === "cancelled"
+                                    ? "destructive"
+                                    : "outline"
+                                }
+                                className="rounded-sm font-semibold"
+                              >
+                                {order.orderStatus?.toUpperCase()}
+                              </Badge>
+                            </div>
+                            <div>On: {order.orderDate}</div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </AuthGuard>
   );
 }

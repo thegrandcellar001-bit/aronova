@@ -81,8 +81,8 @@ const data: NavMenu = [
   {
     id: 6,
     type: "MenuItem",
-    label: "Contact Us",
-    url: "/contact",
+    label: "Concierge",
+    url: "/concierge",
     children: [],
   },
 ];
