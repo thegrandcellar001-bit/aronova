@@ -89,7 +89,7 @@ export default function CartPage() {
 
   return (
     <main className="pb-20">
-      <div className="max-w-frame mx-auto px-4 xl:px-0">
+      <div className="w-full md:max-w-frame mx-auto px-4 xl:px-0">
         {wishlistData && wishlistData.length > 0 ? (
           <>
             <BreadcrumbWishlist />
@@ -108,7 +108,7 @@ export default function CartPage() {
               </p>
             </div>
 
-            <section className="max-w-frame">
+            <section className="w-full md:max-w-frame">
               <motion.div
                 initial={{ y: "100px", opacity: 0 }}
                 whileInView={{ y: "0", opacity: 1 }}
@@ -119,7 +119,7 @@ export default function CartPage() {
                   {wishlistData.map((product) => (
                     <div
                       key={product.id}
-                      className="w-full max-w-[198px] sm:max-w-[295px] pl-0"
+                      className="w-full sm:max-w-[295px] pl-0"
                     >
                       <ProductCard data={product} />
                     </div>

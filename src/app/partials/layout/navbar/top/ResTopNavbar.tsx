@@ -18,8 +18,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
+import { Button } from "@/components/ui/button";
 
 const ResTopNavbar = ({ data }: { data: NavMenu }) => {
+  const dispatch = useAppDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+
   return (
     <Sheet>
       <SheetTrigger asChild className="cursor-pointer">
@@ -84,6 +89,27 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
               )}
             </React.Fragment>
           ))}
+
+          {!isAuthenticated && (
+            <div className="flex flex-col gap-4 w-full mt-6">
+              <Button
+                className="rounded-full cursor-pointer w-full h-10"
+                variant={"secondary"}
+              >
+                <Link href="/register" className="text-white w-full">
+                  <i className="far fa-user-plus mr-2"></i> Create an account
+                </Link>
+              </Button>
+              <Button
+                className="rounded-full cursor-pointer w-full h-10"
+                variant={"default"}
+              >
+                <Link href="/login" className="text-white w-full">
+                  <i className="far fa-sign-in mr-2"></i> Login
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

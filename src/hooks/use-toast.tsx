@@ -6,7 +6,6 @@ const useToast = () => {
       style: {
         background: "#004B3C",
         color: "#fafafa",
-        width: "100%",
         border: "none",
       },
       position: "bottom-center",
@@ -16,7 +15,6 @@ const useToast = () => {
       style: {
         background: "#e91e63",
         color: "#fafafa",
-        width: "100%",
         border: "none",
       },
       position: "bottom-center",

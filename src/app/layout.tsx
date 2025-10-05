@@ -12,6 +12,9 @@ import { Toaster } from "@/components/ui/sonner";
 export const metadata: Metadata = {
   title: "Aronova",
   description: "Aronova - Find clothes that matches your style",
+  icons: {
+    icon: "/icons/favicon.png",
+  },
 };
 
 export const viewport: Viewport = {

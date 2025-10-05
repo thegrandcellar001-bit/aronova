@@ -31,14 +31,13 @@ export default function Page() {
       setLoading(true);
       const { data } = await api.get("/customer/profile");
       setUserData({
-        name: data.Name,
-        email: data.Email,
-        country: data.Country,
+        name: data.name,
+        email: data.email,
+        country: data.country,
       });
+      setLoading(false);
     } catch (err) {
       console.error("Error fetching user data:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -50,7 +49,6 @@ export default function Page() {
         country: accountFormData.country,
       };
       await api.patch("/customer/update", payload);
-      // Optionally, refetch user data to reflect changes
       fetchUserData();
       setEditProfile(false);
     } catch (err) {
@@ -113,8 +111,8 @@ export default function Page() {
           <div className="flex flex-col md:flex-row items-start justify-between gap-6 mt-10">
             <Sidebar />
             {loading ? (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-2">
+              <div className="flex-1 flex items-center justify-center h-[250px] w-full">
+                <div className="flex flex-col items-center justify-center gap-2 h-full w-full">
                   <Spinner className="my-2 h-10 w-10" />
                   <p>Loading your account details...</p>
                 </div>

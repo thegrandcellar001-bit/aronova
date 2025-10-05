@@ -134,9 +134,9 @@ const TopNavbar = () => {
           />
         </InputGroup>
         <div className="flex items-center gap-x-3">
-          <Link href="/search" className="block md:hidden mr-[14px] p-1">
+          {/* <Link href="/search" className="block md:hidden mr-[14px] p-1">
             <i className="fas fa-search text-xl"></i>
-          </Link>
+          </Link> */}
           <CartBtn />
           <Link href="/wishlist" className="p-1 ">
             <i className="far fa-heart text-2xl text-secondary"></i>
