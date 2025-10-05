@@ -14,7 +14,6 @@ import api from "@/lib/axios";
 import { useEffect, useRef, useState } from "react";
 import { UserData } from "@/types/account/user";
 import { useToast } from "@/hooks/use-toast";
-import HolyLoader from "holy-loader";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function Page() {
