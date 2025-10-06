@@ -2,27 +2,26 @@
 
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useAppDispatch } from "@/lib/hooks/redux";
-import { login } from "@/lib/features/auth/authSlice";
 import { Spinner } from "@/components/ui/spinner";
 import { decodeJwt } from "jose";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export default function AuthCallback() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  const { setAuth } = useAuthStore();
 
   useEffect(() => {
     const fetchData = async () => {
       if (token) {
-        dispatch(login({ user: decodeJwt(token), token }));
+        setAuth(token, decodeJwt(token));
         router.replace("/shop");
       }
     };
 
     fetchData();
-  }, [token, dispatch, router]);
+  }, [token, router]);
 
   return (
     <div className="flex items-center justify-center h-screen">
