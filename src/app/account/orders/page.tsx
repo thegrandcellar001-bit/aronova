@@ -4,12 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Sidebar from "../partials/sidebar";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { useAppSelector } from "@/lib/hooks/redux";
 import BreadcrumbOrder from "./partials/orders-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export default function Page() {
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAuthStore();
 
   const orders = [
     {

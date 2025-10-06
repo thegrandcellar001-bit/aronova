@@ -12,10 +12,10 @@ import { MenuItem } from "./MenuItem";
 import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "./user-avatar";
 import Image from "next/image";
+import { useAuthStore } from "@/lib/stores/auth";
 
 const data: NavMenu = [
   {
@@ -87,8 +87,7 @@ const data: NavMenu = [
 ];
 
 const TopNavbar = () => {
-  const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <nav className="sticky top-0 bg-white z-20">

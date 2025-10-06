@@ -7,12 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { logout } from "@/lib/features/auth/authSlice";
 import Link from "next/link";
 import api from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export const UserAvatar = () => {
   const getInitials = (name: string) => {
@@ -22,9 +21,8 @@ export const UserAvatar = () => {
   };
 
   const router = useRouter();
+  const { user, logout } = useAuthStore();
   const { toastError, toastSuccess } = useToast();
-  const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.auth);
 
   const handleLogout = async () => {
     try {
@@ -34,14 +32,14 @@ export const UserAvatar = () => {
         toastError("An error occurred during logout.");
         return;
       } else {
-        await dispatch(logout());
+        logout();
         toastSuccess("Logged out successfully.");
         router.push("/login");
       }
     } catch (error) {
       toastError("Logout failed.");
     } finally {
-      await dispatch(logout());
+      logout();
       router.push("/login");
     }
   };

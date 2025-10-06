@@ -6,16 +6,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types/product.types";
 import { Button } from "@/components/ui/button";
-import { addToCart } from "@/lib/features/carts/cartsSlice";
-import { useAppDispatch } from "@/lib/hooks/redux";
 import { useToast } from "@/hooks/use-toast";
+import { useCartStore } from "@/lib/stores/cart";
 
 type ProductCardProps = {
   data: Product;
 };
 
 const ProductCard = ({ data }: ProductCardProps) => {
-  const dispatch = useAppDispatch();
+  const { addToCart } = useCartStore();
   const { toastSuccess, toastError } = useToast();
   const sizeSelection = "M";
   const colorSelection = { name: "Red", value: "#FF0000" };
@@ -26,17 +25,15 @@ const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   const handleAddToCart = (product: Product) => {
-    dispatch(
-      addToCart({
-        id: product.id,
-        name: product.title,
-        srcUrl: product.srcUrl,
-        price: product.price,
-        attributes: [sizeSelection, colorSelection.name],
-        discount: product.discount,
-        quantity: 1,
-      })
-    );
+    addToCart({
+      id: product.id,
+      name: product.title,
+      srcUrl: product.srcUrl,
+      price: product.price,
+      attributes: [sizeSelection, colorSelection.name],
+      discount: product.discount,
+      quantity: 1,
+    });
     toastSuccess("Added to cart");
   };
 

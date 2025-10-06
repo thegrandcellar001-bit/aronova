@@ -5,20 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import CartCounter from "@/components/ui/CartCounter";
 import { Button } from "@/components/ui/button";
-import {
-  addToCart,
-  CartItem,
-  remove,
-  removeCartItem,
-} from "@/lib/features/carts/cartsSlice";
-import { useAppDispatch } from "@/lib/hooks/redux";
+import { CartItem, useCartStore } from "@/lib/stores/cart";
 
 type ProductCardProps = {
   data: CartItem;
 };
 
 const ProductCard = ({ data }: ProductCardProps) => {
-  const dispatch = useAppDispatch();
+  const { remove, addToCart, removeCartItem } = useCartStore();
 
   return (
     <div className="flex items-start space-x-4">
@@ -48,13 +42,11 @@ const ProductCard = ({ data }: ProductCardProps) => {
             size="icon"
             className="h-5 w-5 md:h-9 md:w-9"
             onClick={() =>
-              dispatch(
-                remove({
-                  id: data.id,
-                  attributes: data.attributes,
-                  quantity: data.quantity,
-                })
-              )
+              remove({
+                id: data.id,
+                attributes: data.attributes,
+                quantity: data.quantity,
+              })
             }
           >
             <i className="far fa-trash text-lg text-red-600 cursor-pointer" />
@@ -113,19 +105,15 @@ const ProductCard = ({ data }: ProductCardProps) => {
           </div>
           <CartCounter
             initialValue={data.quantity}
-            onAdd={() => dispatch(addToCart({ ...data, quantity: 1 }))}
+            onAdd={() => addToCart({ ...data, quantity: 1 })}
             onRemove={() =>
               data.quantity === 1
-                ? dispatch(
-                    remove({
-                      id: data.id,
-                      attributes: data.attributes,
-                      quantity: data.quantity,
-                    })
-                  )
-                : dispatch(
-                    removeCartItem({ id: data.id, attributes: data.attributes })
-                  )
+                ? remove({
+                    id: data.id,
+                    attributes: data.attributes,
+                    quantity: data.quantity,
+                  })
+                : removeCartItem({ id: data.id, attributes: data.attributes })
             }
             isZeroDelete
             className="px-5 py-3 max-h-8 md:max-h-10 min-w-[105px] max-w-[105px] sm:max-w-32"

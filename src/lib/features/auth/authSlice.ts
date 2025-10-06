@@ -4,6 +4,8 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  entityType: "customer";
+  exp: number;
 };
 
 interface AuthState {
@@ -70,4 +72,5 @@ export const {
   logout,
   rehydrateUser,
 } = authSlice.actions;
+
 export default authSlice.reducer;

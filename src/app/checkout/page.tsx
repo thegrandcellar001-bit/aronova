@@ -7,11 +7,8 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { integralCF } from "@/styles/fonts";
 import { FaArrowRight } from "react-icons/fa6";
-import { MdOutlineLocalOffer } from "react-icons/md";
 import { TbBasketExclamation } from "react-icons/tb";
 import React, { useState } from "react";
-import { RootState } from "@/lib/store";
-import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -24,11 +21,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { FaArrowLeft } from "react-icons/fa";
+import { useCartStore } from "@/lib/stores/cart";
 
 export default function CartPage() {
-  const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
-    (state: RootState) => state.carts
-  );
+  const { cart, totalPrice, adjustedTotalPrice } = useCartStore();
+
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
     "card"
   );

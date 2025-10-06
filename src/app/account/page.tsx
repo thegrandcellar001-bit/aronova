@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Sidebar from "./partials/sidebar";
-import { useAppSelector } from "@/lib/hooks/redux";
 import BreadcrumbAccount from "./partials/account-breadcrumb";
 import { CountryDropdown } from "@/components/common/country-dropdown";
 import AuthGuard from "@/lib/auth-guard";
@@ -15,9 +14,10 @@ import { useEffect, useRef, useState } from "react";
 import { UserData } from "@/types/account/user";
 import { useToast } from "@/hooks/use-toast";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export default function Page() {
-  const { user } = useAppSelector((state) => state.auth);
+  const { user } = useAuthStore();
   const { toastError, toastSuccess } = useToast();
 
   const [userData, setUserData] = useState<UserData | null>(null);

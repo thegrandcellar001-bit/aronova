@@ -10,16 +10,31 @@ import { FaArrowRight } from "react-icons/fa6";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { TbBasketExclamation } from "react-icons/tb";
 import React from "react";
-import { RootState } from "@/lib/store";
-import { useAppSelector } from "@/lib/hooks/redux";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCartStore } from "@/lib/stores/cart";
 
 export default function CartPage() {
   const router = useRouter();
-  const { cart, totalPrice, adjustedTotalPrice } = useAppSelector(
-    (state: RootState) => state.carts
-  );
+  const { cart, totalPrice } = useCartStore();
+
+  const itemsDiscountPercentage = cart?.items.reduce((acc, item) => {
+    return acc + item.discount.percentage;
+  }, 0);
+
+  const itemsDiscountPrice = cart?.items.reduce((acc, item) => {
+    return (
+      acc +
+      (item.discount.percentage > 0
+        ? Math.round((item.price * item.discount.percentage) / 100) *
+          item.quantity
+        : item.discount.amount > 0
+        ? item.discount.amount * item.quantity
+        : 0)
+    );
+  }, 0);
+
+  const adjustedTotalPrice = totalPrice - (itemsDiscountPrice ?? 0);
 
   return (
     <main className="pb-20">
@@ -56,19 +71,20 @@ export default function CartPage() {
                 </h6>
                 <div className="flex flex-col space-y-5">
                   <div className="flex items-center justify-between">
-                    <span className="md:text-xl text-black/60">Subtotal</span>
-                    <span className="md:text-xl font-bold">${totalPrice}</span>
+                    <span className="md:text-xl text-black/60">Sub-total</span>
+                    <span className="md:text-xl font-bold">
+                      ${totalPrice.toLocaleString()}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="md:text-xl text-black/60">
-                      Discount (-
-                      {Math.round(
-                        ((totalPrice - adjustedTotalPrice) / totalPrice) * 100
-                      )}
+                      Discount (
+                      {"-" + (itemsDiscountPercentage?.toLocaleString() ?? "0")}
                       %)
                     </span>
                     <span className="md:text-xl font-bold text-red-600">
-                      -${Math.round(totalPrice - adjustedTotalPrice)}
+                      -$
+                      {itemsDiscountPrice?.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -81,7 +97,7 @@ export default function CartPage() {
                   <div className="flex items-center justify-between">
                     <span className="md:text-xl text-black">Total</span>
                     <span className="text-xl md:text-2xl font-bold">
-                      ${Math.round(adjustedTotalPrice)}
+                      ${Math.round(adjustedTotalPrice).toLocaleString()}
                     </span>
                   </div>
                 </div>

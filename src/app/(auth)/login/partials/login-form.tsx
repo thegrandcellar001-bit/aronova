@@ -10,11 +10,10 @@ import { useRouter } from "next/navigation";
 import { decodeJwt } from "jose";
 import { auth } from "@/lib/axios";
 
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
-import { login } from "@/lib/features/auth/authSlice";
 import { useToast } from "@/hooks/use-toast";
 import { Field, FieldSeparator } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export function LoginForm({
   className,
@@ -26,8 +25,8 @@ export function LoginForm({
   const [password, setPassword] = useState("");
 
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAuthStore();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const { toastSuccess, toastError } = useToast();
 
   const togglePasswordVisibility = () => {
@@ -52,16 +51,13 @@ export function LoginForm({
 
       const { token } = response.data;
 
-      dispatch(
-        login({
-          user: decodeJwt(token),
-          token,
-        })
-      );
+      setAuth(token, decodeJwt(token));
 
       toastSuccess("Login successful!");
 
-      router.push("/shop");
+      setTimeout(() => {
+        router.push("/shop");
+      }, 200);
     } catch (error) {
       console.error("Login failed:", error);
       toastError("Login failed. Please check your credentials.");

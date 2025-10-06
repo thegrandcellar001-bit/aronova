@@ -9,8 +9,6 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import { NavMenu } from "../navbar.types";
 import {
   Accordion,
@@ -18,12 +16,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/lib/stores/auth";
 
 const ResTopNavbar = ({ data }: { data: NavMenu }) => {
-  const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <Sheet>
