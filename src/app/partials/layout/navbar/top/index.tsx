@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import Link from "next/link";
 import React from "react";
 import { NavMenu } from "../navbar.types";
@@ -17,6 +15,7 @@ import CartBtn from "./CartBtn";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "./user-avatar";
+import Image from "next/image";
 
 const data: NavMenu = [
   {
@@ -98,15 +97,17 @@ const TopNavbar = () => {
           <div className="block md:hidden mr-4">
             <ResTopNavbar data={data} />
           </div>
-          <Link
-            href="/"
-            className={cn([
-              integralCF.className,
-              "text-2xl text-secondary lg:text-[32px] mb-2 mr-3 lg:mr-10",
-            ])}
-          >
-            Aronova
-          </Link>
+          <div className="flex items-center mx-3 lg:mx-6 w-[35px]">
+            <Link href="/" className="block h-full w-full">
+              <Image
+                src="/icons/logo.png"
+                alt="Aronova Logo"
+                width={100}
+                height={150}
+                className="h-full w-full object-contain"
+              />
+            </Link>
+          </div>
         </div>
         <NavigationMenu className="hidden md:flex mr-2 lg:mr-7">
           <NavigationMenuList>

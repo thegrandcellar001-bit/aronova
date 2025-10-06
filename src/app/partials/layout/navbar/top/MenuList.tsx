@@ -35,7 +35,7 @@ export function MenuList({ data, label }: MenuListProps) {
 }
 
 const ListItem = React.forwardRef<
-  React.ElementRef<typeof Link>,
+  React.ComponentRef<typeof Link>,
   React.ComponentPropsWithoutRef<typeof Link>
 >(({ className, title, children, ...props }, ref) => {
   return (

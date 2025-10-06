@@ -41,15 +41,17 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
         <SheetHeader className="mb-10">
           <SheetTitle asChild>
             <SheetClose asChild>
-              <Link
-                href="/"
-                className={cn([
-                  integralCF.className,
-                  "text-2xl text-secondary",
-                ])}
-              >
-                Aronova
-              </Link>
+              <div className="flex items-center justify-center self-center mx-3 lg:mx-6 w-[35px]">
+                <Link href="/" className="block h-full w-full">
+                  <Image
+                    src="/icons/logo.png"
+                    alt="Aronova Logo"
+                    width={100}
+                    height={150}
+                    className="h-full w-full object-contain"
+                  />
+                </Link>
+              </div>
             </SheetClose>
           </SheetTitle>
         </SheetHeader>
