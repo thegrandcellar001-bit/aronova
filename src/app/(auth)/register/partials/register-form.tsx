@@ -10,9 +10,9 @@ import { toast } from "sonner";
 import { login } from "@/lib/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { decodeJwt } from "jose";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { useToast } from "@/hooks/use-toast";
 import { auth } from "@/lib/axios";
+import { useAuthStore } from "@/lib/stores/auth";
 
 export function RegisterForm({
   className,
@@ -23,8 +23,8 @@ export function RegisterForm({
 
   const { toastSuccess, toastError } = useToast();
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAuthStore();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -53,12 +53,7 @@ export function RegisterForm({
 
       const { token } = response.data;
 
-      dispatch(
-        login({
-          user: decodeJwt(token),
-          token,
-        })
-      );
+      setAuth(token, decodeJwt(token));
 
       toastSuccess("Registration successful!");
 
