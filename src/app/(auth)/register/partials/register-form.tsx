@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { CountryDropdown } from "@/components/common/country-dropdown";
 import { toast } from "sonner";
-import { login } from "@/lib/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { decodeJwt } from "jose";
 import { useToast } from "@/hooks/use-toast";
