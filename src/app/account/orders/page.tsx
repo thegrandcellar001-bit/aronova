@@ -72,7 +72,7 @@ export default function Page() {
             <div className="flex flex-col gap-y-4 flex-1">
               <Tabs defaultValue="account" className="w-full">
                 <TabsList className="w-full">
-                  <TabsTrigger value="account">
+                  <TabsTrigger value="account" className="w-full">
                     Ongoing / Delivered (
                     {
                       orders.filter(
@@ -84,7 +84,7 @@ export default function Page() {
                     }
                     )
                   </TabsTrigger>
-                  <TabsTrigger value="password">
+                  <TabsTrigger value="password" className="w-full">
                     Cancelled / Returned (
                     {
                       orders.filter(
@@ -127,10 +127,15 @@ export default function Page() {
                                 variant={
                                   order.orderStatus === "delivered" ||
                                   order.orderStatus === "shipped"
-                                    ? "default"
-                                    : "secondary"
+                                    ? "secondary"
+                                    : "default"
                                 }
-                                className="rounded-sm font-semibold"
+                                className={`rounded-sm font-semibold ${
+                                  order.orderStatus === "delivered" ||
+                                  order.orderStatus === "shipped"
+                                    ? "text-white"
+                                    : ""
+                                }`}
                               >
                                 {order.orderStatus?.toUpperCase()}
                               </Badge>

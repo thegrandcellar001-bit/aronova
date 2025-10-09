@@ -28,6 +28,12 @@ export default function Page() {
               <h3 className="font-semibold text-xl md:text-2xl">
                 Payment Method
               </h3>
+              <div className="flex items-center text-sm text-black/60">
+                <i className="fas fa-lock mr-2 text-green-600" />
+                We only support card payments at the moment. Your payment
+                information is encrypted and securely processed by our payment
+                partners.
+              </div>
               <div className="flex flex-col gap-y-4 my-4">
                 <RadioGroup
                   value={selectedPaymentMethod}
@@ -63,7 +69,7 @@ export default function Page() {
                     </div>
                   </Label>
 
-                  <Label
+                  {/* <Label
                     htmlFor="method2"
                     className="flex items-center gap-4 rounded-lg border-2 p-3 has-[[data-state=checked]]:border-primary h-20"
                   >
@@ -84,7 +90,7 @@ export default function Page() {
                       </div>
                       <i className="far fa-dollar-sign text-2xl"></i>
                     </div>
-                  </Label>
+                  </Label> */}
                 </RadioGroup>
               </div>
             </div>

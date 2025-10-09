@@ -5,8 +5,10 @@ interface AuthState {
   token: string | null;
   user: any | null;
   isAuthenticated: boolean;
+  hydrated: boolean;
   setAuth: (token: string, user: any) => void;
   logout: () => void;
+  setHydrated: (value: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -15,6 +17,7 @@ export const useAuthStore = create<AuthState>()(
       token: null,
       user: null,
       isAuthenticated: false,
+      hydrated: false,
       setAuth: (token, user) =>
         set(() => ({
           token,
@@ -27,10 +30,17 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           isAuthenticated: false,
         })),
+      setHydrated: (value) => set({ hydrated: value }),
     }),
     {
       name: "authStore",
       onRehydrateStorage: () => (state) => {
+        // Called after Zustand rehydrates from localStorage
+        if (state) {
+          state.setHydrated(true);
+        }
+
+        // Listen for cross-tab logout
         window.addEventListener("storage", (event) => {
           if (event.key === "authStore") {
             const newState = JSON.parse(event.newValue || "{}");

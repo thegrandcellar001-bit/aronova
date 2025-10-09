@@ -8,6 +8,7 @@ import Footer from "./partials/layout/footer";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
+import HydrationGuard from "@/lib/hydration-guard";
 
 export const metadata: Metadata = {
   title: "Aronova",
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={satoshi.className}>
+        <HydrationGuard>
         <HolyLoader color="#C9A227" />
         <TopBanner />
         <Providers>
@@ -36,6 +38,7 @@ export default function RootLayout({
           {children}
         </Providers>
         <Footer />
+        </HydrationGuard>
         <Toaster />
       </body>
     </html>
