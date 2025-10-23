@@ -1,9 +1,18 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useAuthStore } from "@/lib/stores/auth";
 
 const TopBanner = () => {
+  const { isAuthenticated } = useAuthStore();
+
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="bg-secondary text-white text-center text-xl py-2 px-2 sm:px-4 xl:px-0">
       <div className="relative max-w-frame mx-auto">

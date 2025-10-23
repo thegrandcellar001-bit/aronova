@@ -24,7 +24,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useCartStore } from "@/lib/stores/cart";
 
 export default function CartPage() {
-  const { cart, totalPrice, adjustedTotalPrice } = useCartStore();
+  const { cart, totalPrice } = useCartStore();
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
     "card"
@@ -459,7 +459,7 @@ export default function CartPage() {
                   <div className="flex items-center justify-between">
                     <span className="md:text-xl text-black">Total</span>
                     <span className="text-xl md:text-2xl font-bold">
-                      ${Math.round(adjustedTotalPrice)}
+                      ${Math.round(totalPrice)}
                     </span>
                   </div>
                 </div>

@@ -13,8 +13,8 @@ import api from "@/lib/axios";
 import { useEffect, useRef, useState } from "react";
 import { UserData } from "@/types/account/user";
 import { useToast } from "@/hooks/use-toast";
-import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/lib/stores/auth";
+import ApiLoader from "@/components/common/api-loader";
 
 export default function Page() {
   const { user } = useAuthStore();
@@ -110,12 +110,7 @@ export default function Page() {
           <div className="flex flex-col md:flex-row items-start justify-between gap-6 mt-10">
             <Sidebar />
             {loading ? (
-              <div className="flex-1 flex items-center justify-center h-[250px] w-full">
-                <div className="flex flex-col items-center justify-center gap-2 h-full w-full">
-                  <Spinner className="my-2 h-10 w-10" />
-                  <p>Loading your account details...</p>
-                </div>
-              </div>
+              <ApiLoader message="Loading your account details..." />
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
                 <h3 className="font-bold text-2xl md:text-3xl">

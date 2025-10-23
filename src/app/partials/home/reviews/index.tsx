@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as motion from "framer-motion/client";
 import { cn } from "@/lib/utils";
 import { integralCF } from "@/styles/fonts";
@@ -15,18 +15,18 @@ import {
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { useIsClient, useMediaQuery } from "usehooks-ts";
 import ReviewCard from "@/components/common/ReviewCard";
-import { Review } from "@/types/review.types";
+import { HomeReviews } from "@/types/review.types";
 
-type ReviewsProps = { data: Review[] };
+type ReviewsProps = { data: HomeReviews[] };
 
 const Reviews = ({ data }: ReviewsProps) => {
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const isClient = useIsClient();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api) {
       return;
     }

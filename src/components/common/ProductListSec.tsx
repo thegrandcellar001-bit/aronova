@@ -50,7 +50,7 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
                 key={product.id}
                 className="w-full max-w-[198px] sm:max-w-[295px] pl-0"
               >
-                <ProductCard data={product} />
+                <ProductCard data={product} categorySlug="" />
               </CarouselItem>
             ))}
           </CarouselContent>

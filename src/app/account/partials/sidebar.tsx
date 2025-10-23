@@ -49,13 +49,38 @@ export default function Sidebar() {
           >
             <i className="far fa-box"></i> Orders
           </Link>
+
           <Link
-            href="/wishlist"
+            href="/account/orders/reviews"
             className={`${
-              pathname === "/wishlist" ? "text-primary" : "text-gray-500"
+              pathname === "/account/orders/reviews"
+                ? "text-primary"
+                : "text-gray-500"
             } flex items-center gap-x-2`}
           >
-            <i className="far fa-heart"></i> Wishlist
+            <i className="far fa-star"></i> Reviews
+          </Link>
+
+          <Link
+            href="/account/orders/disputes"
+            className={`${
+              pathname === "/account/orders/disputes"
+                ? "text-primary"
+                : "text-gray-500"
+            } flex items-center gap-x-2`}
+          >
+            <i className="far fa-flag"></i> Disputes
+          </Link>
+
+          <Link
+            href="/account/orders/returns"
+            className={`${
+              pathname === "/account/orders/returns"
+                ? "text-primary"
+                : "text-gray-500"
+            } flex items-center gap-x-2`}
+          >
+            <i className="far fa-undo"></i> Returns
           </Link>
         </div>
       </div>
