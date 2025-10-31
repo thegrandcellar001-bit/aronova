@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="flex items-center justify-between mt-10 max-w-frame mx-auto">
+    <div className="flex items-center justify-between mt-10 max-w-frame mx-auto h-screen">
       {/* Left side (login form) */}
       <div className="flex flex-col gap-4 flex-1">
         <div className="flex items-center justify-center mb-10">
@@ -27,7 +27,7 @@ export default function Page() {
 
             <Link
               href="/register"
-              className="mt-2 inline-block bg-secondary text-white px-6 py-2 rounded-full hover:bg-secondary/90 transition"
+              className="mt-2 inline-block bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition"
             >
               Create an account
             </Link>

@@ -14,10 +14,10 @@ const TopBanner = () => {
   }
 
   return (
-    <div className="bg-secondary text-white text-center text-xl py-2 px-2 sm:px-4 xl:px-0">
+    <div className="bg-primary text-white text-center text-xl py-2 px-2 sm:px-4 xl:px-0">
       <div className="relative max-w-frame mx-auto">
         <p className="text-xs sm:text-sm">
-          Sign up and get 20% off to your first order.{" "}
+          Sign up and get 20% off to your first order -{" "}
           <Link href="/register" className="underline font-medium">
             Sign Up Now
           </Link>

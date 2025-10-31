@@ -11,7 +11,7 @@ export default function Page() {
   };
 
   return (
-    <div className="flex items-center justify-between mt-10 mx-auto max-w-frame">
+    <div className="flex items-center justify-between mt-10 mx-auto max-w-frame h-screen">
       {/* Left side */}
       <div className="relative hidden lg:block flex-1">
         <div className="m-10">
@@ -22,7 +22,7 @@ export default function Page() {
             <div className="flex items-center gap-4">
               <Link
                 href="/login"
-                className="mt-2 inline-block bg-secondary text-white px-6 py-2 rounded-full hover:bg-secondary/90 transition"
+                className="mt-2 inline-block bg-primary text-white px-6 py-2 rounded-full hover:bg-primary/90 transition"
               >
                 Log in
               </Link>

@@ -69,11 +69,11 @@ export default function Page() {
   };
 
   useEffect(() => {
-    // fetchReviews();
-    setTimeout(() => {
-      setLoading(false);
-      setReviews([]);
-    }, 1500);
+    fetchReviews();
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setReviews([]);
+    // }, 1500);
   }, []);
 
   return (

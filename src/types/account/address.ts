@@ -1,10 +1,11 @@
 export interface AddressData {
   id: string;
   name: string;
-  phone: string;
-  additionalPhone?: string;
-  address: string;
+  phone_number: string;
+  additional_phone_number?: string;
+  additional_info?: string;
+  delivery_address: string;
   state: string;
   lga: string;
-  isDefault: boolean;
+  is_default: boolean;
 }

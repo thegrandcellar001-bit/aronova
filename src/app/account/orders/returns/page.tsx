@@ -68,11 +68,11 @@ export default function Page() {
   };
 
   useEffect(() => {
-    // fetchReturns();
-    setTimeout(() => {
-      setLoading(false);
-      setReturns([]);
-    }, 1500);
+    fetchReturns();
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setReturns([]);
+    // }, 1500);
   }, []);
 
   return (

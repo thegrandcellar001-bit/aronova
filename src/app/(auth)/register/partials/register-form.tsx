@@ -176,7 +176,7 @@ export function RegisterForm({
         </div>
 
         <Button
-          className="w-full cursor-pointer bg-secondary hover:border-2 hover:border-secondary hover:bg-transparent hover:text-secondary text-white"
+          className="w-full cursor-pointer bg-primary hover:border-2 hover:border-primary hover:bg-transparent hover:text-primary text-white"
           disabled={
             loading ||
             !formData.country ||

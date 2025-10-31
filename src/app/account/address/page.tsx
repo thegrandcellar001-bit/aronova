@@ -15,25 +15,46 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { lgaList } from "@/components/common/location-selector";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditAddressDialog from "@/components/common/dialogs/edit-address";
 import { AddressData } from "@/types/account/address";
 import DeleteAddressDialog from "@/components/common/dialogs/delete-address";
 import Sidebar from "../partials/sidebar";
 import BreadcrumbAddress from "./partials/address-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
+import api from "@/lib/axios";
+import ApiLoader from "@/components/common/api-loader";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Page() {
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState<string | null>("");
   const [selectedLGA, setSelectedLGA] = useState<string | null>("");
+  const [addressList, setAddressList] = useState<AddressData[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
     null
   );
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null
   );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [_, setRefresh] = useState<number>(0);
+  const [formLoading, setFormLoading] = useState<boolean>(false);
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    additionalPhoneNumber: "",
+    deliveryAddress: "",
+    additionalInfo: "",
+    state: "",
+    lga: "",
+    isDefault: false,
+  });
+
+  const { toastSuccess, toastError } = useToast();
 
   const handleStateChange = (state: string) => {
     setSelectedState(state);
@@ -44,27 +65,90 @@ export default function Page() {
     setSelectedLGA(lga);
   };
 
-  const addressList = [
-    {
-      id: "1",
-      name: "John Doe",
-      phone: "123-456-7890",
-      additionalPhone: "555-555-5555",
-      address: "123 Main St, Springfield, IL 62701",
-      state: "Lagos",
-      lga: "Ikeja",
-      isDefault: true,
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      phone: "987-654-3210",
-      address: "456 Elm St, Springfield, IL 62702",
-      state: "Ekiti",
-      lga: "Ikere",
-      isDefault: false,
-    },
-  ];
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const fetchUserAddresses = async () => {
+    setLoading(true);
+
+    try {
+      const res = await api.get("/customer/addresses");
+      setAddressList(res.data.addresses.items as AddressData[]);
+    } catch (error) {
+      console.error("Error fetching user addresses:", error);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddAddress = async () => {
+    setFormLoading(true);
+
+    try {
+      const payload = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        phone_number: formData.phoneNumber,
+        additional_phone_number: formData.additionalPhoneNumber,
+        delivery_address: formData.deliveryAddress,
+        additional_info: formData.additionalInfo,
+        state: selectedState,
+        lga: selectedLGA,
+        is_default: formData.isDefault,
+      };
+
+      const res = await api.post("/customer/addresses", payload);
+      toastSuccess("Address added successfully");
+      setRefresh((prev) => prev + 1); // Trigger re-fetching addresses
+    } catch (error) {
+      console.error("Error adding new address:", error);
+      toastError("An error occurred while adding the address.");
+    } finally {
+      // Reset form or loading state
+      setFormData({
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        additionalPhoneNumber: "",
+        deliveryAddress: "",
+        additionalInfo: "",
+        state: "",
+        lga: "",
+        isDefault: false,
+      });
+      setSelectedState(null);
+      setSelectedLGA(null);
+      setFormLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserAddresses();
+  }, []);
+
+  // const addressList = [
+  //   {
+  //     id: "1",
+  //     name: "John Doe",
+  //     phone: "123-456-7890",
+  //     additionalPhone: "555-555-5555",
+  //     address: "123 Main St, Springfield, IL 62701",
+  //     state: "Lagos",
+  //     lga: "Ikeja",
+  //     isDefault: true,
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Jane Smith",
+  //     phone: "987-654-3210",
+  //     address: "456 Elm St, Springfield, IL 62702",
+  //     state: "Ekiti",
+  //     lga: "Ikere",
+  //     isDefault: false,
+  //   },
+  // ];
 
   return (
     <AuthGuard>
@@ -84,69 +168,83 @@ export default function Page() {
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="account" className="mt-4">
-                  <h3 className="font-semibold text-xl md:text-2xl">
-                    Address Book ({addressList.length})
-                  </h3>
-                  <div className="w-full">
-                    {addressList.map((address) => (
-                      <div
-                        key={address.id}
-                        className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
-                      >
-                        <div className="space-y-1">
-                          <h4 className="font-medium text-lg">
-                            {address.name}
-                          </h4>
-                          <p className="space-x-4">
-                            <i className="far fa-phone text-md mr-1"></i>{" "}
-                            {address.phone}
-                            {address.additionalPhone && (
-                              <> / {address.additionalPhone}</>
-                            )}
-                          </p>
-                          <p>
-                            <i className="far fa-address-card text-md mr-1"></i>{" "}
-                            {address.address}
-                          </p>
-                          <p>
-                            <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
-                            {address.lga}, {address.state}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-x-2 mt-4 md:mt-0">
-                          {address.isDefault && (
-                            <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded ml-auto">
-                              Default
-                            </span>
-                          )}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditOpen(true);
-                              setSelectedAddress(address as AddressData);
-                            }}
+                  {loading ? (
+                    <ApiLoader message="Loading your address book" />
+                  ) : (
+                    <div>
+                      <h3 className="font-semibold text-xl md:text-2xl">
+                        Address Book ({addressList.length})
+                      </h3>
+                      <div className="w-full">
+                        {addressList.map((address) => (
+                          <div
+                            key={address.id}
+                            className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
                           >
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 border-red-600 hover:bg-red-50"
-                            onClick={() => {
-                              setDeleteOpen(true);
-                              setSelectedAddressId(address.id);
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </div>
+                            <div className="space-y-1">
+                              <h4 className="font-medium text-lg">
+                                {address.name}
+                              </h4>
+                              <p className="space-x-4">
+                                <i className="far fa-phone text-md mr-1"></i>{" "}
+                                {address.phone_number}
+                                {address.additional_phone_number && (
+                                  <> / {address.additional_phone_number}</>
+                                )}
+                              </p>
+                              <p>
+                                <i className="far fa-address-card text-md mr-1"></i>{" "}
+                                {address.delivery_address}
+                              </p>
+                              <p>
+                                <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
+                                {address.lga}, {address.state}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-x-2 mt-4 md:mt-0">
+                              {address.is_default && (
+                                <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded ml-auto">
+                                  Default
+                                </span>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setEditOpen(true);
+                                  setSelectedAddress(address as AddressData);
+                                }}
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                                onClick={() => {
+                                  setDeleteOpen(true);
+                                  setSelectedAddressId(address.id);
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                        {addressList.length === 0 && (
+                          <div className="text-center mt-20">
+                            <h2 className="text-2xl font-semibold mb-4">
+                              You have no addresses saved.
+                            </h2>
+                            <p className="mb-6">
+                              Once you have added addresses, you can manage them
+                              here.
+                            </p>
+                          </div>
+                        )}
                       </div>
-                    ))}
-                    {addressList.length === 0 && (
-                      <p className="mt-4 text-gray-500">No addresses found.</p>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </TabsContent>
                 <TabsContent value="password" className="mt-4">
                   <h3 className="font-semibold text-xl md:text-2xl">
@@ -155,11 +253,23 @@ export default function Page() {
                   <div className="grid grid-cols-2 gap-x-3 mt-6">
                     <div className="space-y-3">
                       <Label htmlFor="firstName">First name</Label>
-                      <Input className="h-12" placeholder="First name" />
+                      <Input
+                        className="h-12"
+                        placeholder="First name"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                      />
                     </div>
                     <div className="space-y-3">
                       <Label htmlFor="lastName">Last name</Label>
-                      <Input className="h-12" placeholder="Last name" />
+                      <Input
+                        className="h-12"
+                        placeholder="Last name"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                      />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-x-3 mt-6">
@@ -169,6 +279,9 @@ export default function Page() {
                         className="h-12"
                         type="tel"
                         placeholder="Phone number"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
                       />
                     </div>
                     <div className="space-y-3">
@@ -179,13 +292,22 @@ export default function Page() {
                         className="h-12"
                         type="tel"
                         placeholder="Additional phone number"
+                        name="additionalPhoneNumber"
+                        value={formData.additionalPhoneNumber}
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 gap-y-3 mt-4">
                     <div className="space-y-3">
                       <Label htmlFor="address">Delivery Address</Label>
-                      <Input className="h-12" placeholder="Delivery Address" />
+                      <Input
+                        className="h-12"
+                        placeholder="Delivery Address"
+                        name="deliveryAddress"
+                        value={formData.deliveryAddress}
+                        onChange={handleInputChange}
+                      />
                     </div>
                     <div className="space-y-3">
                       <Label htmlFor="email-address">
@@ -195,6 +317,9 @@ export default function Page() {
                         className="h-12"
                         type="text"
                         placeholder="Enter additional information"
+                        name="additionalInfo"
+                        value={formData.additionalInfo}
+                        onChange={handleInputChange}
                       />
                     </div>
                   </div>
@@ -250,14 +375,35 @@ export default function Page() {
                   </div>
 
                   <div className="flex items-center gap-3 mt-6">
-                    <Checkbox id="saveAsDefault" />
+                    <Checkbox
+                      id="saveAsDefault"
+                      checked={formData.isDefault}
+                      onCheckedChange={(checked) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          isDefault: !!checked,
+                        }))
+                      }
+                    />
                     <Label htmlFor="saveAsDefault">
                       Save as default address
                     </Label>
                   </div>
 
                   <div className="flex items-center justify-end gap-x-4 mt-6">
-                    <Button className="cursor-pointer" variant={"default"}>
+                    <Button
+                      className="cursor-pointer"
+                      onClick={handleAddAddress}
+                      disabled={
+                        formLoading ||
+                        !formData.firstName ||
+                        !formData.lastName ||
+                        !formData.phoneNumber ||
+                        !formData.deliveryAddress ||
+                        !selectedState ||
+                        !selectedLGA
+                      }
+                    >
                       Save Changes
                     </Button>
                   </div>

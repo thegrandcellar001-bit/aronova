@@ -1,75 +1,171 @@
-"use client";
+import Navigation from "../partials/home/navigation";
+import Footer from "../partials/home/footer";
+import { Button } from "@/components/ui/button";
+import { Filter } from "lucide-react";
 
-import ProductListSec from "@/components/common/ProductListSec";
-import { Spinner } from "@/components/ui/spinner";
-import AuthGuard from "@/lib/auth-guard";
-import { useCategoryStore } from "@/lib/stores/categories";
-import Link from "next/link";
-import { useEffect } from "react";
-import { newArrivalsData, topSellingData } from "@/lib/data/products";
-import { integralCF } from "@/styles/fonts";
-import { cn } from "@/lib/utils";
-import ApiLoader from "@/components/common/api-loader";
+const Shop = () => {
+  const products = [
+    {
+      id: 1,
+      image: "/images/products/product-1.jpg",
+      brand: "LAGOS LUXURY",
+      name: "Handcrafted Leather Tote",
+      price: "₦285,000",
+      category: "Accessories",
+    },
+    {
+      id: 2,
+      image: "/images/products/product-2.jpg",
+      name: "Heritage Gold Necklace",
+      brand: "ADIRE HERITAGE",
+      price: "₦420,000",
+      category: "Jewelry",
+    },
+    {
+      id: 3,
+      image: "/images/products/product-3.jpg",
+      brand: "OKE TEXTILES",
+      name: "Silk Aso-Oke Fabric",
+      price: "₦175,000",
+      category: "Textiles",
+    },
+    {
+      id: 4,
+      image: "/images/products/product-1.jpg",
+      brand: "LAGOS LUXURY",
+      name: "Handcrafted Leather Tote",
+      price: "₦285,000",
+      category: "Accessories",
+    },
+    {
+      id: 5,
+      image: "/images/products/product-2.jpg",
+      name: "Heritage Gold Necklace",
+      brand: "ADIRE HERITAGE",
+      price: "₦420,000",
+      category: "Jewelry",
+    },
+    {
+      id: 6,
+      image: "/images/products/product-3.jpg",
+      brand: "OKE TEXTILES",
+      name: "Silk Aso-Oke Fabric",
+      price: "₦175,000",
+      category: "Textiles",
+    },
+    {
+      id: 7,
+      image: "/images/products/product-1.jpg",
+      brand: "LAGOS LUXURY",
+      name: "Handcrafted Leather Tote",
+      price: "₦285,000",
+      category: "Accessories",
+    },
+    {
+      id: 8,
+      image: "/images/products/product-2.jpg",
+      name: "Heritage Gold Necklace",
+      brand: "ADIRE HERITAGE",
+      price: "₦420,000",
+      category: "Jewelry",
+    },
+  ];
 
-export default function Page() {
-  const { categories, fetchCategories, loading } = useCategoryStore();
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+  const categories = [
+    "All",
+    "Accessories",
+    "Jewelry",
+    "Textiles",
+    "Fashion",
+    "Art",
+  ];
 
   return (
-    <AuthGuard>
-      <main className="pt-8 pb-20">
-        <div className="max-w-frame mx-auto px-2">
-          {loading ? (
-            <ApiLoader message="Loading categories..." />
-          ) : (
-            <div className="flex flex-col gap-y-14 w-full">
-              <div>
-                <ProductListSec
-                  title="NEW ARRIVALS"
-                  data={newArrivalsData}
-                  viewAllLink="/shop#new-arrivals"
-                />
-              </div>
+    <div className="min-h-screen bg-background">
+      <Navigation />
 
-              <div>
-                <ProductListSec
-                  title="top selling"
-                  data={topSellingData}
-                  viewAllLink="/shop#top-selling"
-                />
-              </div>
+      <main className="pt-20">
+        {/* Hero Section */}
+        <section className="bg-primary text-primary-foreground py-20 lg:py-24">
+          <div className="max-w-[1400px] mx-auto px-6 lg:px-20">
+            <h1 className="font-serif text-5xl lg:text-6xl mb-6 animate-fade-in">
+              The Market
+            </h1>
+            <p className="font-sans text-lg text-primary-foreground/90 max-w-2xl animate-fade-in-slow">
+              Discover exceptional pieces from Nigeria's most celebrated
+              artisans and luxury brands.
+            </p>
+          </div>
+        </section>
 
-              <div className="flex flex-col gap-y-5 px-4 md:px-0">
-                <h2
-                  className={cn([
-                    integralCF.className,
-                    "text-3xl md:text-4xl mb-6 capitalize",
-                  ])}
-                >
-                  Shop by Category
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {categories.map((category, index) => (
-                    <Link
-                      key={index}
-                      className="flex flex-col items-center justify-center gap-4 border border-gray-500 p-4 hover:shadow-md cursor-pointer h-[170px] w-full flex-1"
-                      href={`/cat/${category.category_slug}`}
-                    >
-                      <i className="fal fa-box text-gray-600 text-5xl"></i>
-                      <span className="text-md font-medium text-center">
-                        {category.name}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
+        {/* Filter Bar */}
+        <section className="border-b border-border bg-background sticky top-20 z-40">
+          <div className="max-w-[1400px] mx-auto px-6 lg:px-20 py-6">
+            <div className="flex flex-wrap items-center gap-4">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Filters
+              </Button>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Button
+                    key={category}
+                    variant={category === "All" ? "default" : "ghost"}
+                    size="sm"
+                    className="text-sm"
+                  >
+                    {category}
+                  </Button>
+                ))}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        </section>
+
+        {/* Products Grid */}
+        <section className="py-16 lg:py-20">
+          <div className="max-w-[1400px] mx-auto px-6 lg:px-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  className="group cursor-pointer animate-fade-in"
+                >
+                  <div className="relative aspect-[3/4] mb-4 overflow-hidden bg-muted">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground">
+                      {product.brand}
+                    </p>
+                    <h3 className="font-sans text-base text-foreground group-hover:text-primary transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="font-sans font-semibold text-foreground">
+                      {product.price}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Load More */}
+            <div className="flex justify-center mt-16">
+              <Button variant="outline" size="lg" className="px-12">
+                Load More
+              </Button>
+            </div>
+          </div>
+        </section>
       </main>
-    </AuthGuard>
+
+      <Footer />
+    </div>
   );
-}
+};
+
+export default Shop;

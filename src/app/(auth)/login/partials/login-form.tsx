@@ -136,8 +136,8 @@ export function LoginForm({
 
         <Button
           type="submit"
-          variant="secondary"
-          className="w-full cursor-pointer bg-secondary hover:border-2 hover:border-secondary hover:bg-transparent hover:text-secondary text-white"
+          variant="default"
+          className="w-full cursor-pointer bg-primary hover:border-2 hover:border-primary hover:bg-transparent hover:text-primary text-white"
           disabled={loading || !email || !password}
           onClick={handleSubmit}
         >

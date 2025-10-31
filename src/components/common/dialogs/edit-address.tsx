@@ -56,12 +56,12 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
 
   const [formData, setFormData] = React.useState({
     name: address.name,
-    phone: address.phone,
-    additionalPhone: address.additionalPhone,
-    address: address.address,
+    phone: address.phone_number,
+    additionalPhone: address.additional_phone_number,
+    address: address.delivery_address,
     state: address.state,
     lga: address.lga,
-    isDefault: address.isDefault,
+    isDefault: address.is_default,
   });
 
   // Keep formData in sync with incoming address prop
@@ -69,12 +69,12 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
     if (address) {
       setFormData({
         name: address.name,
-        phone: address.phone,
-        additionalPhone: address.additionalPhone,
-        address: address.address,
+        phone: address.phone_number,
+        additionalPhone: address.additional_phone_number,
+        address: address.delivery_address,
         state: address.state,
         lga: address.lga,
-        isDefault: address.isDefault,
+        isDefault: address.is_default,
       });
     }
   }, [address]);
@@ -116,7 +116,13 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
       });
 
       toastSuccess("Address updated.");
-      onSave({ id: address.id, ...formData }); // Update parent
+      onSave({
+        id: address.id,
+        ...formData,
+        phone_number: "",
+        delivery_address: "",
+        is_default: false,
+      }); // Update parent
       onClose(); // Close dialog
     } catch (error) {
       console.error("Error updating address:", error);

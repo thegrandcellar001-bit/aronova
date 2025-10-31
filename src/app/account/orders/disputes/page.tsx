@@ -72,11 +72,11 @@ export default function Page() {
   };
 
   useEffect(() => {
-    // fetchDisputes();
-    setTimeout(() => {
-      setLoading(false);
-      setDisputes([]);
-    }, 1500);
+    fetchDisputes();
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setDisputes([]);
+    // }, 1500);
   }, []);
 
   return (

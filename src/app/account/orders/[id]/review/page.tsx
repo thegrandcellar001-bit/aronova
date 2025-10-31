@@ -57,6 +57,7 @@ export default function Page() {
     status: "delivered",
     order_items: [
       {
+        product_id: "787tgdtry5-bjyygytr-6t76gvn",
         name: "Color Screen Smart Bracelet D13 Waterproof Bracelet Waterproof",
         image_url: "/images/orders/2.jpg",
       },
@@ -65,7 +66,7 @@ export default function Page() {
 
   const fetchReview = async () => {
     try {
-      const res = await api.get(`/review/${params.id}/`);
+      const res = await api.get(`/${order.order_items[0].product_id}/reviews`);
       setReview(res.data);
     } catch (error) {
       console.error("Error fetching review:", error);
@@ -78,12 +79,14 @@ export default function Page() {
     setLoading(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const rating = formData.get("rating");
-    const reviewText = formData.get("review");
+    const ratingValue = formData.get("rating");
+    const rating = ratingValue ? parseInt(String(ratingValue), 10) : 0;
+    const reviewValue = formData.get("review");
+    const reviewText = reviewValue ? String(reviewValue) : "";
 
     try {
       const res = await api.post(`/review`, {
-        product_id: params.id,
+        product_id: order.order_items[0].product_id,
         rating,
         comment: reviewText,
       });
@@ -97,7 +100,7 @@ export default function Page() {
   };
 
   useEffect(() => {
-    // fetchReview();
+    fetchReview();
   }, []);
 
   return (
