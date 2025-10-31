@@ -10,7 +10,7 @@ const PreOwned = () => {
       brand: "Hermès",
       name: "Birkin 30",
       price: "₦8,500,000",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
       verified: true,
     },
     {
@@ -18,7 +18,7 @@ const PreOwned = () => {
       brand: "Chanel",
       name: "Classic Flap Medium",
       price: "₦3,200,000",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
       verified: true,
     },
     {
@@ -26,7 +26,7 @@ const PreOwned = () => {
       brand: "Louis Vuitton",
       name: "Neverfull MM",
       price: "₦1,800,000",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
       verified: true,
     },
     {
@@ -34,7 +34,7 @@ const PreOwned = () => {
       brand: "Cartier",
       name: "Love Bracelet",
       price: "₦4,500,000",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
       verified: true,
     },
     {
@@ -42,7 +42,7 @@ const PreOwned = () => {
       brand: "Rolex",
       name: "Datejust 36",
       price: "₦12,000,000",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
       verified: true,
     },
     {
@@ -50,7 +50,7 @@ const PreOwned = () => {
       brand: "Gucci",
       name: "Jackie 1961",
       price: "₦2,100,000",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
       verified: true,
     },
   ];

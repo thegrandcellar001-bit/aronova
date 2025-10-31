@@ -25,7 +25,7 @@ const Discover = () => {
       category: "Restaurant",
       location: "Victoria Island, Lagos",
       description: "Contemporary Nigerian cuisine meets refined dining.",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
     },
     {
       id: 2,
@@ -33,7 +33,7 @@ const Discover = () => {
       category: "Hotel",
       location: "Ikoyi, Lagos",
       description: "Boutique luxury in the heart of Lagos.",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
     },
     {
       id: 3,
@@ -41,7 +41,7 @@ const Discover = () => {
       category: "Restaurant",
       location: "Victoria Island, Lagos",
       description: "Nigerian art, culture, and cuisine.",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
     },
     {
       id: 4,
@@ -49,7 +49,7 @@ const Discover = () => {
       category: "Bar",
       location: "Lekki Phase 1, Lagos",
       description: "Premium spirits in an intimate setting.",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
     },
     {
       id: 5,
@@ -57,7 +57,7 @@ const Discover = () => {
       category: "Lounge",
       location: "Lekki, Lagos",
       description: "Where luxury meets Lagos nightlife.",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
     },
     {
       id: 6,
@@ -65,7 +65,7 @@ const Discover = () => {
       category: "Experience",
       location: "Lagos & Beyond",
       description: "Curated journeys through Nigerian art and culture.",
-      image: "/placeholder.svg",
+      image: "/images/products/placeholder.svg",
     },
   ];
 
@@ -179,7 +179,7 @@ const Discover = () => {
             <Button
               size="lg"
               variant="outline"
-              className="border-cream text-cream hover:bg-cream/10"
+              className="border-cream text-primary hover:bg-cream/10 hover:text-white"
             >
               <Phone className="w-5 h-5 mr-2" />
               Call Us
