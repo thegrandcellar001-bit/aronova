@@ -18,7 +18,7 @@ const ExploreSection = () => {
         <p className="font-sans text-sm text-gold tracking-[0.2em] uppercase mb-4">
           Explore
         </p>
-        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6 text-cream">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-cream">
           Discover Experiences <br />
           Beyond the Marketplace
         </h2>

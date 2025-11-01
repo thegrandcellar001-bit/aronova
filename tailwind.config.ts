@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         serif: ["Anton", "sans-serif"],
         sans: ["Plus Jakarta Sans", "sans-serif"],
+        heading: "var(--font-satoshi-bold)",
       },
       screens: {
         xs: "375px",

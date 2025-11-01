@@ -1,11 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import "../../public/css/all.css";
 import "@/styles/globals.css";
-import TopBanner from "./partials/layout/top-banner";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
 import HydrationGuard from "@/lib/hydration-guard";
+import localFont from "next/font/local";
+
+const satoshi = localFont({
+  src: [
+    {
+      path: "../styles/fonts/Satoshi-Bold.woff2",
+      weight: "600",
+      style: "bold",
+    },
+  ],
+  variable: "--font-satoshi-bold",
+});
 
 export const metadata: Metadata = {
   title: "ARONOVA — Luxury Redefined for Nigeria",
@@ -85,10 +96,9 @@ export default function RootLayout({
         />
       </head>
 
-      <body>
+      <body className={satoshi.variable}>
         <HydrationGuard>
           <HolyLoader color="#C9A227" />
-          <TopBanner />
           <Providers>{children}</Providers>
         </HydrationGuard>
         <Toaster />

@@ -25,7 +25,7 @@ const MarketSection = () => {
       <div className="max-w-[1400px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6 text-foreground">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl mb-6 text-foreground">
             The Market
           </h2>
           <p className="font-sans text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -42,7 +42,7 @@ const MarketSection = () => {
               className="group cursor-pointer animate-scale-in"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
-              <div className="aspect-[4/5] overflow-hidden mb-4 bg-secondary">
+              <div className="aspect-4/5 overflow-hidden mb-4 bg-secondary">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -50,12 +50,10 @@ const MarketSection = () => {
                 />
               </div>
               <div className="space-y-1">
-                <p className="font-sans text-sm text-muted-foreground tracking-wider uppercase">
+                <p className="text-sm text-muted-foreground tracking-wider uppercase">
                   {product.brand}
                 </p>
-                <h3 className="font-serif text-xl text-foreground">
-                  {product.name}
-                </h3>
+                <h3 className="text-xl text-foreground">{product.name}</h3>
                 <p className="font-sans text-foreground font-medium">
                   {product.price}
                 </p>

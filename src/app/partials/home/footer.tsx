@@ -41,7 +41,7 @@ const Footer = () => {
 
         {/* Newsletter Section */}
         <div className="max-w-2xl mb-16">
-          <h3 className="font-serif text-2xl mb-4">Join Our Circle</h3>
+          <h3 className="text-2xl mb-4">Join Our Circle</h3>
           <p className="font-sans text-sm text-primary-foreground/80 mb-6">
             Receive early access to new editions and experiences.
           </p>

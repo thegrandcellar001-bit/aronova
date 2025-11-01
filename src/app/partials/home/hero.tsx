@@ -13,7 +13,7 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 animate-fade-in-slow">
-        <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 text-cream tracking-tight">
+        <h1 className="text-3xl md:text-6xl lg:text-6xl my-6 text-cream tracking-tight">
           Discover the extraordinary — <br />
           curated, authenticated, and yours.
         </h1>

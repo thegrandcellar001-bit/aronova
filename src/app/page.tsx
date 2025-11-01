@@ -47,7 +47,7 @@ export default function Home() {
         {/* Bottom Tagline */}
         <section className="py-20 bg-foreground text-background">
           <div className="text-center px-6">
-            <p className="font-serif text-3xl md:text-4xl lg:text-5xl italic">
+            <p className="text-3xl md:text-4xl lg:text-5xl font-bold">
               Curated for discovery. <br />
               Authenticated with provenance.
             </p>
