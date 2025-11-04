@@ -64,7 +64,7 @@ const About = () => {
         </div>
         <div className="relative z-10 h-full flex items-center px-6">
           <div className="max-w-3xl animate-fade-in">
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
               Redefining Luxury for Nigeria
             </h1>
             <p className="font-sans text-xl text-cream/90 max-w-2xl">
@@ -80,7 +80,7 @@ const About = () => {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
           <div className="animate-fade-in">
-            <h2 className="font-serif text-3xl md:text-4xl mb-6">Our Vision</h2>
+            <h2 className="text-3xl md:text-4xl mb-6">Our Vision</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
               To build a new luxury paradigm for Nigeria — one rooted in
               transparency, craftsmanship, and cultural pride. Where every
@@ -88,9 +88,7 @@ const About = () => {
             </p>
           </div>
           <div className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <h2 className="font-serif text-3xl md:text-4xl mb-6">
-              Our Mission
-            </h2>
+            <h2 className="text-3xl md:text-4xl mb-6">Our Mission</h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
               To curate exceptional products and experiences that celebrate
               Nigerian creativity, connect discerning buyers with authentic
@@ -103,9 +101,7 @@ const About = () => {
       {/* Core Values */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl text-center mb-16">
-            Our Values
-          </h2>
+          <h2 className="text-3xl md:text-4xl text-center mb-16">Our Values</h2>
           <div className="grid md:grid-cols-3 gap-12">
             {values.map((value, index) => (
               <div
@@ -131,7 +127,7 @@ const About = () => {
       {/* Quote Banner */}
       <section className="py-20 px-6 bg-deep-green text-cream">
         <div className="max-w-4xl mx-auto text-center">
-          <blockquote className="font-serif text-3xl md:text-4xl italic leading-relaxed">
+          <blockquote className="font-semibold text-3xl md:text-4xl italic leading-relaxed">
             "Luxury is not about price — it's about provenance, purpose, and the
             stories we choose to carry forward."
           </blockquote>
@@ -142,7 +138,7 @@ const About = () => {
       {/* Timeline */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl mb-16 text-center">
+          <h2 className="text-3xl md:text-4xl mb-16 text-center">
             Our Journey
           </h2>
           <div className="space-y-12">
@@ -152,7 +148,7 @@ const About = () => {
                 className="flex gap-8 animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="flex-shrink-0 w-24">
+                <div className="shrink-0 w-24">
                   <div className="font-sans font-semibold text-gold text-xl">
                     {item.year}
                   </div>
@@ -169,9 +165,7 @@ const About = () => {
       {/* Team Section */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl md:text-4xl mb-6">
-            Built by Believers
-          </h2>
+          <h2 className="text-3xl md:text-4xl mb-6">Built by Believers</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             ARONOVA is a team of curators, authenticators, and storytellers
             united by a shared belief: that Nigerian luxury deserves a platform

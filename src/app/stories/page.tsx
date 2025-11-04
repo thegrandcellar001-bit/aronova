@@ -85,7 +85,7 @@ const Stories = () => {
             <p className="text-sm text-gold tracking-[0.2em] uppercase mb-4">
               {featuredStory.category} — {featuredStory.date}
             </p>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6">
               {featuredStory.title}
             </h1>
             <p className="font-sans text-xl text-cream/90 mb-8 max-w-2xl">
@@ -108,9 +108,7 @@ const Stories = () => {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              The Journal
-            </h2>
+            <h2 className="text-3xl md:text-4xl mb-4">The Journal</h2>
             <p className="text-muted-foreground max-w-2xl">
               Chronicling the people, places, and ideas shaping Nigeria's new
               luxury landscape.
@@ -134,7 +132,7 @@ const Stories = () => {
                 <p className="text-sm text-gold tracking-wide mb-3 uppercase">
                   {story.category} — {story.date}
                 </p>
-                <h3 className="font-serif text-2xl md:text-3xl mb-4 group-hover:text-primary transition-colors">
+                <h3 className="text-2xl md:text-3xl mb-4 group-hover:text-primary transition-colors">
                   {story.title}
                 </h3>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -158,7 +156,7 @@ const Stories = () => {
       {/* Newsletter CTA */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="font-serif text-3xl md:text-4xl mb-6">
+          <h2 className="text-3xl md:text-4xl mb-6">
             Stories Delivered to Your Inbox
           </h2>
           <p className="text-muted-foreground mb-8">

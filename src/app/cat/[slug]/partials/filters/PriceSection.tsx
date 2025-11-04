@@ -20,7 +20,7 @@ const PriceSection = () => {
             min={0}
             max={250}
             step={1}
-            label="$"
+            label="₦"
             className="overflow-visible"
           />
           <div className="mb-3" />

@@ -14,7 +14,7 @@ const Concierge = () => {
           <p className="text-sm text-gold tracking-[0.2em] uppercase mb-4">
             Concierge Service
           </p>
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6">
             Your Vision, Our Expertise
           </h1>
           <p className="font-sans text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -28,7 +28,7 @@ const Concierge = () => {
       {/* Services Grid */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl mb-12 text-center">
             What We Offer
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -80,9 +80,7 @@ const Concierge = () => {
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              Get in Touch
-            </h2>
+            <h2 className="text-3xl md:text-4xl mb-4">Get in Touch</h2>
             <p className="text-muted-foreground">
               Share your vision, and we'll create a plan to bring it to life.
             </p>
@@ -165,9 +163,7 @@ const Concierge = () => {
       {/* Contact Cards */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl text-center mb-12">
-            Or Reach Us Directly
-          </h2>
+          <h2 className="text-3xl text-center mb-12">Or Reach Us Directly</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-8 bg-cream rounded-lg">
               <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-4">

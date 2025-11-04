@@ -88,7 +88,7 @@ const Discover = () => {
         </div>
         <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
           <div className="max-w-4xl animate-fade-in">
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
               Discover Lagos, Refined
             </h1>
             <p className="font-sans text-lg text-cream/90 max-w-2xl mx-auto">
@@ -142,7 +142,7 @@ const Discover = () => {
                     <div className="text-sm text-gold mb-2">
                       {venue.category}
                     </div>
-                    <h3 className="font-serif text-2xl mb-2">{venue.name}</h3>
+                    <h3 className="text-2xl mb-2">{venue.name}</h3>
                     <p className="text-sm text-cream/80 mb-3">
                       {venue.description}
                     </p>
@@ -161,7 +161,7 @@ const Discover = () => {
       {/* Concierge CTA */}
       <section className="py-20 px-6 bg-deep-green text-cream">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl md:text-4xl mb-6">
+          <h2 className="text-3xl md:text-4xl mb-6">
             Need Something More Bespoke?
           </h2>
           <p className="text-lg text-cream/90 mb-8 max-w-2xl mx-auto">

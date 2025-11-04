@@ -67,11 +67,11 @@ const PreOwned = () => {
             backgroundImage: `url(${"/images/hero/preowned-hero.jpg"})`,
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/50 to-black/30" />
         </div>
         <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
           <div className="max-w-3xl animate-fade-in">
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
               Pre-Owned, Verified, and Loved.
             </h1>
             <p className="font-sans text-lg text-cream/90 max-w-2xl mx-auto">
@@ -86,7 +86,7 @@ const PreOwned = () => {
       {/* Authentication Steps */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-6xl mx-auto">
-          <h2 className="font-serif text-3xl md:text-4xl text-center mb-16">
+          <h2 className="text-3xl md:text-4xl text-center mb-16">
             How We Authenticate
           </h2>
           <div className="grid md:grid-cols-3 gap-12">
@@ -140,9 +140,7 @@ const PreOwned = () => {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              Shop Pre-Owned
-            </h2>
+            <h2 className="text-3xl md:text-4xl mb-4">Shop Pre-Owned</h2>
             <div className="flex flex-wrap justify-center gap-4 mt-8">
               <Button
                 variant="outline"
@@ -164,7 +162,7 @@ const PreOwned = () => {
                 className="group cursor-pointer animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative aspect-[4/5] mb-4 overflow-hidden rounded-lg bg-cream">
+                <div className="relative aspect-4/5 mb-4 overflow-hidden rounded-lg bg-cream">
                   <img
                     src={product.image}
                     alt={product.name}
@@ -192,9 +190,7 @@ const PreOwned = () => {
       {/* Sell with Us */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="font-serif text-3xl md:text-4xl mb-6">
-            Sell Your Luxury Pieces
-          </h2>
+          <h2 className="text-3xl md:text-4xl mb-6">Sell Your Luxury Pieces</h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Turn your pre-loved luxury items into value. Our authentication and
             consignment service ensures a seamless, transparent process.

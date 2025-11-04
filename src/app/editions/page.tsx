@@ -46,7 +46,7 @@ const Editions = () => {
         <section className="bg-primary text-primary-foreground py-20 lg:py-32">
           <div className="max-w-[1400px] mx-auto px-6 lg:px-20">
             <div className="max-w-3xl">
-              <h1 className="font-serif text-5xl lg:text-7xl mb-8 animate-fade-in">
+              <h1 className="text-5xl lg:text-7xl mb-8 animate-fade-in">
                 Curated Editions
               </h1>
               <p className="font-sans text-lg lg:text-xl text-primary-foreground/90 mb-8 animate-fade-in-slow">
@@ -100,7 +100,7 @@ const Editions = () => {
                     <div className="inline-block px-4 py-2 border border-gold text-gold text-xs font-sans tracking-[0.2em] uppercase">
                       {edition.status}
                     </div>
-                    <h2 className="font-serif text-4xl lg:text-5xl text-foreground">
+                    <h2 className="text-3xl lg:text-4xl text-foreground">
                       {edition.title}
                     </h2>
                     <p className="font-sans text-lg text-muted-foreground leading-relaxed">
@@ -133,7 +133,7 @@ const Editions = () => {
         {/* Newsletter CTA */}
         <section className="bg-muted py-20 lg:py-24">
           <div className="max-w-[1400px] mx-auto px-6 lg:px-20 text-center">
-            <h2 className="font-serif text-4xl lg:text-5xl mb-6 text-foreground">
+            <h2 className="text-4xl lg:text-5xl mb-6 text-foreground">
               Be First to Know
             </h2>
             <p className="font-sans text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">

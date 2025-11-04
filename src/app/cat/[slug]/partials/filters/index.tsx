@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const Filters = () => {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <hr className="border-t-black/10" />
       <CategoriesSection />
       <hr className="border-t-black/10" />
@@ -21,11 +21,11 @@ const Filters = () => {
       <DressStyleSection />
       <Button
         type="button"
-        className="bg-black w-full rounded-full text-sm font-medium py-4 h-12"
+        className="bg-secondary w-full rounded-full text-sm font-medium py-4 h-12"
       >
         Apply Filter
       </Button>
-    </>
+    </div>
   );
 };
 

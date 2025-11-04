@@ -1,7 +1,6 @@
 "use client";
 
 import ProductListSec from "@/components/common/ProductListSec";
-import { Spinner } from "@/components/ui/spinner";
 import AuthGuard from "@/lib/auth-guard";
 import { useCategoryStore } from "@/lib/stores/categories";
 import Link from "next/link";
