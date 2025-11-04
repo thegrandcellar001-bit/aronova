@@ -47,7 +47,7 @@ export default function ProductPage() {
   }, [productId]);
 
   return (
-    <main>
+    <main className="py-26 bg-white">
       {loading ? (
         <ApiLoader message="Loading product..." />
       ) : (
@@ -55,16 +55,21 @@ export default function ProductPage() {
           {product ? (
             <>
               <div className="max-w-frame mx-auto px-4 xl:px-0">
-                <hr className="h-px border-t-black/10 mb-5 sm:mb-6" />
-                <BreadcrumbProduct title={product?.name ?? "product"} />
+                <BreadcrumbProduct
+                  title={product?.name ?? "product"}
+                  category={{
+                    name: product?.category_name,
+                    slug: product?.category_slug,
+                  }}
+                />
                 <section className="mb-11">
                   <ProductContent data={product} />
                 </section>
-                <Tabs productId={productId} />
+                <Tabs product={product} />
               </div>
               <div className="mb-[50px] sm:mb-20">
                 <ProductListSec
-                  title="You might also like"
+                  title="You may also like"
                   data={relatedProductData}
                 />
               </div>
@@ -74,7 +79,7 @@ export default function ProductPage() {
               <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">
                 <i className="fal fa-box text-4xl"></i>
                 <p className="text-black/40">
-                  The product you are lookig for does not exist.
+                  The product you are looking for does not exist.
                 </p>
               </div>
             </div>

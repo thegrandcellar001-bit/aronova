@@ -36,7 +36,6 @@ export default function Home() {
     // </>
 
     <div className="min-h-screen bg-background font-sans">
-      <Navigation />
       <main>
         <Hero />
         <MarketSection />
@@ -54,7 +53,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

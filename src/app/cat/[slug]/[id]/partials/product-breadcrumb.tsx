@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
-const BreadcrumbProduct = ({ title }: { title: string }) => {
+const BreadcrumbProduct = ({
+  title,
+  category,
+}: {
+  title: string;
+  category: { name: string; slug: string };
+}) => {
   return (
     <Breadcrumb className="mb-5 sm:mb-9">
       <BreadcrumbList>
@@ -22,6 +28,12 @@ const BreadcrumbProduct = ({ title }: { title: string }) => {
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link href="/shop">Shop</Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink asChild>
+            <Link href={`/cat/${category.slug}`}>{category.name}</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />

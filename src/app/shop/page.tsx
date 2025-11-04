@@ -81,8 +81,6 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-
       {loading ? (
         <ApiLoader message="Loading products..." />
       ) : (
@@ -158,7 +156,7 @@ const Shop = () => {
                         {products.map((product) => (
                           <Link
                             key={product.id}
-                            href={`/cat/${product.category_slug}/product/${product.id}`}
+                            href={`/cat/${product.category_slug}/${product.id}`}
                           >
                             <div className="group cursor-pointer animate-fade-in">
                               <div className="relative aspect-3/4 mb-4 overflow-hidden bg-muted">
@@ -225,8 +223,6 @@ const Shop = () => {
           </section>
         </main>
       )}
-
-      <Footer />
     </div>
   );
 };

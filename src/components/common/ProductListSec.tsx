@@ -19,16 +19,13 @@ type ProductListSecProps = {
 
 const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
   return (
-    <section className="max-w-frame mx-auto text-center">
+    <section className="max-w-frame mx-auto">
       <motion.h2
         initial={{ y: "100px", opacity: 0 }}
         whileInView={{ y: "0", opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className={cn([
-          integralCF.className,
-          "text-[32px] md:text-5xl mb-8 md:mb-14 capitalize",
-        ])}
+        className="text-[28px] md:text-[32px] mb-2 md:mb-6 pl-4 md:pl-0"
       >
         {title}
       </motion.h2>
@@ -48,9 +45,12 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
             {data.map((product) => (
               <CarouselItem
                 key={product.id}
-                className="w-full max-w-[198px] sm:max-w-[295px] pl-0"
+                className="w-full max-w-[164px] sm:max-w-[219px] pl-0"
               >
-                <ProductCard data={product} categorySlug="" />
+                <ProductCard
+                  product={product}
+                  categorySlug={product.category_slug}
+                />
               </CarouselItem>
             ))}
           </CarouselContent>

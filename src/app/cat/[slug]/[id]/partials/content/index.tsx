@@ -16,12 +16,7 @@ const Header = ({ data }: { data: Product }) => {
           <PhotoSection data={data} />
         </div>
         <div>
-          <h1
-            className={cn([
-              integralCF.className,
-              "text-2xl md:text-[40px] md:leading-[40px] mb-3 md:mb-3.5 capitalize",
-            ])}
-          >
+          <h1 className="text-2xl font-bold md:text-[40px] md:leading-10 mb-3 md:mb-3.5 capitalize">
             {data.name}
           </h1>
           <div className="flex items-center mb-3 sm:mb-3.5">
@@ -40,16 +35,16 @@ const Header = ({ data }: { data: Product }) => {
           </div>
           <div className="flex items-center space-x-2.5 sm:space-x-3 mb-5">
             {data.pricing.discount > 0 ? (
-              <span className="font-bold text-black text-xl xl:text-2xl">
+              <span className="text-black text-xl xl:text-2xl">
                 ${data.pricing.final_price}
               </span>
             ) : (
-              <span className="font-bold text-black text-xl xl:text-2xl">
+              <span className="text-black text-xl xl:text-2xl">
                 ${data.pricing.base_price}
               </span>
             )}
             {data.pricing.discount > 0 && (
-              <span className="font-bold text-black/40 line-through text-xl xl:text-2xl">
+              <span className="text-black/40 line-through text-xl xl:text-2xl">
                 ${data.pricing.base_price}
               </span>
             )}
@@ -59,9 +54,6 @@ const Header = ({ data }: { data: Product }) => {
               </span>
             )}
           </div>
-          <p className="text-sm sm:text-base text-black/60 mb-5">
-            {data.description}
-          </p>
           <hr className="h-px border-t-black/10 mb-5" />
           <ColorSelection />
           <hr className="h-px border-t-black/10 my-5" />

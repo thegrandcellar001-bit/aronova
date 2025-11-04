@@ -166,7 +166,7 @@ export default function ShopPage() {
                           <ProductCard
                             key={product.id}
                             categorySlug={params.slug}
-                            data={product}
+                            product={product}
                           />
                         ))}
                       </div>

@@ -6,6 +6,8 @@ import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
 import HydrationGuard from "@/lib/hydration-guard";
 import localFont from "next/font/local";
+import Navigation from "./partials/home/navigation";
+import Footer from "./partials/home/footer";
 
 const satoshi = localFont({
   src: [
@@ -99,7 +101,11 @@ export default function RootLayout({
       <body className={satoshi.variable}>
         <HydrationGuard>
           <HolyLoader color="#C9A227" />
-          <Providers>{children}</Providers>
+          <Providers>
+            <Navigation />
+            {children}
+            <Footer />
+          </Providers>
         </HydrationGuard>
         <Toaster />
       </body>

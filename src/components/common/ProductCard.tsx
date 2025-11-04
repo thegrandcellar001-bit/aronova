@@ -6,60 +6,50 @@ import { Product } from "@/types/product.types";
 
 type ProductCardProps = {
   categorySlug: string;
-  data: Product;
+  product: Product;
 };
 
-const ProductCard = ({ categorySlug, data }: ProductCardProps) => {
+const ProductCard = ({ categorySlug, product }: ProductCardProps) => {
   return (
-    <Link
-      href={`/cat/${categorySlug}/product/${data.id}`}
-      className="flex flex-col items-start aspect-auto"
-    >
-      <div className="bg-[#F0EEED] rounded-[13px] lg:rounded-[20px] w-full lg:max-w-[295px] aspect-square mb-2.5 xl:mb-4 overflow-hidden">
-        <Image
-          src={data.images[0]}
-          width={295}
-          height={298}
-          className="rounded-md w-full h-full object-contain hover:scale-110 transition-all duration-500"
-          alt={data.name}
-          priority
-        />
-      </div>
-      <strong className="text-black xl:text-xl">{data.name}</strong>
-      <div className="flex items-end mb-1 xl:mb-2">
-        <Rating
-          initialValue={data.average_rating}
-          allowFraction
-          SVGclassName="inline-block"
-          emptyClassName="fill-gray-50"
-          size={19}
-          readonly
-        />
-        <span className="text-black text-xs xl:text-sm ml-[11px] xl:ml-[13px] pb-0.5 xl:pb-0">
-          {data.average_rating.toFixed(1)}
-          <span className="text-black/60">/5</span>
-        </span>
-      </div>
-      <div className="flex items-center space-x-[5px] xl:space-x-2.5">
-        {data.pricing.discount > 0 ? (
-          <span className="font-bold text-black text-xl xl:text-2xl">
-            ${data.pricing.final_price}
-          </span>
-        ) : (
-          <span className="font-bold text-black text-xl xl:text-2xl">
-            ${data.pricing.base_price}
-          </span>
-        )}
-        {data.pricing.discount > 0 && (
-          <span className="font-bold text-black/40 line-through text-xl xl:text-2xl">
-            ${data.pricing.base_price}
-          </span>
-        )}
-        {data.pricing.discount > 0 && (
-          <span className="font-medium text-[10px] xl:text-xs py-1.5 px-3.5 rounded-full bg-[#FF3333]/10 text-[#FF3333]">
-            {`-${data.pricing.discount}%`}
-          </span>
-        )}
+    <Link key={product.id} href={`/cat/${product.category_slug}/${product.id}`}>
+      <div className="group cursor-pointer animate-fade-in">
+        <div className="relative aspect-3/4 mb-4 overflow-hidden bg-muted">
+          <img
+            src={product.images[0]}
+            alt={product.name}
+            className="w-full h-[96%] object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+
+          {product.pricing.discount > 0 && (
+            <span className="font-medium text-[10px] xl:text-xs py-1.5 px-2 rounded-full bg-secondary text-deep-green absolute bottom-3 right-2">
+              {`-${product.pricing.discount}%`}
+            </span>
+          )}
+        </div>
+        <div className="space-y-1">
+          <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground">
+            {product.merchant_store_name}
+          </p>
+          <h3 className="font-sans text-base text-foreground group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+          <div className="flex flex-wrap items-center space-x-[5px] xl:space-x-2.5 relative">
+            {product.pricing.discount > 0 ? (
+              <span className="text-black text-xl xl:text-2xl">
+                ₦{product.pricing.final_price.toLocaleString()}
+              </span>
+            ) : (
+              <span className="text-black text-xl xl:text-2xl">
+                ₦{product.pricing.base_price.toLocaleString()}
+              </span>
+            )}
+            {product.pricing.discount > 0 && (
+              <span className="text-black/40 line-through text-xl xl:text-2xl">
+                ₦{product.pricing.base_price.toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </Link>
   );

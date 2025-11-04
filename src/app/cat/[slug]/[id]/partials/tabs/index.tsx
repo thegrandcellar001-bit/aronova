@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import ProductDetailsContent from "./ProductDetailsContent";
 import ReviewsContent from "./ReviewsContent";
+import { Product } from "@/types/product.types";
 
 type TabBtn = {
   id: number;
@@ -22,7 +23,7 @@ const tabBtnData: TabBtn[] = [
   },
 ];
 
-const Tabs = ({ productId }: { productId: string }) => {
+const Tabs = ({ product }: { product: Product }) => {
   const [active, setActive] = useState<number>(1);
 
   return (
@@ -35,8 +36,8 @@ const Tabs = ({ productId }: { productId: string }) => {
             type="button"
             className={cn([
               active === tab.id
-                ? "border-black border-b-2 font-medium"
-                : "border-b border-black/10 text-black/60 font-normal",
+                ? "border-secondary border-b-2 font-medium"
+                : "border-b border-secondary/10 text-black/60 font-normal",
               "p-5 sm:p-6 rounded-none flex-1",
             ])}
             onClick={() => setActive(tab.id)}
@@ -46,8 +47,8 @@ const Tabs = ({ productId }: { productId: string }) => {
         ))}
       </div>
       <div className="mb-12 sm:mb-16">
-        {active === 1 && <ProductDetailsContent />}
-        {active === 2 && <ReviewsContent productId={productId} />}
+        {active === 1 && <ProductDetailsContent product={product} />}
+        {active === 2 && <ReviewsContent productId={product.id} />}
       </div>
     </div>
   );
