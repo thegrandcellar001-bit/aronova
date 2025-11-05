@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import React, { Fragment, useEffect, useState } from "react";
-import ReviewCard from "@/components/common/ReviewCard";
+import ReviewCard from "@/components/common/review-card";
 import { reviewsData } from "@/lib/data/reviews";
 import api from "@/lib/axios";
 import { useAuthStore } from "@/lib/stores/auth";

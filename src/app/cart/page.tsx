@@ -178,9 +178,9 @@ export default function CartPage() {
                     </div>
                   </div>
                   <div className="flex space-x-3">
-                    <InputGroup className="bg-[#F0F0F0]">
+                    <InputGroup className="bg-[#F0F0F0] rounded-none focus-within:shadow-none">
                       <InputGroup.Text>
-                        <MdOutlineLocalOffer className="text-black/40 text-2xl" />
+                        <i className="far fa-tag text-black/40 text-xl" />
                       </InputGroup.Text>
                       <InputGroup.Input
                         type="text"

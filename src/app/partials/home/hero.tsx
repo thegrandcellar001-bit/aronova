@@ -3,13 +3,28 @@ import { Button } from "@/components/ui/button";
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${"/images/background/hero-bg.jpg"})` }}
+      {/* Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        // poster ensures fallback shows before video loads
+        poster="/images/background/hero-bg.jpg"
       >
-        <div className="absolute inset-0 bg-black/30" />
-      </div>
+        <source src="/videos/hero-video.webm" type="video/webm" />
+        {/* If browser does not support video, this image shows */}
+        <img
+          src="/images/background/hero-bg.jpg"
+          alt="Hero Background"
+          className="w-full h-full object-cover"
+        />
+      </video>
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/30" />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 animate-fade-in-slow">
@@ -21,6 +36,7 @@ const Hero = () => {
           A global emporium where provenance meets beauty, crafted with
           intention and meaning.
         </p>
+
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button
             size="lg"

@@ -1,6 +1,6 @@
 "use client";
 
-import ProductListSec from "@/components/common/ProductListSec";
+import ProductListSec from "@/components/common/product-slider";
 import AuthGuard from "@/lib/auth-guard";
 import { useCategoryStore } from "@/lib/stores/categories";
 import Link from "next/link";

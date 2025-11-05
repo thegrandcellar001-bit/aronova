@@ -5,7 +5,7 @@ import {
   relatedProductData,
   topSellingData,
 } from "@/lib/data/products";
-import ProductListSec from "@/components/common/ProductListSec";
+import ProductListSec from "@/components/common/product-slider";
 import BreadcrumbProduct from "./partials/product-breadcrumb";
 import ProductContent from "./partials/content";
 import Tabs from "./partials/tabs";
@@ -13,7 +13,7 @@ import { Product } from "@/types/product.types";
 import { useParams } from "next/navigation";
 import api from "@/lib/axios";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ApiLoader from "@/components/common/api-loader";
 
 const data: Product[] = [
@@ -51,9 +51,9 @@ export default function ProductPage() {
       {loading ? (
         <ApiLoader message="Loading product..." />
       ) : (
-        <>
+        <Fragment>
           {product ? (
-            <>
+            <Fragment>
               <div className="max-w-frame mx-auto px-4 xl:px-0">
                 <BreadcrumbProduct
                   title={product?.name ?? "product"}
@@ -67,13 +67,13 @@ export default function ProductPage() {
                 </section>
                 <Tabs product={product} />
               </div>
-              <div className="mb-[50px] sm:mb-20">
+              <div>
                 <ProductListSec
                   title="You may also like"
                   data={relatedProductData}
                 />
               </div>
-            </>
+            </Fragment>
           ) : (
             <div className="max-w-frame mx-auto px-4 xl:px-0">
               <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">
@@ -84,7 +84,7 @@ export default function ProductPage() {
               </div>
             </div>
           )}
-        </>
+        </Fragment>
       )}
     </main>
   );
