@@ -14,7 +14,7 @@ const Navigation = () => {
     "Editions",
     "Stories",
     "Concierge",
-    "Pre-Owned",
+    "ReAronova",
     "About",
   ];
 

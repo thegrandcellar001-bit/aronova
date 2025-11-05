@@ -1,16 +1,17 @@
 "use client";
 
-import React, { use } from "react";
+import React, { Fragment, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import CartCounter from "@/components/ui/CartCounter";
 import { Button } from "@/components/ui/button";
 import api from "@/lib/axios";
 import { useToast } from "@/hooks/use-toast";
-import { CartItem } from "@/types/cart.types";
+import { CartItem, CartVariant } from "@/types/cart.types";
 
 type CartProductProps = {
   item: CartItem;
+  variant?: CartVariant;
   category_slug: string;
   userId: number;
   onCartChange?: () => void; // optional callback to refetch cart after change
@@ -18,6 +19,7 @@ type CartProductProps = {
 
 const CartProduct = ({
   item,
+  variant,
   category_slug,
   userId,
   onCartChange,
@@ -75,14 +77,26 @@ const CartProduct = ({
 
       {/* Product Details */}
       <div className="flex w-full self-stretch flex-col">
-        <div className="flex items-center justify-between">
-          <Link
-            href={`/cat/${category_slug}/product/${item.product_id}`}
-            className="text-black
-             font-bold text-base xl:text-xl"
-          >
-            {item.name}
-          </Link>
+        <div className="flex items-start justify-between">
+          <div>
+            <Link
+              href={`/cat/${category_slug}/${item.product_id}`}
+              className="text-black text-base xl:text-xl"
+            >
+              {item.name}
+            </Link>
+
+            {variant && (
+              <Fragment>
+                <p className="text-black text-sm capitalize">
+                  Color: <span>{variant?.color}</span>
+                </p>
+                <p className="text-black text-sm capitalize">
+                  Size: <span>{variant?.size}</span>
+                </p>
+              </Fragment>
+            )}
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -96,7 +110,7 @@ const CartProduct = ({
         {/* Price + Quantity Counter */}
         <div className="flex items-center flex-wrap justify-between mt-2">
           <div className="flex items-center space-x-[5px] xl:space-x-2.5">
-            <span className="font-bold text-black text-xl xl:text-2xl">
+            <span className="text-black text-xl xl:text-2xl">
               ${totalPrice}
             </span>
           </div>

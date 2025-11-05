@@ -20,26 +20,40 @@ import ApiLoader from "@/components/common/api-loader";
 export interface CartData {
   id: number;
   user_id: number;
-  total: number;
+  status: string;
   items: {
     id: number;
-    name: string;
-    product: Product;
     product_id: string;
-    category_slug: string;
-    images: string[];
-    pricing: {
-      base_price: number;
-      currency: string;
+    name: string;
+    variant_id: string;
+    product: {
+      id: string;
+      category_slug: string;
+      pricing: {
+        base_price: number;
+        discount: number;
+        final_price: number;
+      };
+      primary_image: string;
+    };
+    variant: {
+      id: string;
+      product_id: string;
+      color: string;
+      size: string;
+      pricing: {
+        base_price: number;
+        discount: number;
+        final_price: number;
+        price_adjustment: number;
+        total_price: number;
+      };
     };
     subtotal: number;
     quantity: number;
-    variant_id: string;
-    variant: Variant;
   }[];
   created_at: string;
   updated_at: string;
-  status: string;
 }
 
 export default function CartPage() {
@@ -71,7 +85,7 @@ export default function CartPage() {
   }, []);
 
   return (
-    <main className="pb-20">
+    <main className="py-26 bg-white">
       {loading ? (
         <ApiLoader message="Loading your cart..." />
       ) : (
@@ -79,17 +93,12 @@ export default function CartPage() {
           {cart && cart.items.length > 0 ? (
             <>
               <BreadcrumbCart />
-              <h2
-                className={cn([
-                  integralCF.className,
-                  "font-bold text-[32px] md:text-[40px] uppercase mb-1",
-                ])}
-              >
+              <h2 className="font-bold text-[28px] md:text-4xl mb-1">
                 Your cart
               </h2>
               <p className="text-black/60 mb-5">
-                Every piece here is curated and authenticated. We’ve reserved it
-                for you.
+                You have {cart.items.length} item
+                {cart.items.length > 1 ? "s" : ""} in your cart.
               </p>
               <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
                 <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
@@ -100,11 +109,12 @@ export default function CartPage() {
                           id: item.id,
                           product_id: item.product_id,
                           name: item.name,
-                          image: item.images[0],
-                          price: item.pricing.base_price,
+                          image: item.product.primary_image,
+                          price: item.product.pricing.base_price,
                           quantity: item.quantity,
                         }}
-                        category_slug={item.category_slug}
+                        variant={item.variant}
+                        category_slug={item.product.category_slug}
                         userId={cart.user_id}
                         onCartChange={async () => {
                           const data = await fetchCartItems();
@@ -123,11 +133,17 @@ export default function CartPage() {
                   </h6>
                   <div className="flex flex-col space-y-5">
                     <div className="flex items-center justify-between">
-                      <span className="md:text-xl text-black/60">
-                        Sub-total
-                      </span>
-                      <span className="md:text-xl font-bold">
-                        ${cart?.total.toLocaleString()}
+                      <span className=" text-black/60">Sub-total</span>
+                      <span className="font-bold">
+                        $
+                        {cart?.items
+                          .reduce(
+                            (acc, item) =>
+                              acc +
+                              item.product.pricing.base_price * item.quantity,
+                            0
+                          )
+                          .toLocaleString()}
                       </span>
                     </div>
                     {/* <div className="flex items-center justify-between">
@@ -142,16 +158,22 @@ export default function CartPage() {
                     </span>
                   </div> */}
                     <div className="flex items-center justify-between">
-                      <span className="md:text-xl text-black/60">
-                        Delivery Fee
-                      </span>
-                      <span className="md:text-xl font-bold">Free</span>
+                      <span className="text-black/60">Delivery Fee</span>
+                      <span className="font-bold">Free</span>
                     </div>
                     <hr className="border-t-black/10" />
                     <div className="flex items-center justify-between">
-                      <span className="md:text-xl text-black">Total</span>
-                      <span className="text-xl md:text-2xl font-bold">
-                        ${Math.round(cart?.total).toLocaleString()}
+                      <span className="text-black">Total</span>
+                      <span className="font-bold">
+                        $
+                        {Math.round(
+                          cart?.items.reduce(
+                            (acc, item) =>
+                              acc +
+                              item.product.pricing.base_price * item.quantity,
+                            0
+                          )
+                        ).toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -164,21 +186,21 @@ export default function CartPage() {
                         type="text"
                         name="code"
                         placeholder="Add promo code"
-                        className="bg-transparent placeholder:text-black/40"
+                        className="bg-transparent rounded-none placeholder:text-black/40"
                       />
                     </InputGroup>
                     <Button
                       type="button"
                       variant="secondary"
-                      className="text-white rounded-full w-full max-w-[119px] h-[48px] cursor-pointer"
+                      className="text-white w-full max-w-[119px] h-12 cursor-pointer"
                     >
                       Apply
                     </Button>
                   </div>
                   <Button
                     onClick={() => router.push("/checkout")}
-                    variant="secondary"
-                    className="text-sm md:text-base text-white font-medium rounded-full w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
+                    variant="default"
+                    className="text-sm md:text-base text-white font-medium w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
                   >
                     Checkout{" "}
                     <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
@@ -186,10 +208,10 @@ export default function CartPage() {
                   <Button
                     type="button"
                     variant="ghost"
-                    className="text-sm md:text-base font-medium rounded-full w-full py-4 h-[54px] md:h-[60px]"
+                    className="text-sm md:text-base font-medium w-full py-4 h-[54px] md:h-[60px]"
                     asChild
                   >
-                    <Link href="/discover">Continue Browsing →</Link>
+                    <Link href="/shop">Continue Browsing →</Link>
                   </Button>
                 </div>
               </div>
