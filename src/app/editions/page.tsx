@@ -147,8 +147,6 @@ const Editions = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 };
