@@ -94,7 +94,7 @@ export function LoginForm({
             id="email"
             type="email"
             placeholder="m@example.com"
-            className="h-[44px]"
+            className="h-11 bg-white"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
@@ -116,7 +116,7 @@ export function LoginForm({
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
-              className="h-[44px]"
+              className="h-11 bg-white"
               placeholder="Your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

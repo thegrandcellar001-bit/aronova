@@ -75,11 +75,11 @@ const Navigation = () => {
               <UserAvatar />
             ) : (
               <Button
-                className="rounded-full cursor-pointer hidden md:block"
+                className="cursor-pointer hidden md:block"
                 variant="default"
               >
                 <Link href="/login" className="text-white">
-                  <i className="far fa-sign-in"></i> Login
+                  <i className="far fa-sign-in mr-1"></i> Login
                 </Link>
               </Button>
             )}

@@ -41,7 +41,12 @@ export function RegisterForm({
     setLoading(true);
 
     try {
-      const response = await auth.post("/customer/register", formData);
+      const response = await auth.post("/customer/register", {
+        email: formData.email,
+        name: formData.fullName,
+        password: formData.password,
+        country: formData.country,
+      });
 
       if (response.status !== 201) {
         console.error("Registration failed:", response);
@@ -92,7 +97,7 @@ export function RegisterForm({
           <Input
             id="fullName"
             type="text"
-            className="h-[44px]"
+            className="h-11 bg-white"
             placeholder="John Doe"
             onChange={(e) =>
               setFormData({ ...formData, fullName: e.target.value })
@@ -106,7 +111,7 @@ export function RegisterForm({
           <Input
             id="email"
             type="email"
-            className="h-[44px]"
+            className="h-11 bg-white"
             placeholder="example@aronova.com"
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
@@ -123,7 +128,7 @@ export function RegisterForm({
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
-              className="h-[44px]"
+              className="h-11 bg-white"
               placeholder="Your password"
               value={formData.password}
               onChange={(e) =>
@@ -148,7 +153,7 @@ export function RegisterForm({
             <Label htmlFor="confirm-password">Confirm Password</Label>
           </div>
           <Input
-            className="h-[44px]"
+            className="h-11 bg-white"
             id="confirm-password"
             placeholder="Re-enter your password"
             type={showPassword ? "text" : "password"}
