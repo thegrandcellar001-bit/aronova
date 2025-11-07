@@ -104,7 +104,7 @@ export default function Page() {
 
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10 bg-white">
         <section className="px-6 max-w-7xl mx-auto">
           <BreadcrumbAccount />
           <div className="flex flex-col md:flex-row items-start justify-between gap-6 mt-10">
@@ -223,7 +223,7 @@ export default function Page() {
                           <div className="space-y-3">
                             <Label htmlFor="first-name">First name</Label>
                             <Input
-                              className="h-12"
+                              className="h-12 bg-white"
                               placeholder="First name"
                               value={accountFormData.firstName}
                               onChange={(e) =>
@@ -237,7 +237,7 @@ export default function Page() {
                           <div className="space-y-3">
                             <Label htmlFor="last-name">Last name</Label>
                             <Input
-                              className="h-12"
+                              className="h-12 bg-white"
                               placeholder="Last name"
                               value={accountFormData.lastName}
                               onChange={(e) =>
@@ -255,7 +255,7 @@ export default function Page() {
                               E-mail address
                             </Label>
                             <Input
-                              className="h-12"
+                              className="h-12 bg-white"
                               placeholder="E-mail address"
                               value={accountFormData.email}
                               onChange={(e) =>
@@ -307,7 +307,7 @@ export default function Page() {
                               Current Password
                             </Label>
                             <Input
-                              className="h-12"
+                              className="h-12 bg-white"
                               placeholder="Current Password"
                             />
                           </div>
@@ -317,7 +317,7 @@ export default function Page() {
                           <div className="space-y-3">
                             <Label htmlFor="newPassword">New Password</Label>
                             <Input
-                              className="h-12"
+                              className="h-12 bg-white"
                               placeholder="New Password"
                             />
                           </div>
@@ -326,7 +326,7 @@ export default function Page() {
                               Confirm Password
                             </Label>
                             <Input
-                              className="h-12"
+                              className="h-12 bg-white"
                               placeholder="Confirm Password"
                             />
                           </div>

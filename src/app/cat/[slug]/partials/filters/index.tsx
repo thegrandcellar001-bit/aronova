@@ -21,7 +21,8 @@ const Filters = () => {
       <DressStyleSection />
       <Button
         type="button"
-        className="bg-secondary w-full rounded-full text-sm font-medium py-4 h-12"
+        variant="default"
+        className="w-full text-sm font-medium py-4 h-12 cursor-pointer"
       >
         Apply Filter
       </Button>

@@ -9,9 +9,8 @@ import { useState } from "react";
 import AuthGuard from "@/lib/auth-guard";
 
 export default function Page() {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
-    "card"
-  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("card");
 
   const handlePaymentMethodChange = (value: string) => {
     setSelectedPaymentMethod(value);
@@ -19,7 +18,7 @@ export default function Page() {
 
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10 bg-white">
         <section className="px-6 max-w-7xl mx-auto">
           <BreadcrumbPayment />
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
@@ -42,7 +41,7 @@ export default function Page() {
                 >
                   <Label
                     htmlFor="method1"
-                    className="flex items-center gap-4 rounded-lg border-2 p-3 has-[[data-state=checked]]:border-primary h-20"
+                    className="flex items-center gap-4 rounded-lg border-2 p-3 has-[data-state=checked]:border-primary h-20"
                   >
                     <RadioGroupItem
                       value="card"

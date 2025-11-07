@@ -78,9 +78,11 @@ export default function Page() {
 
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10 bg-white">
         <section className="px-6 max-w-7xl mx-auto">
-          <BreadcrumbOrder />
+          <BreadcrumbOrder
+            subLink={{ title: "Reviews", path: "/orders/reviews" }}
+          />
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
             <Sidebar />
             {loading ? (

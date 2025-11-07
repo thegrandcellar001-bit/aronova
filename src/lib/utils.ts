@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from "clsx";
-import { debounce } from "lodash";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -11,7 +10,11 @@ export const compareArrays = (a: any[], b: any[]) => {
 };
 
 // Utility to generate visible page numbers based on current page & total pages
-export const getVisiblePages = (current: number, total: number, windowSize: number) => {
+export const getVisiblePages = (
+  current: number,
+  total: number,
+  windowSize: number
+) => {
   const pages: number[] = [];
 
   if (total <= windowSize) {
@@ -36,3 +39,22 @@ export const debouncedSyncCart = debounce(
   },
   1500 // wait 1.5 seconds
 );
+
+export const splitName = (fullName: string) => {
+  const names = fullName.split(" ");
+  return {
+    firstName: names[0] || "",
+    lastName: names.slice(1).join(" ") || "",
+  };
+};
+
+export function debounce<T extends (...args: any[]) => void>(
+  fn: T,
+  delay = 300
+) {
+  let timer: any;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}

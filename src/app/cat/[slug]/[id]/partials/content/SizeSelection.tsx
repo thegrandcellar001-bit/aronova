@@ -20,7 +20,7 @@ const SizeSelection = () => {
             type="button"
             variant="default"
             className={cn([
-              "bg-[#F0F0F0] flex items-center justify-center px-5 lg:px-6 py-2.5 lg:py-3 text-sm lg:text-base rounded-full m-1 lg:m-0 max-h-[46px] text-black hover:text-white cursor-pointer",
+              "bg-[#F0F0F0] flex items-center justify-center px-5 lg:px-6 py-2.5 lg:py-3 text-sm lg:text-base m-1 lg:m-0 max-h-[46px] text-black hover:text-white cursor-pointer",
               sizeSelection === size && "bg-deep-green font-medium text-white",
             ])}
             onClick={() => setSizeSelection(size)}

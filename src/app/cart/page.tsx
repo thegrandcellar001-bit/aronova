@@ -4,84 +4,23 @@ import BreadcrumbCart from "./partials/cart-breadcrumb";
 import ProductCard from "./partials/cart-product";
 import { Button } from "@/components/ui/button";
 import InputGroup from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import { FaArrowRight } from "react-icons/fa6";
-import { MdOutlineLocalOffer } from "react-icons/md";
 import { TbBasketExclamation } from "react-icons/tb";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import api from "@/lib/axios";
-import { Product, Variant } from "@/types/product.types";
 import { useToast } from "@/hooks/use-toast";
 import ApiLoader from "@/components/common/api-loader";
-
-export interface CartData {
-  id: number;
-  user_id: number;
-  status: string;
-  items: {
-    id: number;
-    product_id: string;
-    name: string;
-    variant_id: string;
-    product: {
-      id: string;
-      category_slug: string;
-      pricing: {
-        base_price: number;
-        discount: number;
-        final_price: number;
-      };
-      primary_image: string;
-    };
-    variant: {
-      id: string;
-      product_id: string;
-      color: string;
-      size: string;
-      pricing: {
-        base_price: number;
-        discount: number;
-        final_price: number;
-        price_adjustment: number;
-        total_price: number;
-      };
-    };
-    subtotal: number;
-    quantity: number;
-  }[];
-  created_at: string;
-  updated_at: string;
-}
+import { useCart } from "../providers/cart-provider";
+import { CartItem } from "@/types/cart.types";
 
 export default function CartPage() {
   const router = useRouter();
   const { toastError } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [cart, setCartData] = useState<CartData>();
-
-  const fetchCartItems = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get("/cart");
-      return res.data as CartData;
-    } catch (error) {
-      console.error("Error fetching cart items:", error);
-      toastError("An error occurred while fetching cart items.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { state, loading, reloadCart } = useCart();
 
   useEffect(() => {
-    const getData = async () => {
-      const data = await fetchCartItems();
-      setCartData(data as CartData);
-    };
-
-    getData();
+    reloadCart();
   }, []);
 
   return (
@@ -90,38 +29,27 @@ export default function CartPage() {
         <ApiLoader message="Loading your cart..." />
       ) : (
         <div className="max-w-frame mx-auto px-4 xl:px-0">
-          {cart && cart.items.length > 0 ? (
+          {state.items.length > 0 ? (
             <>
               <BreadcrumbCart />
               <h2 className="font-bold text-[28px] md:text-4xl mb-1">
                 Your cart
               </h2>
               <p className="text-black/60 mb-5">
-                You have {cart.items.length} item
-                {cart.items.length > 1 ? "s" : ""} in your cart.
+                You have {state.items.length} item
+                {state.items.length > 1 ? "s" : ""} in your cart.
               </p>
               <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
                 <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
-                  {cart?.items.map((item, idx, arr) => (
-                    <React.Fragment key={idx}>
+                  {state.items.map((item: CartItem, index: number) => (
+                    <React.Fragment key={item.id}>
                       <ProductCard
-                        item={{
-                          id: item.id,
-                          product_id: item.product_id,
-                          name: item.name,
-                          image: item.product.primary_image,
-                          price: item.product.pricing.base_price,
-                          quantity: item.quantity,
-                        }}
+                        item={item}
                         variant={item.variant}
                         category_slug={item.product.category_slug}
-                        userId={cart.user_id}
-                        onCartChange={async () => {
-                          const data = await fetchCartItems();
-                          setCartData(data as CartData);
-                        }}
+                        userId={state.user_id}
                       />
-                      {arr.length - 1 !== idx && (
+                      {state.items.length - 1 !== index && (
                         <hr className="border-t-black/10" />
                       )}
                     </React.Fragment>
@@ -136,11 +64,13 @@ export default function CartPage() {
                       <span className=" text-black/60">Sub-total</span>
                       <span className="font-bold">
                         $
-                        {cart?.items
+                        {state.items
                           .reduce(
-                            (acc, item) =>
+                            (acc: number, item: CartItem) =>
                               acc +
-                              item.product.pricing.base_price * item.quantity,
+                              (item.variant?.final_price ||
+                                item.product.pricing.final_price) *
+                                item.quantity,
                             0
                           )
                           .toLocaleString()}
@@ -166,14 +96,16 @@ export default function CartPage() {
                       <span className="text-black">Total</span>
                       <span className="font-bold">
                         $
-                        {Math.round(
-                          cart?.items.reduce(
-                            (acc, item) =>
+                        {state.items
+                          .reduce(
+                            (acc: number, item: CartItem) =>
                               acc +
-                              item.product.pricing.base_price * item.quantity,
+                              (item.variant?.final_price ||
+                                item.product.pricing.final_price) *
+                                item.quantity,
                             0
                           )
-                        ).toLocaleString()}
+                          .toLocaleString()}
                       </span>
                     </div>
                   </div>

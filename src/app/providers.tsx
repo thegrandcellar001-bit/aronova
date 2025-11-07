@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import SpinnerbLoader from "@/components/ui/SpinnerbLoader";
+import { CartProvider } from "./providers/cart-provider";
 
 type Props = {
   children: React.ReactNode;
 };
 
 const Providers = ({ children }: Props) => {
-  return <>{children}</>;
+  return <CartProvider>{children}</CartProvider>;
 };
 
 export default Providers;

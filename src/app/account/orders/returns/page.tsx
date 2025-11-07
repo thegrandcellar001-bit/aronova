@@ -49,7 +49,6 @@ interface ReturnResponse {
 }
 
 export default function Page() {
-  const { user } = useAuthStore();
   const { toastError } = useToast();
   const [returns, setReturns] = useState<ReturnResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -69,17 +68,15 @@ export default function Page() {
 
   useEffect(() => {
     fetchReturns();
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setReturns([]);
-    // }, 1500);
   }, []);
 
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10 bg-white">
         <section className="px-6 max-w-7xl mx-auto">
-          <BreadcrumbOrder />
+          <BreadcrumbOrder
+            subLink={{ title: "Returns", path: "/orders/returns" }}
+          />
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
             <Sidebar />
             {loading ? (

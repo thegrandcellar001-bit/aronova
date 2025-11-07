@@ -35,7 +35,7 @@ const ColorSelection = () => {
             type="button"
             className={cn([
               color.code,
-              "rounded-full w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center cursor-pointer",
+              "w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center cursor-pointer",
             ])}
             onClick={() => setColorSelection(color)}
           >

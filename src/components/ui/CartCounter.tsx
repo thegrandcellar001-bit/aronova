@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
+import { Spinner } from "./spinner";
 
 type CartCounterProps = {
   isZeroDelete?: boolean;
   onAdd?: (value: number) => void;
   onRemove?: (value: number) => void;
   className?: string;
+  loading: boolean;
   initialValue?: number;
 };
 
@@ -18,6 +20,7 @@ const CartCounter = ({
   onAdd,
   onRemove,
   className,
+  loading,
   initialValue = 1,
 }: CartCounterProps) => {
   const [counter, setCounter] = useState<number>(initialValue);
@@ -42,31 +45,37 @@ const CartCounter = ({
   return (
     <div
       className={cn(
-        "bg-[#F0F0F0] w-full min-w-[110px] max-w-[110px] sm:max-w-[170px] py-3 md:py-3.5 px-4 sm:px-5 rounded-full flex items-center justify-between",
+        "bg-[#F0F0F0] w-full min-w-[110px] max-w-[110px] sm:max-w-[170px] py-3 md:py-3.5 px-4 sm:px-5  flex items-center justify-between",
         className
       )}
     >
-      <Button
-        variant="ghost"
-        size="icon"
-        type="button"
-        className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
-        onClick={() => remove()}
-      >
-        <FaMinus />
-      </Button>
-      <span className="font-medium text-sm sm:text-base">
-        {!isZeroDelete ? counter : initialValue}
-      </span>
-      <Button
-        variant="ghost"
-        size="icon"
-        type="button"
-        className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
-        onClick={() => addToCart()}
-      >
-        <FaPlus />
-      </Button>
+      {loading ? (
+        <Spinner className="w-6 h-6 mx-auto" />
+      ) : (
+        <Fragment>
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
+            onClick={() => remove()}
+          >
+            <FaMinus />
+          </Button>
+          <span className="font-medium text-sm sm:text-base">
+            {!isZeroDelete ? counter : initialValue}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
+            onClick={() => addToCart()}
+          >
+            <FaPlus />
+          </Button>
+        </Fragment>
+      )}
     </div>
   );
 };

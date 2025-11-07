@@ -14,9 +14,9 @@ const ColorsSection = () => {
   const [selected, setSelected] = useState<string>("bg-green-600");
 
   return (
-    <Accordion type="single" collapsible defaultValue="filter-colors">
+    <Accordion type="single" collapsible>
       <AccordionItem value="filter-colors" className="border-none">
-        <AccordionTrigger className="text-black font-bold text-xl hover:no-underline p-0 py-0.5">
+        <AccordionTrigger className="text-black text-xl hover:no-underline p-0 py-0.5">
           Colors
         </AccordionTrigger>
         <AccordionContent className="pt-4 pb-0">
@@ -38,7 +38,7 @@ const ColorsSection = () => {
                 type="button"
                 className={cn([
                   color,
-                  "rounded-full w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center border border-black/20",
+                  "w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center border border-black/20",
                 ])}
                 onClick={() => setSelected(color)}
               >

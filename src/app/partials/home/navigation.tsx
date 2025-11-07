@@ -1,6 +1,5 @@
 "use client";
 
-import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/stores/auth";
 import { UserAvatar } from "../layout/navbar/top/user-avatar";
@@ -9,13 +8,34 @@ import Link from "next/link";
 
 const Navigation = () => {
   const navItems = [
-    "Discover",
-    "Shop",
-    "Editions",
-    "Stories",
-    "Concierge",
-    "ReAronova",
-    "About",
+    {
+      name: "Discover",
+      path: "/discover",
+    },
+    {
+      name: "Shop",
+      path: "/shop",
+    },
+    {
+      name: "Editions",
+      path: "/editions",
+    },
+    {
+      name: "Stories",
+      path: "/stories",
+    },
+    {
+      name: "Concierge",
+      path: "/concierge",
+    },
+    {
+      name: "ReAronova",
+      path: "/re-aronova",
+    },
+    {
+      name: "About",
+      path: "/about",
+    },
   ];
 
   const { isAuthenticated } = useAuthStore();
@@ -31,18 +51,14 @@ const Navigation = () => {
 
           {/* Navigation Links */}
           <div className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => {
-              const path =
-                item === "Discover"
-                  ? "/discover"
-                  : `/${item.toLowerCase().replace(" ", "-")}`;
+            {navItems.map((item, index) => {
               return (
                 <a
-                  key={item}
-                  href={path}
+                  key={index}
+                  href={item.path}
                   className="text-sm font-sans tracking-wide text-foreground hover:text-primary transition-colors relative group"
                 >
-                  {item}
+                  {item.name}
                   <span className="absolute bottom-0 left-0 w-0 h-px bg-primary group-hover:w-full transition-all duration-300" />
                 </a>
               );

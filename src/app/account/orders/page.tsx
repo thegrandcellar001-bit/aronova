@@ -62,8 +62,7 @@ export default function Page() {
       status: "delivered",
       order_items: [
         {
-          name:
-            "Color Screen Smart Bracelet D13 Waterproof Bracelet Waterproof",
+          name: "Color Screen Smart Bracelet D13 Waterproof Bracelet Waterproof",
           image_url: "/images/orders/2.jpg",
         },
       ],
@@ -130,7 +129,7 @@ export default function Page() {
 
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10 bg-white">
         <section className="px-6 max-w-7xl mx-auto">
           <BreadcrumbOrder />
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">

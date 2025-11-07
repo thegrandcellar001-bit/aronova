@@ -34,9 +34,9 @@ const dressStylesData: DressStyle[] = [
 
 const DressStyleSection = () => {
   return (
-    <Accordion type="single" collapsible defaultValue="filter-style">
+    <Accordion type="single" collapsible>
       <AccordionItem value="filter-style" className="border-none">
-        <AccordionTrigger className="text-black font-bold text-xl hover:no-underline p-0 py-0.5">
+        <AccordionTrigger className="text-black font-light text-xl hover:no-underline p-0 py-0.5">
           Dress Style
         </AccordionTrigger>
         <AccordionContent className="pt-4 pb-0">

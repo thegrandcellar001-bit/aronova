@@ -1,7 +1,5 @@
 "use client";
 
-import Navigation from "../partials/home/navigation";
-import Footer from "../partials/home/footer";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { useCategoryStore } from "@/lib/stores/categories";
@@ -14,6 +12,14 @@ import Link from "next/link";
 import Filters from "../cat/[slug]/partials/filters";
 import MobileFilters from "../cat/[slug]/partials/filters/MobileFilters";
 import { useMediaQuery } from "@/hooks/use-media-query";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductResponse {
   limit: number;
@@ -100,34 +106,47 @@ const Shop = () => {
 
           {/* Filter Bar */}
           <section className="border-b border-border bg-background sticky top-20 z-40">
-            <div className="max-w-[1400px] mx-auto px-6 lg:px-20 py-6">
-              <div className="flex flex-wrap items-center gap-4">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Filter className="h-4 w-4" />
-                  Filters
-                </Button>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category.category_slug}
-                      variant={category.name === "All" ? "default" : "ghost"}
-                      size="sm"
-                      className={`text-sm cursor-pointer ${
-                        currentCategory === category.category_slug &&
-                        "bg-secondary text-primary"
-                      } hover:bg-secondary hover:text-primary`}
-                      onClick={() => fetchProducts(category.category_slug)}
-                    >
-                      {category.name}
-                    </Button>
-                  ))}
-                </div>
+            <div className="max-w-[1400px] mx-auto px-2 lg:px-20 py-6">
+              <div className="flex items-center gap-4 w-[95%]">
+                <Carousel
+                  opts={{
+                    align: "start",
+                  }}
+                  className="relative w-full"
+                >
+                  <div className="bg-background w-[34px] h-9 absolute left-0 top-0 bottom-0 flex items-center justify-center z-10">
+                    <CarouselPrevious className="absolute left-0 z-10 inline-flex rounded-none cursor-pointer bg-primary text-white" />
+                  </div>
+                  <CarouselContent className="ml-7">
+                    {categories.map((category) => (
+                      <CarouselItem
+                        key={category.category_slug}
+                        className="basis-auto shrink-0"
+                      >
+                        <Button
+                          variant={
+                            category.name === "All" ? "default" : "outline"
+                          }
+                          size="sm"
+                          className={`text-sm cursor-pointer whitespace-nowrap ${
+                            currentCategory === category.category_slug &&
+                            "bg-primary text-white"
+                          } border-[1.5px] border-deep-green hover:bg-primary hover:text-white`}
+                          onClick={() => fetchProducts(category.category_slug)}
+                        >
+                          {category.name}
+                        </Button>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselNext className="absolute inline-flex cursor-pointer rounded-none bg-primary text-white" />
+                </Carousel>
               </div>
             </div>
           </section>
 
           {/* Products Grid */}
-          <section className="py-8 lg:py-10">
+          <section className="py-8 lg:py-10 bg-white">
             {productLoading ? (
               <ApiLoader message="Loading products..." />
             ) : (

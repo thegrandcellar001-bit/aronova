@@ -83,7 +83,7 @@ const Editions = () => {
                       index % 2 === 1 ? "lg:col-start-2" : ""
                     } animate-fade-in`}
                   >
-                    <div className="aspect-[4/5] overflow-hidden bg-muted">
+                    <div className="aspect-4/5 overflow-hidden bg-muted">
                       <img
                         src={edition.image}
                         alt={edition.title}

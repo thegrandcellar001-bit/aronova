@@ -9,9 +9,9 @@ import { Slider } from "@/components/ui/slider";
 
 const PriceSection = () => {
   return (
-    <Accordion type="single" collapsible defaultValue="filter-price">
+    <Accordion type="single" collapsible>
       <AccordionItem value="filter-price" className="border-none">
-        <AccordionTrigger className="text-black font-bold text-xl hover:no-underline p-0 py-0.5">
+        <AccordionTrigger className="text-black text-xl hover:no-underline p-0 py-0.5">
           Price
         </AccordionTrigger>
         <AccordionContent className="pt-4">
@@ -21,6 +21,7 @@ const PriceSection = () => {
             max={250}
             step={1}
             label="₦"
+            color="var(--secondary)"
             className="overflow-visible"
           />
           <div className="mb-3" />

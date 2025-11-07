@@ -128,31 +128,9 @@ export default function Page() {
     fetchUserAddresses();
   }, []);
 
-  // const addressList = [
-  //   {
-  //     id: "1",
-  //     name: "John Doe",
-  //     phone: "123-456-7890",
-  //     additionalPhone: "555-555-5555",
-  //     address: "123 Main St, Springfield, IL 62701",
-  //     state: "Lagos",
-  //     lga: "Ikeja",
-  //     isDefault: true,
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Jane Smith",
-  //     phone: "987-654-3210",
-  //     address: "456 Elm St, Springfield, IL 62702",
-  //     state: "Ekiti",
-  //     lga: "Ikere",
-  //     isDefault: false,
-  //   },
-  // ];
-
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10 bg-white">
         <section className="px-6 max-w-7xl mx-auto">
           <BreadcrumbAddress />
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
@@ -254,7 +232,7 @@ export default function Page() {
                     <div className="space-y-3">
                       <Label htmlFor="firstName">First name</Label>
                       <Input
-                        className="h-12"
+                        className="h-12 bg-white"
                         placeholder="First name"
                         name="firstName"
                         value={formData.firstName}
@@ -264,7 +242,7 @@ export default function Page() {
                     <div className="space-y-3">
                       <Label htmlFor="lastName">Last name</Label>
                       <Input
-                        className="h-12"
+                        className="h-12 bg-white"
                         placeholder="Last name"
                         name="lastName"
                         value={formData.lastName}
@@ -276,7 +254,7 @@ export default function Page() {
                     <div className="space-y-3">
                       <Label htmlFor="phoneNumber">Phone number</Label>
                       <Input
-                        className="h-12"
+                        className="h-12 bg-white"
                         type="tel"
                         placeholder="Phone number"
                         name="phoneNumber"
@@ -289,7 +267,7 @@ export default function Page() {
                         Additional Phone Number
                       </Label>
                       <Input
-                        className="h-12"
+                        className="h-12 bg-white"
                         type="tel"
                         placeholder="Additional phone number"
                         name="additionalPhoneNumber"
@@ -302,7 +280,7 @@ export default function Page() {
                     <div className="space-y-3">
                       <Label htmlFor="address">Delivery Address</Label>
                       <Input
-                        className="h-12"
+                        className="h-12 bg-white"
                         placeholder="Delivery Address"
                         name="deliveryAddress"
                         value={formData.deliveryAddress}
@@ -314,7 +292,7 @@ export default function Page() {
                         Additional Information
                       </Label>
                       <Input
-                        className="h-12"
+                        className="h-12 bg-white"
                         type="text"
                         placeholder="Enter additional information"
                         name="additionalInfo"
@@ -331,8 +309,8 @@ export default function Page() {
                         defaultValue={selectedState || ""}
                         onValueChange={(e) => handleStateChange(e)}
                       >
-                        <SelectTrigger className="w-full h-12">
-                          <SelectValue placeholder="- Select -" />
+                        <SelectTrigger className="w-full h-12 bg-white">
+                          <SelectValue placeholder="- Select state -" />
                         </SelectTrigger>
                         <SelectContent id="state">
                           <SelectGroup>
@@ -356,7 +334,7 @@ export default function Page() {
                           disabled={!selectedState}
                         >
                           <SelectTrigger className="w-full h-12">
-                            <SelectValue placeholder="- Select -" />
+                            <SelectValue placeholder="- Select LGA -" />
                           </SelectTrigger>
                           <SelectContent id="lga">
                             <SelectGroup>

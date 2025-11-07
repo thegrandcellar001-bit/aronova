@@ -1,11 +1,22 @@
 export interface CartItem {
   id: number;
   product_id: string;
-  variant_id?: string;
   name: string;
-  image: string;
-  price: number;
+  variant_id: string;
+  subtotal: number;
   quantity: number;
+  product: {
+    id: string;
+    category_slug: string;
+    final_price: number;
+    primary_image: string;
+    pricing: {
+      base_price: number;
+      discount: number;
+      final_price: number;
+    };
+  };
+  variant?: CartVariant;
 }
 
 export interface CartVariant {
@@ -13,6 +24,7 @@ export interface CartVariant {
   product_id: string;
   color: string;
   size: string;
+  final_price: number;
   pricing: {
     base_price: number;
     discount: number;
@@ -26,4 +38,13 @@ export interface CartProductProps {
   item: CartItem;
   userId: number;
   onCartChange?: () => void; // optional callback to refetch cart after change
+}
+
+export interface CartData {
+  id: number;
+  user_id: number;
+  status: string;
+  items: CartItem[];
+  created_at: string;
+  updated_at: string;
 }

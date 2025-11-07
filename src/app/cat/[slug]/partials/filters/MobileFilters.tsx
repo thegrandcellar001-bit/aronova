@@ -1,28 +1,28 @@
 import React from "react";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { FiSliders } from "react-icons/fi";
 import Filters from ".";
+import { Button } from "@/components/ui/buttons";
 
 const MobileFilters = () => {
   return (
     <>
       <Drawer>
         <DrawerTrigger asChild>
-          <button
+          <Button
             type="button"
-            className="h-8 w-8 rounded-full bg-[#F0F0F0] text-black p-1 md:hidden"
+            variant="outline"
+            className="h-12 w-full bg-white cursor-pointer"
           >
-            <FiSliders className="text-base mx-auto" />
-          </button>
+            <i className="text-base far fa-filter" /> Filters
+          </Button>
         </DrawerTrigger>
         <DrawerContent className="max-h-[90%]">
           <DrawerHeader>
