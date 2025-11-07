@@ -17,7 +17,7 @@ import { useAuthStore } from "@/lib/stores/auth";
 import ApiLoader from "@/components/common/api-loader";
 
 export default function Page() {
-  const { user } = useAuthStore();
+  const { user, token, setAuth } = useAuthStore();
   const { toastError, toastSuccess } = useToast();
 
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -50,6 +50,12 @@ export default function Page() {
       await api.patch("/customer/update", payload);
       fetchUserData();
       setEditProfile(false);
+      setAuth(token || "", {
+        ...user,
+        name: payload.name,
+        email: payload.email,
+      });
+      toastSuccess("Profile updated successfully");
     } catch (err) {
       console.error("Error updating profile:", err);
       toastError("Failed to update profile");
@@ -178,27 +184,6 @@ export default function Page() {
                             </span>
                           )}
                         </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="border rounded-md p-4 col-span-full">
-                    <h2 className="font-medium text-md border-b pb-2">
-                      <i className="far fa-credit-card mr-1"></i> Payment Method
-                    </h2>
-                    <div className="mt-2 space-y-1">
-                      <p className="font-medium">
-                        Your default payment method:
-                      </p>
-                      <div className="grid gap-1.5 font-normal border rounded-md p-4 mt-3">
-                        <p className="text-sm leading-none font-medium">
-                          Pay with Cards, Bank Transfer or USSD
-                        </p>
-                        <p className="text-muted-foreground text-sm">
-                          Prepay for your order with the above methods, you will
-                          be redirected to the payment gateway to complete your
-                          purchase.
-                        </p>
                       </div>
                     </div>
                   </div>

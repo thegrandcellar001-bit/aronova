@@ -27,14 +27,6 @@ export default function Sidebar() {
           >
             <i className="far fa-address-book"></i> Address Book
           </Link>
-          <Link
-            href="/account/payment"
-            className={`${
-              pathname === "/account/payment" ? "text-primary" : "text-gray-500"
-            } flex items-center gap-x-2`}
-          >
-            <i className="far fa-credit-card"></i> Payment Method
-          </Link>
         </div>
       </div>
 

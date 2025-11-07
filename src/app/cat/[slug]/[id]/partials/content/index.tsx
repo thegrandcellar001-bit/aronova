@@ -1,14 +1,16 @@
 import React from "react";
 import PhotoSection from "./PhotoSection";
 import { Product } from "@/types/product.types";
-import { integralCF } from "@/styles/fonts";
-import { cn } from "@/lib/utils";
 import Rating from "@/components/ui/Rating";
 import ColorSelection from "./ColorSelection";
 import SizeSelection from "./SizeSelection";
 import AddToCardSection from "./AddToCardSection";
+import { useAuthStore } from "@/lib/stores/auth";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Header = ({ data }: { data: Product }) => {
+  const { isAuthenticated } = useAuthStore();
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -59,7 +61,17 @@ const Header = ({ data }: { data: Product }) => {
           <hr className="h-px border-t-black/10 my-5" />
           <SizeSelection />
           <hr className="hidden md:block h-px border-t-black/10 my-5" />
-          <AddToCardSection data={data} />
+          {!isAuthenticated ? (
+            <Link
+              href="/login"
+              className="bg-primary text-white p-3 mt-6 w-full rounded-none text-md cursor-pointer flex items-center justify-center"
+            >
+              <i className="far fa-info-circle text-md mr-2"></i> Create an
+              account / login to order
+            </Link>
+          ) : (
+            <AddToCardSection data={data} />
+          )}
         </div>
       </div>
     </>

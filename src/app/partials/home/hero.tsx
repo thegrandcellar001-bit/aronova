@@ -1,36 +1,72 @@
-import { Button } from "@/components/ui/button";
+"use client";
 
-const Hero = () => {
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+
+const videos = [
+  {
+    src: "/videos/hero-video.webm",
+    poster: "/images/background/hero-bg.jpg",
+    caption: "Discover the extraordinary — curated, authenticated, and yours.",
+  },
+  {
+    src: "/videos/hero-video-2.webm",
+    poster: "/images/background/hero-bg-2.jpg",
+    caption: "Experience timeless beauty, crafted with provenance and purpose.",
+  },
+];
+
+export default function Hero() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Video */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        // poster ensures fallback shows before video loads
-        poster="/images/background/hero-bg.jpg"
+      {/* Background Carousel */}
+      <Carousel
+        className="absolute inset-0"
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        plugins={[Autoplay({ delay: 6000, stopOnInteraction: false })]}
       >
-        <source src="/videos/hero-video.webm" type="video/webm" />
-        {/* If browser does not support video, this image shows */}
-        <img
-          src="/images/background/hero-bg.jpg"
-          alt="Hero Background"
-          className="w-full h-full object-cover"
-        />
-      </video>
+        <CarouselContent>
+          {videos.map((video, index) => (
+            <CarouselItem key={index} className="relative h-screen">
+              <video
+                className="absolute inset-0 w-full h-full object-cover"
+                muted
+                loop
+                playsInline
+                preload="auto"
+                poster={video.poster}
+                autoPlay
+              >
+                <source src={video.src} type="video/webm" />
+                <img
+                  src={video.poster}
+                  alt="Hero Background"
+                  className="w-full h-full object-cover"
+                />
+              </video>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/30" />
+      <div className="absolute inset-0 bg-black/40 z-0" />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 animate-fade-in-slow">
         <h1 className="text-3xl md:text-6xl lg:text-6xl my-6 text-cream tracking-tight">
-          Discover the extraordinary — <br />
-          curated, authenticated, and yours.
+          {videos[activeIndex].caption}
         </h1>
         <p className="font-sans text-lg md:text-xl text-cream/90 max-w-2xl mx-auto mb-10 leading-relaxed">
           A global emporium where provenance meets beauty, crafted with
@@ -55,11 +91,9 @@ const Hero = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-10">
         <div className="w-px h-12 bg-cream/50" />
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

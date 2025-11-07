@@ -47,6 +47,7 @@
     "country-data-list": "^1.5.5",
     "date-fns": "^4.1.0",
     "dlx": "^0.2.1",
+    "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^11.5.4",
     "holy-loader": "^2.3.7",
