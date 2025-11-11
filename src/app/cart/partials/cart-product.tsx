@@ -77,7 +77,7 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
         <div className="flex items-center flex-wrap justify-between mt-2">
           <div className="flex items-center space-x-[5px] xl:space-x-2.5">
             <span className="text-black text-xl xl:text-2xl">
-              ${totalPrice}
+              ₦{totalPrice}
             </span>
           </div>
 

@@ -1,53 +1,91 @@
-import React from "react";
+import React, { Fragment } from "react";
 import PhotoSection from "./PhotoSection";
 import { Product } from "@/types/product.types";
 import Rating from "@/components/ui/Rating";
 import ColorSelection from "./ColorSelection";
 import SizeSelection from "./SizeSelection";
-import AddToCardSection from "./AddToCardSection";
 import { useAuthStore } from "@/lib/stores/auth";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useWishlist } from "@/app/providers/wishlist-provider";
+import { useToast } from "@/hooks/use-toast";
+import { Spinner } from "@/components/ui/spinner";
+import AddToCartSection from "./AddToCartSection";
 
 const Header = ({ data }: { data: Product }) => {
   const { isAuthenticated } = useAuthStore();
+  const { addItem, removeItem, itemExists, loading } = useWishlist();
+
+  const inWishlist = itemExists(data.id);
+
+  const handleWishlistClick = async () => {
+    if (inWishlist) {
+      await removeItem(data.id);
+    } else {
+      await addItem({
+        productId: data.id,
+        quantity: 1,
+        variantId: data.variants?.[0]?.id,
+      });
+    }
+  };
+
   return (
-    <>
+    <Fragment>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
           <PhotoSection data={data} />
         </div>
         <div>
-          <h1 className="text-2xl font-bold md:text-[40px] md:leading-10 mb-3 md:mb-3.5 capitalize">
-            {data.name}
-          </h1>
-          <div className="flex items-center mb-3 sm:mb-3.5">
-            <Rating
-              initialValue={data.average_rating}
-              allowFraction
-              SVGclassName="inline-block"
-              emptyClassName="fill-gray-50"
-              size={25}
-              readonly
-            />
-            <span className="text-black text-xs sm:text-sm ml-[11px] sm:ml-[13px] pb-0.5 sm:pb-0">
-              {data.average_rating.toFixed(1)}
-              <span className="text-black/60">/5</span>
-            </span>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold md:text-[40px] md:leading-10 mb-3 md:mb-3.5 capitalize">
+              {data.name}
+            </h1>
+          </div>
+          <div className="flex items-center justify-between mb-3 sm:mb-3.5">
+            <div className="flex items-center">
+              <Rating
+                initialValue={data.average_rating}
+                allowFraction
+                SVGclassName="inline-block"
+                emptyClassName="fill-gray-50"
+                size={25}
+                readonly
+              />
+              <span className="text-black text-xs sm:text-sm ml-[11px] sm:ml-[13px] pb-0.5 sm:pb-0">
+                {data.average_rating.toFixed(1)}
+                <span className="text-black/60">/5</span>
+              </span>
+            </div>
+
+            <div
+              className="flex items-center justify-center cursor-pointer mr-4"
+              title="Add to wishlist"
+              onClick={handleWishlistClick}
+            >
+              {loading.add || loading.remove ? (
+                <Spinner className="w-6 h-6" />
+              ) : (
+                <i
+                  className={`fa-heart text-2xl ${
+                    inWishlist ? "fas text-red-500" : "far text-gray-500"
+                  }`}
+                />
+              )}
+            </div>
           </div>
           <div className="flex items-center space-x-2.5 sm:space-x-3 mb-5">
             {data.pricing.discount > 0 ? (
               <span className="text-black text-xl xl:text-2xl">
-                ${data.pricing.final_price}
+                ₦{data.pricing.final_price}
               </span>
             ) : (
               <span className="text-black text-xl xl:text-2xl">
-                ${data.pricing.base_price}
+                ₦{data.pricing.base_price}
               </span>
             )}
             {data.pricing.discount > 0 && (
               <span className="text-black/40 line-through text-xl xl:text-2xl">
-                ${data.pricing.base_price}
+                ₦{data.pricing.base_price}
               </span>
             )}
             {data.pricing.discount > 0 && (
@@ -70,11 +108,11 @@ const Header = ({ data }: { data: Product }) => {
               account / login to order
             </Link>
           ) : (
-            <AddToCardSection data={data} />
+            <AddToCartSection data={data} />
           )}
         </div>
       </div>
-    </>
+    </Fragment>
   );
 };
 

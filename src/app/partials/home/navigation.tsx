@@ -5,6 +5,7 @@ import { useAuthStore } from "@/lib/stores/auth";
 import { UserAvatar } from "../layout/navbar/top/user-avatar";
 import CartBtn from "../layout/navbar/top/CartBtn";
 import Link from "next/link";
+import { useWishlist } from "@/app/providers/wishlist-provider";
 
 const Navigation = () => {
   const navItems = [
@@ -39,6 +40,7 @@ const Navigation = () => {
   ];
 
   const { isAuthenticated } = useAuthStore();
+  const { itemsCount } = useWishlist();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -67,8 +69,13 @@ const Navigation = () => {
 
           <div className="flex items-center gap-x-4">
             <CartBtn />
-            <Link href="/wishlist" className="p-1 ">
+            <Link href="/wishlist" className="p-1 relative">
               <i className="far fa-heart text-2xl text-primary"></i>
+              {itemsCount > 0 && (
+                <span className="absolute top-[-7px] -right-0.5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-primary rounded-full">
+                  {itemsCount}
+                </span>
+              )}
             </Link>
 
             {isAuthenticated ? (

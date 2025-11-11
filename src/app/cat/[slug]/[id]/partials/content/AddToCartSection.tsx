@@ -1,21 +1,27 @@
 "use client";
 
 import CartCounter from "@/components/ui/CartCounter";
-import React, { Fragment, useState } from "react";
-import AddToCartBtn from "./AddToCartBtn";
+import React, { Fragment, useEffect, useState } from "react";
 import { Product } from "@/types/product.types";
 import { useCart } from "@/app/providers/cart-provider";
-import RemoveFromCartBtn from "./RemoveFromCartBtn";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
-const AddToCardSection = ({ data }: { data: Product }) => {
+const AddToCartSection = ({ data }: { data: Product }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const {
+    addItem,
+    addLoading,
+    removeItem,
+    removeLoading,
     inCart,
     findItem,
     increaseQuantity,
     decreaseQuantity,
     updateLoading,
   } = useCart();
+
+  console.log(data);
 
   const itemInCart = inCart(data.id);
   const itemId = itemInCart ? findItem(data.id).id : null;
@@ -34,7 +40,19 @@ const AddToCardSection = ({ data }: { data: Product }) => {
             }}
             loading={updateLoading}
           />
-          <RemoveFromCartBtn item_id={itemId} />
+          <Button
+            type="button"
+            variant="destructive"
+            className="w-full ml-3 sm:ml-5 h-11 md:h-[52px] text-sm sm:text-base text-white transition-all cursor-pointer"
+            onClick={() => removeItem(itemId)}
+            disabled={removeLoading}
+          >
+            {removeLoading ? (
+              <Spinner className="w-6 h-6 mx-auto" />
+            ) : (
+              "Remove from cart"
+            )}
+          </Button>
         </Fragment>
       ) : (
         <Fragment>
@@ -48,11 +66,25 @@ const AddToCardSection = ({ data }: { data: Product }) => {
             }}
             loading={false}
           />
-          <AddToCartBtn item={data} quantity={quantity} />
+          <Button
+            type="button"
+            variant="default"
+            className="w-full ml-3 sm:ml-5 h-11 md:h-[52px] text-sm sm:text-base text-white transition-all cursor-pointer"
+            onClick={() =>
+              addItem(data, quantity, data.variants && data.variants[0].id)
+            }
+            disabled={addLoading}
+          >
+            {addLoading ? (
+              <Spinner className="w-6 h-6 mx-auto" />
+            ) : (
+              "Add to cart"
+            )}
+          </Button>
         </Fragment>
       )}
     </div>
   );
 };
 
-export default AddToCardSection;
+export default AddToCartSection;

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import InputGroup from "@/components/ui/input-group";
 import { FaArrowRight } from "react-icons/fa6";
 import { TbBasketExclamation } from "react-icons/tb";
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -30,7 +30,7 @@ export default function CartPage() {
       ) : (
         <div className="max-w-frame mx-auto px-4 xl:px-0">
           {state.items.length > 0 ? (
-            <>
+            <Fragment>
               <BreadcrumbCart />
               <h2 className="font-bold text-[28px] md:text-4xl mb-1">
                 Your cart
@@ -39,6 +39,7 @@ export default function CartPage() {
                 You have {state.items.length} item
                 {state.items.length > 1 ? "s" : ""} in your cart.
               </p>
+
               <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
                 <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
                   {state.items.map((item: CartItem, index: number) => (
@@ -63,7 +64,7 @@ export default function CartPage() {
                     <div className="flex items-center justify-between">
                       <span className=" text-black/60">Sub-total</span>
                       <span className="font-bold">
-                        $
+                        ₦
                         {state.items
                           .reduce(
                             (acc: number, item: CartItem) =>
@@ -95,7 +96,7 @@ export default function CartPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-black">Total</span>
                       <span className="font-bold">
-                        $
+                        ₦
                         {state.items
                           .reduce(
                             (acc: number, item: CartItem) =>
@@ -147,7 +148,7 @@ export default function CartPage() {
                   </Button>
                 </div>
               </div>
-            </>
+            </Fragment>
           ) : (
             <div className="flex items-center flex-col text-gray-300 mt-32">
               <TbBasketExclamation strokeWidth={1} className="text-6xl" />

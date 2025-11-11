@@ -101,12 +101,11 @@ export default function ShopPage() {
 
   return (
     <AuthGuard>
-      <main className="pb-20">
+      <main className="pt-26 bg-white pb-10">
         <div className="max-w-frame mx-auto px-4 xl:px-0">
-          <ShopCategories />
           <BreadcrumbShop category={categoryData} />
           <div className="flex md:space-x-5 items-start">
-            <div className="hidden md:block min-w-[295px] max-w-[295px] border border-black/10 rounded-[20px] px-5 md:px-6 py-5 space-y-5 md:space-y-6">
+            <div className="hidden md:block min-w-[295px] max-w-[295px] border border-black/10 px-5 md:px-6 py-5 space-y-5 md:space-y-6">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-black text-xl">Filters</span>
                 <FiSliders className="text-2xl text-black/40" />

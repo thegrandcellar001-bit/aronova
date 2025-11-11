@@ -15,6 +15,7 @@ import { UserData } from "@/types/account/user";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/lib/stores/auth";
 import ApiLoader from "@/components/common/api-loader";
+import { em } from "framer-motion/client";
 
 export default function Page() {
   const { user, token, setAuth } = useAuthStore();
@@ -23,6 +24,7 @@ export default function Page() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [editProfile, setEditProfile] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [updateLoading, setUpdateLoading] = useState(false);
   const editProfileElem = useRef<HTMLDivElement>(null);
 
   const fetchUserData = async () => {
@@ -41,6 +43,7 @@ export default function Page() {
   };
 
   const handleUpdateProfile = async () => {
+    setUpdateLoading(true);
     try {
       const payload = {
         name: `${accountFormData.firstName} ${accountFormData.lastName}`,
@@ -59,6 +62,24 @@ export default function Page() {
     } catch (err) {
       console.error("Error updating profile:", err);
       toastError("Failed to update profile");
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    setUpdateLoading(true);
+    try {
+      const res = await api.post("/customer/reset-password", {
+        email: user.email,
+        new_password: passwordFormData.newPassword,
+      });
+      toastSuccess("Password updated successfully");
+    } catch (err) {
+      console.error("Error updating password:", err);
+      toastError("Failed to update password");
+    } finally {
+      setUpdateLoading(false);
     }
   };
 
@@ -80,7 +101,11 @@ export default function Page() {
     country: userData?.country || "",
   });
 
-  const [passwordFormData, setPasswordFormData] = useState({});
+  const [passwordFormData, setPasswordFormData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const address = {
     id: "1",
@@ -205,10 +230,10 @@ export default function Page() {
                           Edit Your Profile
                         </h3>
                         <div className="grid grid-cols-2 gap-x-3 mt-6">
-                          <div className="space-y-3">
+                          <div>
                             <Label htmlFor="first-name">First name</Label>
                             <Input
-                              className="h-12 bg-white"
+                              className="h-12 bg-white mt-3"
                               placeholder="First name"
                               value={accountFormData.firstName}
                               onChange={(e) =>
@@ -219,10 +244,10 @@ export default function Page() {
                               }
                             />
                           </div>
-                          <div className="space-y-3">
+                          <div>
                             <Label htmlFor="last-name">Last name</Label>
                             <Input
-                              className="h-12 bg-white"
+                              className="h-12 bg-white mt-3"
                               placeholder="Last name"
                               value={accountFormData.lastName}
                               onChange={(e) =>
@@ -240,7 +265,7 @@ export default function Page() {
                               E-mail address
                             </Label>
                             <Input
-                              className="h-12 bg-white"
+                              className="h-12 bg-white mt-3"
                               placeholder="E-mail address"
                               value={accountFormData.email}
                               onChange={(e) =>
@@ -277,42 +302,66 @@ export default function Page() {
                             className="cursor-pointer"
                             variant={"default"}
                             onClick={handleUpdateProfile}
+                            disabled={updateLoading}
                           >
-                            Save Changes
+                            {updateLoading ? "Saving..." : "Save Changes"}
                           </Button>
                         </div>
                       </TabsContent>
+
+                      {/* Password Tab Content */}
                       <TabsContent value="password" className="mt-4">
                         <h3 className="font-medium text-lg">
                           Change Your Password
                         </h3>
                         <div className="grid grid-cols-1 gap-y-3 mt-4">
-                          <div className="space-y-3">
+                          <div>
                             <Label htmlFor="currentPassword">
                               Current Password
                             </Label>
                             <Input
-                              className="h-12 bg-white"
+                              className="h-12 bg-white mt-3"
                               placeholder="Current Password"
+                              value={passwordFormData.currentPassword}
+                              onChange={(e) =>
+                                setPasswordFormData({
+                                  ...passwordFormData,
+                                  currentPassword: e.target.value,
+                                })
+                              }
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-x-3 mt-4">
-                          <div className="space-y-3">
+                          <div>
                             <Label htmlFor="newPassword">New Password</Label>
                             <Input
-                              className="h-12 bg-white"
+                              className="h-12 bg-white mt-3"
                               placeholder="New Password"
+                              value={passwordFormData.newPassword}
+                              onChange={(e) =>
+                                setPasswordFormData({
+                                  ...passwordFormData,
+                                  newPassword: e.target.value,
+                                })
+                              }
                             />
                           </div>
-                          <div className="space-y-3">
+                          <div>
                             <Label htmlFor="confirmPassword">
                               Confirm Password
                             </Label>
                             <Input
-                              className="h-12 bg-white"
+                              className="h-12 bg-white mt-3"
                               placeholder="Confirm Password"
+                              value={passwordFormData.confirmPassword}
+                              onChange={(e) =>
+                                setPasswordFormData({
+                                  ...passwordFormData,
+                                  confirmPassword: e.target.value,
+                                })
+                              }
                             />
                           </div>
                         </div>
@@ -321,8 +370,16 @@ export default function Page() {
                           <Button
                             className="cursor-pointer"
                             variant={"default"}
+                            onClick={handleResetPassword}
+                            disabled={
+                              updateLoading ||
+                              !passwordFormData.currentPassword ||
+                              !passwordFormData.newPassword ||
+                              passwordFormData.newPassword !==
+                                passwordFormData.confirmPassword
+                            }
                           >
-                            Save Changes
+                            {updateLoading ? "Saving..." : "Save Changes"}
                           </Button>
                         </div>
                       </TabsContent>

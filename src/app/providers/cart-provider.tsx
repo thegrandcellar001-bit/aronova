@@ -12,6 +12,7 @@ import { debounce } from "@/lib/utils";
 import { CartItem } from "@/types/cart.types";
 import { Product } from "@/types/product.types";
 import { useAuthStore } from "@/lib/stores/auth";
+import { useToast } from "@/hooks/use-toast";
 
 type CartState = { items: CartItem[] };
 
@@ -66,6 +67,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [removeLoading, setRemoveLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const prevSnapshot = useRef<CartState | null>(null);
+  const [status, setStatus] = useState({
+    success: false,
+    message: null as string | null,
+  });
+  const { toastSuccess, toastError } = useToast();
 
   function snapshot() {
     prevSnapshot.current = JSON.parse(JSON.stringify(state));
@@ -99,8 +105,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       dispatch({ type: "SET", payload: mapped });
     } catch (err) {
       console.error("Failed to load cart", err);
+      toastError("Failed to load cart");
     } finally {
-      setLoading(false); // stop loading
+      setLoading(false);
     }
   }
 
@@ -109,14 +116,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setAddLoading(true);
     dispatch({ type: "ADD", payload: item });
+
     try {
       await api.post("/cart/items", {
         product_id: item.id,
         quantity,
         ...(variant_id && { variant_id }),
       });
+      setStatus({ success: true, message: "Item added to cart." });
+      toastSuccess("Item added to cart.");
     } catch {
       rollback();
+      setStatus({ success: false, message: "Failed to add item to cart." });
+      toastError("Failed to add item to cart");
     } finally {
       setAddLoading(false);
     }
@@ -128,9 +140,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setRemoveLoading(true);
     dispatch({ type: "REMOVE", payload: item_id });
     try {
-      const res = await api.delete(`/cart/items/${item_id}`);
+      await api.delete(`/cart/items/${item_id}`);
+      setStatus({ success: true, message: "Item removed from cart." });
+      toastSuccess("Item removed from cart");
     } catch {
       rollback();
+      setStatus({
+        success: false,
+        message: "Failed to remove item from cart.",
+      });
+      toastError("Failed to remove item from cart");
     } finally {
       setRemoveLoading(false);
     }
@@ -148,8 +167,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
           type: "UPDATE_QTY",
           payload: { item_id, quantity: updatedItem.quantity },
         });
+        setStatus({ success: true, message: "Item quantity updated." });
+        toastSuccess("Item quantity updated");
       } catch (err) {
         loadCart();
+        setStatus({
+          success: false,
+          message: "Failed to update item quantity.",
+        });
+        toastError("Failed to update item quantity");
       } finally {
         setUpdateLoading(false);
       }
@@ -161,11 +187,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     debouncedSync(item_id, quantity);
   }
 
-  function clearCart() {
+  async function clearCart() {
     snapshot();
     dispatch({ type: "CLEAR" });
 
-    api.post("/cart/clear").catch(() => rollback());
+    try {
+      await api.post("/cart/clear");
+      setStatus({ success: true, message: "Cart cleared." });
+      toastSuccess("Cart cleared");
+    } catch {
+      rollback();
+      setStatus({ success: false, message: "Failed to clear cart." });
+      toastError("Failed to clear cart");
+    }
   }
 
   useEffect(() => {
@@ -179,6 +213,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       value={{
         state,
         totalItems: state.items.reduce((sum, item) => sum + item.quantity, 0),
+        status,
         addItem,
         addLoading,
         removeItem,
