@@ -110,7 +110,7 @@ export default function ShopPage() {
                 <span className="font-bold text-black text-xl">Filters</span>
                 <FiSliders className="text-2xl text-black/40" />
               </div>
-              <Filters />
+              {/* <Filters priceRange={[50, 100000]} setPriceRange={() => {}} /> */}
             </div>
             <div className="flex flex-col w-full space-y-5">
               <div className="flex flex-col lg:flex-row lg:justify-between">
@@ -118,7 +118,7 @@ export default function ShopPage() {
                   <h1 className="font-bold text-2xl md:text-[32px]">
                     {categoryData.name}
                   </h1>
-                  <MobileFilters />
+                  {/* <MobileFilters /> */}
                 </div>
                 {categoryProducts && categoryProducts.length > 0 && (
                   <div className="flex flex-col sm:items-center sm:flex-row">

@@ -9,8 +9,14 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 
-const SizeSection = () => {
-  const [selected, setSelected] = useState<string>("Large");
+const SizeSection = ({
+  selectedSizes,
+  setSelectedSizes,
+}: {
+  selectedSizes: string[];
+  setSelectedSizes: (sizes: string[]) => void;
+}) => {
+  const [selected, setSelected] = useState<string>("M");
 
   return (
     <Accordion type="single" collapsible>

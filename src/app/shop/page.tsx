@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Filter } from "lucide-react";
 import { useCategoryStore } from "@/lib/stores/categories";
 import { Fragment, useEffect, useState } from "react";
 import ApiLoader from "@/components/common/api-loader";
@@ -44,21 +43,45 @@ const Shop = () => {
     categories.length > 0 ? categories[0].category_slug : null
   );
 
+  const [filters, setFilters] = useState({
+    priceRange: [0, 100000],
+    colors: [] as string[],
+    sizes: [] as string[],
+    dressStyles: [] as string[],
+  });
+
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const { toastError } = useToast();
 
-  const fetchProducts = async (category_slug: string, page: number = 1) => {
+  const fetchProducts = async (
+    category_slug: string,
+    page: number = 1,
+    filters: any
+  ) => {
     setProductLoading(true);
 
     try {
       const limit = categoryMeta?.limit || 20;
       const offset = (page - 1) * limit;
 
+      const params: any = { limit, offset };
+
+      if (filters) {
+        if (filters.colors.length > 0) params.colors = filters.colors.join(",");
+        if (filters.sizes.length > 0) params.sizes = filters.sizes.join(",");
+        if (filters.dressStyles.length > 0)
+          params.dressStyles = filters.dressStyles.join(",");
+        if (filters.priceRange) {
+          params.price_min = filters.priceRange[0];
+          params.price_max = filters.priceRange[1];
+        }
+      }
+
       const res = await api.get<ProductResponse>(
         `/categories/${category_slug}`,
         {
-          params: { limit, offset },
+          params,
         }
       );
 
@@ -75,13 +98,19 @@ const Shop = () => {
     }
   };
 
+  const handleApplyFilters = () => {
+    if (currentCategory) {
+      fetchProducts(currentCategory, 1, filters);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
   useEffect(() => {
     if (categories.length > 0) {
-      fetchProducts(categories[0].category_slug);
+      fetchProducts(categories[0].category_slug, 1, filters);
     }
   }, [categories]);
 
@@ -132,7 +161,9 @@ const Shop = () => {
                             currentCategory === category.category_slug &&
                             "bg-primary text-white"
                           } border-[1.5px] border-deep-green hover:bg-primary hover:text-white`}
-                          onClick={() => fetchProducts(category.category_slug)}
+                          onClick={() =>
+                            fetchProducts(category.category_slug, 1, filters)
+                          }
                         >
                           {category.name}
                         </Button>
@@ -152,7 +183,19 @@ const Shop = () => {
             ) : (
               <div className="max-w-[1400px] px-6 lg:px-20 flex flex-col md:flex-row items-start gap-6">
                 <div className="w-full md:w-1/3">
-                  {isDesktop ? <Filters /> : <MobileFilters />}
+                  {isDesktop ? (
+                    <Filters
+                      filters={filters}
+                      setFilters={setFilters}
+                      onApply={handleApplyFilters}
+                    />
+                  ) : (
+                    <MobileFilters
+                      filters={filters}
+                      setFilters={setFilters}
+                      onApply={handleApplyFilters}
+                    />
+                  )}
                 </div>
 
                 <div className="grow w-full">

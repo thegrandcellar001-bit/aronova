@@ -51,7 +51,6 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
             >
               {item.name}
             </Link>
-
             {variant && (
               <Fragment>
                 <p className="text-black text-sm capitalize">

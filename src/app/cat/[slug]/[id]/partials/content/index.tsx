@@ -94,7 +94,7 @@ const Header = ({ data }: { data: Product }) => {
           </div>
           <div className="flex items-center space-x-2.5 sm:space-x-3 mb-5">
             {selectedVariant ? (
-              <>
+              <Fragment>
                 <span className="text-black text-xl xl:text-2xl">
                   ₦{selectedVariant.pricing.final_price}
                 </span>
@@ -108,9 +108,9 @@ const Header = ({ data }: { data: Product }) => {
                     </span>
                   </Fragment>
                 )}
-              </>
+              </Fragment>
             ) : (
-              <>
+              <Fragment>
                 <span className="text-black text-xl xl:text-2xl">
                   ₦{data.pricing.final_price}
                 </span>
@@ -124,7 +124,7 @@ const Header = ({ data }: { data: Product }) => {
                     </span>
                   </>
                 )}
-              </>
+              </Fragment>
             )}
           </div>
           <hr className="h-px border-t-black/10 mb-5" />

@@ -11,7 +11,15 @@ import { FiSliders } from "react-icons/fi";
 import Filters from ".";
 import { Button } from "@/components/ui/buttons";
 
-const MobileFilters = () => {
+const MobileFilters = ({
+  filters,
+  setFilters,
+  onApply,
+}: {
+  filters: any;
+  setFilters: React.Dispatch<React.SetStateAction<any>>;
+  onApply: (filters: any) => void;
+}) => {
   return (
     <>
       <Drawer>
@@ -34,7 +42,11 @@ const MobileFilters = () => {
             <DrawerDescription className="hidden">filters</DrawerDescription>
           </DrawerHeader>
           <div className="max-h-[90%] overflow-y-auto w-full px-5 md:px-6 py-5 space-y-5 md:space-y-6">
-            <Filters />
+            <Filters
+              filters={filters}
+              setFilters={setFilters}
+              onApply={onApply}
+            />
           </div>
         </DrawerContent>
       </Drawer>
