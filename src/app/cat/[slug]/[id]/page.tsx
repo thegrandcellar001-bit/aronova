@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  newArrivalsData,
-  relatedProductData,
-  topSellingData,
-} from "@/lib/data/products";
+import { relatedProductData } from "@/lib/data/products";
 import ProductListSec from "@/components/common/product-slider";
 import BreadcrumbProduct from "./partials/product-breadcrumb";
 import ProductContent from "./partials/content";
@@ -15,12 +11,8 @@ import api from "@/lib/axios";
 import { useToast } from "@/hooks/use-toast";
 import { Fragment, useEffect, useState } from "react";
 import ApiLoader from "@/components/common/api-loader";
-
-const data: Product[] = [
-  ...newArrivalsData,
-  ...topSellingData,
-  ...relatedProductData,
-];
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function ProductPage() {
   const params = useParams<{ id: string }>();
@@ -76,11 +68,14 @@ export default function ProductPage() {
             </Fragment>
           ) : (
             <div className="max-w-frame mx-auto px-4 xl:px-0">
-              <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">
-                <i className="fal fa-box text-4xl"></i>
-                <p className="text-black/40">
+              <div className="flex items-center flex-col gap-y-6 text-gray-500 mt-32">
+                <i className="fal fa-box-open text-6xl" />
+                <span className="block mb-4">
                   The product you are looking for does not exist.
-                </p>
+                </span>
+                <Button className="rounded-full" asChild>
+                  <Link href="/shop">Shop</Link>
+                </Button>
               </div>
             </div>
           )}

@@ -43,7 +43,7 @@ export default function CartPage() {
               <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
                 <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
                   {state.items.map((item: CartItem, index: number) => (
-                    <React.Fragment key={item.id}>
+                    <Fragment key={index}>
                       <ProductCard
                         item={item}
                         variant={item.variant}
@@ -53,7 +53,7 @@ export default function CartPage() {
                       {state.items.length - 1 !== index && (
                         <hr className="border-t-black/10" />
                       )}
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </div>
                 <div className="w-full lg:max-w-[505px] p-5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
@@ -150,8 +150,8 @@ export default function CartPage() {
               </div>
             </Fragment>
           ) : (
-            <div className="flex items-center flex-col text-gray-300 mt-32">
-              <TbBasketExclamation strokeWidth={1} className="text-6xl" />
+            <div className="flex items-center flex-col gap-y-6 text-gray-500 mt-32">
+              <i className="fal fa-shopping-cart text-6xl" />
               <span className="block mb-4">No items in your cart yet.</span>
               <Button className="rounded-full" asChild>
                 <Link href="/shop">Shop</Link>

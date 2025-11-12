@@ -1,42 +1,44 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-export type Color = {
-  name: string;
-  code: string;
-};
+import { Variant } from "@/types/product.types";
 
 interface ProductsState {
-  colorSelection: Color;
-  sizeSelection: string;
-  setColorSelection: (color: Color) => void;
-  setSizeSelection: (size: string) => void;
+  colorSelection: string | null; // now just the color name, e.g. "blue"
+  sizeSelection: string | null; // "M", "L", etc.
+  selectedVariant: Variant | null;
+  setColorSelection: (color: string) => void;
+  setSizeSelection: (size: string | null) => void;
+  setSelectedVariant: (variant: Variant | null) => void;
   resetSelections: () => void;
 }
 
 export const useProductStore = create<ProductsState>()(
   persist(
     (set) => ({
-      colorSelection: {
-        name: "Brown",
-        code: "bg-[#4F4631]",
-      },
-      sizeSelection: "Large",
+      colorSelection: null,
+      sizeSelection: null,
+      selectedVariant: null,
 
-      setColorSelection: (color) => set({ colorSelection: color }),
+      setColorSelection: (color) =>
+        set({
+          colorSelection: color,
+          sizeSelection: null, // reset size when color changes
+          selectedVariant: null,
+        }),
+
       setSizeSelection: (size) => set({ sizeSelection: size }),
+
+      setSelectedVariant: (variant) => set({ selectedVariant: variant }),
 
       resetSelections: () =>
         set({
-          colorSelection: {
-            name: "Brown",
-            code: "bg-[#4F4631]",
-          },
-          sizeSelection: "Large",
+          colorSelection: null,
+          sizeSelection: null,
+          selectedVariant: null,
         }),
     }),
     {
-      name: "productStore", // localStorage key
+      name: "productStore", // still persisted in localStorage
     }
   )
 );

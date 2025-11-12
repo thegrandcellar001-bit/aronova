@@ -9,7 +9,7 @@ import {
 } from "react";
 import api from "@/lib/axios";
 import { debounce } from "@/lib/utils";
-import { CartItem } from "@/types/cart.types";
+import { CartData, CartItem } from "@/types/cart.types";
 import { Product } from "@/types/product.types";
 import { useAuthStore } from "@/lib/stores/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -25,12 +25,21 @@ function reducer(state: CartState, action: any): CartState {
       return { items: action.payload };
 
     case "ADD": {
-      const exists = state.items.find((i) => i.id === action.payload.id);
+      const exists = state.items.find(
+        (i) =>
+          i.product_id === action.payload.product_id &&
+          i.variant_id === action.payload.variant_id
+      );
+
       const updated = exists
         ? state.items.map((i) =>
-            i.id === exists.id ? { ...i, quantity: i.quantity + 1 } : i
+            i.product_id === action.payload.product_id &&
+            i.variant_id === action.payload.variant_id
+              ? { ...i, quantity: i.quantity + action.payload.quantity }
+              : i
           )
-        : [...state.items, { ...action.payload, quantity: 1 }];
+        : [...state.items, action.payload];
+
       return { items: updated };
     }
 
@@ -111,18 +120,53 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function addItem(item: Product, quantity: number, variant_id?: string) {
+  async function addItem(
+    product: Product,
+    quantity: number,
+    variant_id?: string
+  ) {
     snapshot();
 
     setAddLoading(true);
-    dispatch({ type: "ADD", payload: item });
+
+    // A temporary CartItem object before dispatching
+    const tempItem = {
+      id: crypto.randomUUID(), // temporary local ID until backend returns one
+      product_id: product.id,
+      name: product.name,
+      quantity,
+      variant_id: variant_id ?? "",
+      subtotal: product.pricing.final_price * quantity,
+      product: {
+        id: product.id,
+        category_slug: product.category_slug,
+        final_price: product.pricing.final_price,
+        primary_image: product.images[0],
+        pricing: product.pricing,
+      },
+      variant: product.variants?.find((v) => v.id === variant_id),
+    };
+
+    dispatch({ type: "ADD", payload: tempItem });
 
     try {
-      await api.post("/cart/items", {
-        product_id: item.id,
+      const res = await api.post("/cart/items", {
+        product_id: product.id,
         quantity,
         ...(variant_id && { variant_id }),
       });
+
+      // Replace temporary item ID with backend item ID
+      const backendItem: any = {
+        ...tempItem,
+        id: res.data.items[0].id, // <-- backend ID
+      };
+
+      dispatch({
+        type: "UPDATE_QTY",
+        payload: { item_id: tempItem.id, item: backendItem },
+      });
+
       setStatus({ success: true, message: "Item added to cart." });
       toastSuccess("Item added to cart.");
     } catch {
@@ -232,10 +276,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
           ),
         clearCart,
         reloadCart: loadCart,
-        inCart: (product_id: string) =>
-          state.items.find((i) => i.product_id === product_id),
-        findItem: (product_id: string) =>
-          state.items.find((i) => i.product_id === product_id),
+        inCart: (product_id: string, variant_id?: string | null) =>
+          state.items.find(
+            (i) =>
+              i.product_id === product_id &&
+              (variant_id !== undefined && variant_id !== null
+                ? i.variant_id === variant_id
+                : !i.variant_id)
+          ),
+        findItem: (product_id: string, variant_id?: string) =>
+          state.items.find(
+            (i) =>
+              i.product_id === product_id &&
+              (variant_id ? i.variant_id === variant_id : true)
+          ),
       }}
     >
       {children}
