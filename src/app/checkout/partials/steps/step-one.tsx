@@ -17,6 +17,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { lgaList } from "@/components/common/location-selector";
 import { useUserData } from "@/app/providers/user-provider";
 import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
 
 export default function StepOne({
   user,
@@ -85,9 +86,9 @@ export default function StepOne({
 
       {userAddresses.length > 0 ? (
         <Fragment>
-          <div className="mt-4 mb-6 p-4 border border-black/10 rounded-lg bg-gray-50">
+          <div className="mt-4 mb-6 p-4 border border-black/10">
             <p className="font-medium text-md mb-2 text-black">
-              Customer Address
+              Saved Address(es):
             </p>
             <hr className="border-t border-black/10 mb-4" />
             <div className="flex flex-col gap-3">
@@ -98,6 +99,11 @@ export default function StepOne({
                     {address.delivery_address}, {address.lga}, {address.state}
                   </p>
                   <p className="text-black">Phone: {address.phone_number}</p>
+                  <Badge className="w-max px-2 py-1 text-sm rounded-none my-1">
+                    {address.is_default
+                      ? "Default Address"
+                      : "Alternate Address"}
+                  </Badge>
                 </div>
               ))}
             </div>

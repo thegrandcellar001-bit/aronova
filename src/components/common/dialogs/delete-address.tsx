@@ -44,11 +44,7 @@ const DeleteAddressDialog: React.FC<DeleteAddressDialogProps> = ({
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await api.delete("/account/address", {
-        data: {
-          id,
-        },
-      });
+      await api.delete(`/customer/addresses/${id}`);
       toastSuccess("Address deleted.");
       onClose(); // close the dialog
       onConfirm();
@@ -99,7 +95,7 @@ const DeleteAddressDialog: React.FC<DeleteAddressDialogProps> = ({
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Delete address</DrawerTitle>
-          <DrawerDescription className="mt-2">
+          <DrawerDescription className="mt-2 text-black">
             Are you sure you want to delete this address? <br /> This action
             cannot be undone.
           </DrawerDescription>

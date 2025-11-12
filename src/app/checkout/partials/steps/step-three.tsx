@@ -49,31 +49,13 @@ export default function StepThree({
   const { toastSuccess, toastError } = useToast();
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  const handlePaymentInitialization = async (order: OrderData) => {
-    setSubmitLoading(true);
-    try {
-      const response = await api.post(`/payments/initialize`, {
-        amount: order.total_amount,
-        currency: "NGN",
-        email: user.email,
-        order_id: order.id,
-      });
-      const { authorization_url } = response.data;
-      window.location.href = authorization_url;
-    } catch (e) {
-      toastError("Failed to initialize payment. Please try again.");
-    } finally {
-      setSubmitLoading(false);
-    }
-  };
-
   const handleSubmitOrder = async () => {
     setSubmitLoading(true);
     try {
       const res = await api.post(`/orders`);
-      const order = res.data;
+      const { payment_authorization_url, payment_reference, order } = res.data;
       toastSuccess("Redirecting to our payment gateway.");
-      await handlePaymentInitialization(order);
+      window.location.href = payment_authorization_url;
     } catch (e) {
       toastError("Failed to place order. Please try again.");
     } finally {
@@ -100,7 +82,7 @@ export default function StepThree({
                 <i className="far fa-map text-md mr-1"></i> Delivery Address
               </p>
               {userAddresses
-                .filter((address) => address.is_default === false)
+                .filter((address) => address.is_default)
                 .map((address, index) => (
                   <div key={index} className="mt-2">
                     <p className="text-sm text-black font-medium">

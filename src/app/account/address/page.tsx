@@ -39,19 +39,16 @@ export default function Page() {
     null
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const [_, setRefresh] = useState<number>(0);
   const [formLoading, setFormLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    additionalPhoneNumber: "",
-    deliveryAddress: "",
-    additionalInfo: "",
+    phone_number: "",
+    additional_phone_number: "",
+    delivery_address: "",
+    additional_info: "",
     state: "",
     lga: "",
-    isDefault: false,
+    is_default: false,
   });
 
   const { toastSuccess, toastError } = useToast();
@@ -89,38 +86,49 @@ export default function Page() {
 
     try {
       const payload = {
-        name: `${formData.firstName} ${formData.lastName}`,
-        phone_number: formData.phoneNumber,
-        additional_phone_number: formData.additionalPhoneNumber,
-        delivery_address: formData.deliveryAddress,
-        additional_info: formData.additionalInfo,
+        phone_number: formData.phone_number,
+        additional_phone_number: formData.additional_phone_number,
+        delivery_address: formData.delivery_address,
+        additional_info: formData.additional_info,
         state: selectedState,
         lga: selectedLGA,
-        is_default: formData.isDefault,
+        is_default: formData.is_default,
       };
 
       const res = await api.post("/customer/addresses", payload);
       toastSuccess("Address added successfully");
-      setRefresh((prev) => prev + 1); // Trigger re-fetching addresses
+      await fetchUserAddresses();
     } catch (error) {
       console.error("Error adding new address:", error);
       toastError("An error occurred while adding the address.");
     } finally {
       // Reset form or loading state
       setFormData({
-        firstName: "",
-        lastName: "",
-        phoneNumber: "",
-        additionalPhoneNumber: "",
-        deliveryAddress: "",
-        additionalInfo: "",
+        phone_number: "",
+        additional_phone_number: "",
+        delivery_address: "",
+        additional_info: "",
         state: "",
         lga: "",
-        isDefault: false,
+        is_default: false,
       });
       setSelectedState(null);
       setSelectedLGA(null);
       setFormLoading(false);
+    }
+  };
+
+  const handleSetDefault = async (id: string) => {
+    setLoading(true);
+    try {
+      await api.patch(`/customer/addresses/${id}`);
+      toastSuccess("Default address updated.");
+      await fetchUserAddresses();
+    } catch (error) {
+      console.error("Error setting default address:", error);
+      toastError("Failed to set default address. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -160,9 +168,6 @@ export default function Page() {
                             className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
                           >
                             <div className="space-y-1">
-                              <h4 className="font-medium text-lg">
-                                {address.name}
-                              </h4>
                               <p className="space-x-4">
                                 <i className="far fa-phone text-md mr-1"></i>{" "}
                                 {address.phone_number}
@@ -180,14 +185,26 @@ export default function Page() {
                               </p>
                             </div>
                             <div className="flex items-center gap-x-2 mt-4 md:mt-0">
-                              {address.is_default && (
-                                <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded ml-auto">
+                              {address.is_default ? (
+                                <span className="text-xs bg-primary text-white px-2 py-1 rounded ml-auto">
                                   Default
                                 </span>
+                              ) : (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="cursor-pointer border-primary text-primary bg-white"
+                                  onClick={() => {
+                                    handleSetDefault(address.id);
+                                  }}
+                                >
+                                  Set as default
+                                </Button>
                               )}
                               <Button
                                 variant="outline"
                                 size="sm"
+                                className="cursor-pointer bg-white border-primary text-primary"
                                 onClick={() => {
                                   setEditOpen(true);
                                   setSelectedAddress(address as AddressData);
@@ -198,7 +215,7 @@ export default function Page() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                className="text-red-600 border-red-600 hover:bg-red-50"
+                                className="text-red-600 border-red-600 hover:bg-red-50 bg-white cursor-pointer "
                                 onClick={() => {
                                   setDeleteOpen(true);
                                   setSelectedAddressId(address.id);
@@ -230,35 +247,13 @@ export default function Page() {
                   </h3>
                   <div className="grid grid-cols-2 gap-x-3 mt-6">
                     <div className="space-y-3">
-                      <Label htmlFor="firstName">First name</Label>
-                      <Input
-                        className="h-12 bg-white"
-                        placeholder="First name"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="lastName">Last name</Label>
-                      <Input
-                        className="h-12 bg-white"
-                        placeholder="Last name"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-x-3 mt-6">
-                    <div className="space-y-3">
                       <Label htmlFor="phoneNumber">Phone number</Label>
                       <Input
-                        className="h-12 bg-white"
+                        className="h-12 bg-white mt-3"
                         type="tel"
                         placeholder="Phone number"
                         name="phoneNumber"
-                        value={formData.phoneNumber}
+                        value={formData.phone_number}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -267,11 +262,11 @@ export default function Page() {
                         Additional Phone Number
                       </Label>
                       <Input
-                        className="h-12 bg-white"
+                        className="h-12 bg-white mt-3"
                         type="tel"
                         placeholder="Additional phone number"
-                        name="additionalPhoneNumber"
-                        value={formData.additionalPhoneNumber}
+                        name="additional_phone_number"
+                        value={formData.additional_phone_number}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -280,10 +275,10 @@ export default function Page() {
                     <div className="space-y-3">
                       <Label htmlFor="address">Delivery Address</Label>
                       <Input
-                        className="h-12 bg-white"
+                        className="h-12 bg-white mt-3"
                         placeholder="Delivery Address"
-                        name="deliveryAddress"
-                        value={formData.deliveryAddress}
+                        name="delivery_address"
+                        value={formData.delivery_address}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -292,11 +287,11 @@ export default function Page() {
                         Additional Information
                       </Label>
                       <Input
-                        className="h-12 bg-white"
+                        className="h-12 bg-white mt-3"
                         type="text"
                         placeholder="Enter additional information"
-                        name="additionalInfo"
-                        value={formData.additionalInfo}
+                        name="additional_info"
+                        value={formData.additional_info}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -309,7 +304,7 @@ export default function Page() {
                         defaultValue={selectedState || ""}
                         onValueChange={(e) => handleStateChange(e)}
                       >
-                        <SelectTrigger className="w-full h-12 bg-white">
+                        <SelectTrigger className="w-full h-12 bg-white mt-3">
                           <SelectValue placeholder="- Select state -" />
                         </SelectTrigger>
                         <SelectContent id="state">
@@ -333,7 +328,7 @@ export default function Page() {
                           onValueChange={(e) => handleLGAChange(e)}
                           disabled={!selectedState}
                         >
-                          <SelectTrigger className="w-full h-12">
+                          <SelectTrigger className="w-full bg-white h-12 mt-3">
                             <SelectValue placeholder="- Select LGA -" />
                           </SelectTrigger>
                           <SelectContent id="lga">
@@ -355,11 +350,11 @@ export default function Page() {
                   <div className="flex items-center gap-3 mt-6">
                     <Checkbox
                       id="saveAsDefault"
-                      checked={formData.isDefault}
+                      checked={formData.is_default}
                       onCheckedChange={(checked) =>
                         setFormData((prev) => ({
                           ...prev,
-                          isDefault: !!checked,
+                          is_default: !!checked,
                         }))
                       }
                     />
@@ -374,15 +369,13 @@ export default function Page() {
                       onClick={handleAddAddress}
                       disabled={
                         formLoading ||
-                        !formData.firstName ||
-                        !formData.lastName ||
-                        !formData.phoneNumber ||
-                        !formData.deliveryAddress ||
+                        !formData.phone_number ||
+                        !formData.delivery_address ||
                         !selectedState ||
                         !selectedLGA
                       }
                     >
-                      Save Changes
+                      {formLoading ? "Saving..." : "Save"}
                     </Button>
                   </div>
                 </TabsContent>
@@ -394,7 +387,7 @@ export default function Page() {
             <EditAddressDialog
               address={selectedAddress}
               open={editOpen}
-              onSave={() => console.log("Saved")}
+              onSave={() => fetchUserAddresses()}
               onClose={() => setEditOpen(false)}
             />
           )}
@@ -404,7 +397,7 @@ export default function Page() {
               id={selectedAddressId}
               open={deleteOpen}
               onClose={() => setDeleteOpen(false)}
-              onConfirm={() => console.log("Confirmed")}
+              onConfirm={() => fetchUserAddresses()}
             />
           )}
         </section>

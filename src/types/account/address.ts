@@ -1,8 +1,7 @@
 export interface AddressData {
   id: string;
-  name: string;
   phone_number: string;
-  additional_phone_number?: string;
+  additional_phone_number: string;
   additional_info?: string;
   delivery_address: string;
   state: string;

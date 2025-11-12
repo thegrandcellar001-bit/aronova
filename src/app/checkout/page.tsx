@@ -52,7 +52,6 @@ export default function Page() {
                   Checkout
                 </h2>
                 <p className="text-black/60 mb-5">Checkout your items.</p>
-
                 <div className="flex flex-col lg:flex-row gap-x-4 space-y-5 lg:space-y-0 lg:space-x-5 items-start relative">
                   {/* Left Section */}
                   <div className="w-full mt-6">

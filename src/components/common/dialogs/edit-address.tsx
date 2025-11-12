@@ -55,26 +55,24 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
   const { toastSuccess, toastError } = useToast();
 
   const [formData, setFormData] = React.useState({
-    name: address.name,
-    phone: address.phone_number,
-    additionalPhone: address.additional_phone_number,
-    address: address.delivery_address,
+    phone_number: address.phone_number,
+    additional_phone_number: address.additional_phone_number,
+    delivery_address: address.delivery_address,
     state: address.state,
     lga: address.lga,
-    isDefault: address.is_default,
+    is_default: address.is_default,
   });
 
   // Keep formData in sync with incoming address prop
   useEffect(() => {
     if (address) {
       setFormData({
-        name: address.name,
-        phone: address.phone_number,
-        additionalPhone: address.additional_phone_number,
-        address: address.delivery_address,
+        phone_number: address.phone_number,
+        additional_phone_number: address.additional_phone_number,
+        delivery_address: address.delivery_address,
         state: address.state,
         lga: address.lga,
-        isDefault: address.is_default,
+        is_default: address.is_default,
       });
     }
   }, [address]);
@@ -83,19 +81,18 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
     e.preventDefault();
 
     // Validation
-    if (formData.name.length < 2) {
-      toastError("Name must be at least 2 characters.");
-      return;
-    }
-    if (formData.phone.length < 2) {
+    if (formData.phone_number.length < 2) {
       toastError("Phone number must be at least 2 characters.");
       return;
     }
-    if (formData.additionalPhone && formData.additionalPhone.length < 2) {
+    if (
+      formData.additional_phone_number &&
+      formData.additional_phone_number.length < 2
+    ) {
       toastError("Additional phone number must be at least 2 characters.");
       return;
     }
-    if (formData.address.length < 2) {
+    if (formData.delivery_address.length < 2) {
       toastError("Address must be at least 2 characters.");
       return;
     }
@@ -110,19 +107,15 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
 
     setLoading(true);
     try {
-      await api.put("/account/address", {
-        id: address.id,
-        ...formData,
-      });
-
+      const res = await api.patch(
+        `/customer/addresses/${address.id}`,
+        formData
+      );
       toastSuccess("Address updated.");
       onSave({
         id: address.id,
-        ...formData,
-        phone_number: "",
-        delivery_address: "",
-        is_default: false,
-      }); // Update parent
+        ...res.data,
+      });
       onClose(); // Close dialog
     } catch (error) {
       console.error("Error updating address:", error);
@@ -145,7 +138,7 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-w-xl bg-white">
           <DialogHeader>
             <DialogTitle>Edit Address</DialogTitle>
             <DialogDescription>
@@ -161,7 +154,7 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
 
   return (
     <Drawer open={open} onOpenChange={onClose}>
-      <DrawerContent>
+      <DrawerContent className="bg-white">
         <DrawerHeader className="text-left">
           <DrawerTitle>Edit Address</DrawerTitle>
           <DrawerDescription>
@@ -184,13 +177,12 @@ const EditAddressDialog: React.FC<EditAddressDialogProps> = ({
 interface FormProps {
   className?: string;
   formData: {
-    name: string;
-    phone: string;
-    additionalPhone?: string;
-    address: string;
+    phone_number: string;
+    additional_phone_number: string;
+    delivery_address: string;
     state: string;
     lga: string;
-    isDefault: boolean;
+    is_default: boolean;
   };
   setFormData: (data: Partial<FormProps["formData"]>) => void;
   loading: boolean;
@@ -206,21 +198,9 @@ function Form({
 }: FormProps) {
   return (
     <form
-      className={cn("grid items-start gap-6", className)}
+      className={cn("grid items-start gap-6 mt-4", className)}
       onSubmit={onSubmit}
     >
-      <div className="grid gap-3 mt-4">
-        <Label htmlFor="name">Name</Label>
-        <Input
-          id="name"
-          placeholder="Edit name"
-          className="h-12"
-          value={formData.name}
-          onChange={(e) => setFormData({ name: e.target.value })}
-          required
-        />
-      </div>
-
       <div className="grid grid-cols-2 gap-3">
         <div className="grid gap-3">
           <Label htmlFor="phone">Matric number</Label>
@@ -228,9 +208,9 @@ function Form({
             type="tel"
             id="phone"
             placeholder="Edit phone number"
-            className="h-12"
-            value={formData.phone}
-            onChange={(e) => setFormData({ phone: e.target.value })}
+            className="h-12 bg-white"
+            value={formData.phone_number}
+            onChange={(e) => setFormData({ phone_number: e.target.value })}
             required
           />
         </div>
@@ -239,9 +219,11 @@ function Form({
           <Input
             id="additional-phone"
             placeholder="Edit additional phone number"
-            className="h-12"
-            value={formData.additionalPhone}
-            onChange={(e) => setFormData({ additionalPhone: e.target.value })}
+            className="h-12 bg-white"
+            value={formData.additional_phone_number}
+            onChange={(e) =>
+              setFormData({ additional_phone_number: e.target.value })
+            }
             required
           />
         </div>
@@ -252,9 +234,9 @@ function Form({
         <Input
           id="delivery-address"
           placeholder="Edit delivery address"
-          className="h-12"
-          value={formData.address}
-          onChange={(e) => setFormData({ address: e.target.value })}
+          className="h-12 bg-white"
+          value={formData.delivery_address}
+          onChange={(e) => setFormData({ delivery_address: e.target.value })}
           required
         />
       </div>
@@ -267,7 +249,7 @@ function Form({
             defaultValue={formData.state}
             onValueChange={(e) => setFormData({ state: e })}
           >
-            <SelectTrigger className="w-full h-14">
+            <SelectTrigger className="w-full h-14 bg-white mt-3">
               <SelectValue placeholder="- Select -" />
             </SelectTrigger>
             <SelectContent id="state">
@@ -291,7 +273,7 @@ function Form({
               onValueChange={(e) => setFormData({ lga: e })}
               disabled={!formData.state}
             >
-              <SelectTrigger className="w-full h-14">
+              <SelectTrigger className="w-full h-14 bg-white mt-3">
                 <SelectValue placeholder="- Select -" />
               </SelectTrigger>
               <SelectContent id="lga">
@@ -310,7 +292,7 @@ function Form({
         </div>
 
         <div className="flex items-center gap-3">
-          <Checkbox id="saveAsDefault" defaultChecked={formData.isDefault} />
+          <Checkbox id="saveAsDefault" defaultChecked={formData.is_default} />
           <Label htmlFor="saveAsDefault">Save as default address</Label>
         </div>
       </div>
@@ -319,10 +301,10 @@ function Form({
         className="cursor-pointer"
         type="submit"
         disabled={
-          formData.name.length < 2 ||
-          formData.phone.length < 2 ||
-          (formData.additionalPhone && formData.additionalPhone.length < 2) ||
-          formData.address.length < 2 ||
+          formData.phone_number.length < 2 ||
+          (formData.additional_phone_number &&
+            formData.additional_phone_number.length < 2) ||
+          formData.delivery_address.length < 2 ||
           formData.state.length < 2 ||
           formData.lga.length < 2 ||
           loading

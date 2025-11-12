@@ -127,24 +127,30 @@ const Header = ({ data }: { data: Product }) => {
               </Fragment>
             )}
           </div>
-          <hr className="h-px border-t-black/10 mb-5" />
           {hasVariants && (
             <Fragment>
-              <ColorSelection
-                data={data}
-                colorSelection={colorSelection}
-                setColorSelection={setColorSelection}
-                setSizeSelection={setSizeSelection}
-                setSelectedVariant={setSelectedVariant}
-              />
-              <hr className="h-px border-t-black/10 my-5" />
-              <SizeSelection
-                data={data}
-                colorSelection={colorSelection}
-                sizeSelection={sizeSelection}
-                setSizeSelection={setSizeSelection}
-                setSelectedVariant={setSelectedVariant}
-              />
+              {data.variants.some((v: any) => !!v.color) && (
+                <Fragment>
+                  <hr className="h-px border-t-black/10 mb-5" />
+                  <ColorSelection
+                    data={data}
+                    colorSelection={colorSelection}
+                    setColorSelection={setColorSelection}
+                    setSizeSelection={setSizeSelection}
+                    setSelectedVariant={setSelectedVariant}
+                  />
+                  <hr className="h-px border-t-black/10 my-5" />
+                </Fragment>
+              )}
+              {data.variants.some((v: any) => !!v.size) && (
+                <SizeSelection
+                  data={data}
+                  colorSelection={colorSelection}
+                  sizeSelection={sizeSelection}
+                  setSizeSelection={setSizeSelection}
+                  setSelectedVariant={setSelectedVariant}
+                />
+              )}
               <hr className="hidden md:block h-px border-t-black/10 my-5" />
             </Fragment>
           )}
