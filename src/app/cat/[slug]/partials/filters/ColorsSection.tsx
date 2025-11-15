@@ -14,12 +14,11 @@ const ColorsSection = ({
   setSelectedColors: (colors: string[]) => void;
 }) => {
   const colors = [
-    { title: "green", className: "bg-green-600" },
     { title: "red", className: "bg-red-600" },
+    { title: "green", className: "bg-green-600" },
+    { title: "blue", className: "bg-blue-600" },
     { title: "yellow", className: "bg-yellow-300" },
     { title: "orange", className: "bg-orange-600" },
-    { title: "cyan", className: "bg-cyan-400" },
-    { title: "blue", className: "bg-blue-600" },
     { title: "purple", className: "bg-purple-600" },
     { title: "pink", className: "bg-pink-600" },
     { title: "white", className: "bg-white" },
@@ -51,9 +50,16 @@ const ColorsSection = ({
                   "w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center border border-black/20",
                 ])}
                 onClick={() => toggleColor(color.title)}
+                title={color.title}
               >
                 {selectedColors.includes(color.title) && (
-                  <i className="far fa-check  text-lg text-white" />
+                  <i
+                    className={`far fa-check text-lg ${
+                      color.className.includes("white")
+                        ? "text-black"
+                        : "text-white"
+                    }`}
+                  />
                 )}
               </button>
             ))}

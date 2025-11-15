@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 const Footer = () => {
   const footerLinks = {
     Shop: ["Market", "Editions", "Pre-Owned"],
-    Explore: ["Experiences", "Restaurants", "Concierge"],
+    Explore: ["Concierge"],
     Stories: ["Journal", "Collaborations", "Culture"],
     Company: ["About", "Contact", "Terms & Privacy"],
   };

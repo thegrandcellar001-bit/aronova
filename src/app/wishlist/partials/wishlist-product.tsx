@@ -27,7 +27,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         href={`/cat/${data.category_slug}/${data.product_id}`}
         className="flex flex-col items-start aspect-auto"
       >
-        <div className="bg-[#F0EEED] rounded-[13px] lg:rounded-[20px] w-full lg:max-w-[295px] aspect-square mb-2.5 xl:mb-4 overflow-hidden relative">
+        <div className="bg-[#F0EEED] w-full lg:max-w-[295px] aspect-square mb-2.5 xl:mb-4 overflow-hidden relative">
           <Image
             src={data.primary_image}
             width={295}

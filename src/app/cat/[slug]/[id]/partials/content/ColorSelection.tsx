@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import React from "react";
-import { IoMdCheckmark } from "react-icons/io";
 import { Product } from "@/types/product.types";
 
 const ColorSelection = ({
@@ -14,7 +13,7 @@ const ColorSelection = ({
 }: {
   data: Product;
   colorSelection: string | null;
-  setColorSelection: (color: string) => void;
+  setColorSelection: (color: string | null) => void;
   setSizeSelection: (size: string | null) => void;
   setSelectedVariant: (variant: any) => void;
 }) => {
@@ -31,24 +30,33 @@ const ColorSelection = ({
         {colors.map((color, index) => (
           <button
             key={index}
+            title={color}
             type="button"
             className={cn([
               "w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center cursor-pointer border",
-              colorSelection === color ? "border-black" : "border-gray-300",
+              colorSelection === color ? "ring-2 ring-secondary" : "",
             ])}
             style={{ backgroundColor: color }}
             onClick={() => {
-              setColorSelection(color);
-              setSizeSelection(null); // reset size when color changes
+              const isSame = colorSelection === color;
+
+              setColorSelection(isSame ? null : color);
+              setSizeSelection(null);
               setSelectedVariant(null);
             }}
           >
             {colorSelection === color && (
-              <IoMdCheckmark className="text-base text-white" />
+              <i className="far fa-check text-base text-white" />
             )}
           </button>
         ))}
       </div>
+      {colorSelection && (
+        <div className="text-sm text-black/60 mt-4">
+          <i className="far fa-info-circle mr-1"></i> Selected Color:{" "}
+          <span className="capitalize">{colorSelection}</span>
+        </div>
+      )}
     </div>
   );
 };

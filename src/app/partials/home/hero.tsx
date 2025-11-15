@@ -8,6 +8,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { useRouter } from "next/navigation";
 
 const videos = [
   {
@@ -24,6 +25,7 @@ const videos = [
 
 export default function Hero() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const router = useRouter();
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -77,6 +79,7 @@ export default function Hero() {
           <Button
             size="lg"
             className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans tracking-wide px-8 transition-all duration-300 hover:scale-105 cursor-pointer"
+            onClick={() => router.push("/shop")}
           >
             Explore the Curation
           </Button>
@@ -84,6 +87,7 @@ export default function Hero() {
             size="lg"
             variant="outline"
             className="border-2 border-cream text-primary hover:bg-cream hover:text-foreground font-sans tracking-wide px-8 transition-all duration-300 cursor-pointer"
+            onClick={() => router.push("/discover")}
           >
             Discover Provenance
           </Button>

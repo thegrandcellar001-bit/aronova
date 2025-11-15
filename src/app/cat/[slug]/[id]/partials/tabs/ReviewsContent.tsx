@@ -3,46 +3,39 @@
 import { Button } from "@/components/ui/button";
 import React, { Fragment, useEffect, useState } from "react";
 import ReviewCard from "@/components/common/review-card";
-import { reviewsData } from "@/lib/data/reviews";
-import api from "@/lib/axios";
 import { useAuthStore } from "@/lib/stores/auth";
 import { Review } from "@/types/review.types";
 import ApiLoader from "@/components/common/api-loader";
+import { useProduct } from "@/app/providers/product-provider";
 
 const ReviewsContent = ({ productId }: { productId: string }) => {
   const { user } = useAuthStore();
   const userId = user?.id;
+
+  const { fetchProductReviews, loading } = useProduct();
   const [limit, setLimit] = useState<number>(10);
   const [offset, setOffset] = useState<number>(0);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const fetchReviews = async () => {
-    setLoading(true);
-
-    try {
-      const res = await api.get(`/${productId}/reviews`, {
-        params: {
-          limit,
-          offset,
-        },
-      });
-      setReviews(res.data);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
     setOffset((prevOffset) => prevOffset + limit);
-    fetchReviews();
+    await fetchProductReviews(productId, { limit, offset });
   };
 
   useEffect(() => {
+    const fetchReviews = async () => {
+      const data = await fetchProductReviews(productId, { limit, offset });
+      if (data && data.reviews) {
+        if (offset === 0) {
+          setReviews(data.reviews);
+        } else {
+          setReviews((prevReviews) => [...prevReviews, ...data.reviews]);
+        }
+      }
+    };
+
     fetchReviews();
-  }, [productId]);
+  }, [productId, limit, offset]);
 
   return (
     <section>
@@ -57,7 +50,7 @@ const ReviewsContent = ({ productId }: { productId: string }) => {
         </div>
       </div>
 
-      {loading ? (
+      {loading.reviews ? (
         <ApiLoader message="Loading product reviews..." />
       ) : (
         <Fragment>

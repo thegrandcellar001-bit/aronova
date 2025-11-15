@@ -1,6 +1,11 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const ExploreSection = () => {
+  const router = useRouter();
+
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Parallax Effect */}
@@ -10,7 +15,7 @@ const ExploreSection = () => {
           backgroundImage: `url(${"/images/background/explore-bg.jpg"})`,
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/70 to-black/40" />
       </div>
 
       {/* Content */}
@@ -28,7 +33,8 @@ const ExploreSection = () => {
         </p>
         <Button
           size="lg"
-          className="bg-gold hover:bg-gold/90 text-foreground font-sans tracking-wide px-8 transition-all duration-300"
+          className="bg-gold hover:bg-gold/90 text-foreground font-sans tracking-wide px-8 transition-all duration-300 cursor-pointer"
+          onClick={() => router.push("/shop")}
         >
           Explore Now
         </Button>

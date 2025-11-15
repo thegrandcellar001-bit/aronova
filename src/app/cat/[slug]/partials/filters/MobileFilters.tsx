@@ -32,7 +32,7 @@ const MobileFilters = ({
             <i className="text-base far fa-filter" /> Filters
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="max-h-[90%]">
+        <DrawerContent className="max-h-[90%] w-[95%] pb-10">
           <DrawerHeader>
             <div className="flex items-center justify-between">
               <span className="font-bold text-black text-xl">Filters</span>

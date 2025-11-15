@@ -252,7 +252,7 @@ export default function Page() {
                         className="h-12 bg-white mt-3"
                         type="tel"
                         placeholder="Phone number"
-                        name="phoneNumber"
+                        name="phone_number"
                         value={formData.phone_number}
                         onChange={handleInputChange}
                       />
@@ -347,21 +347,24 @@ export default function Page() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 mt-6">
-                    <Checkbox
-                      id="saveAsDefault"
-                      checked={formData.is_default}
-                      onCheckedChange={(checked) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          is_default: !!checked,
-                        }))
-                      }
-                    />
-                    <Label htmlFor="saveAsDefault">
-                      Save as default address
-                    </Label>
-                  </div>
+                  {addressList.length > 0 &&
+                    addressList.some((address) => !address.is_default) && (
+                      <div className="flex items-center gap-3 mt-6">
+                        <Checkbox
+                          id="saveAsDefault"
+                          checked={formData.is_default}
+                          onCheckedChange={(checked) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              is_default: !!checked,
+                            }))
+                          }
+                        />
+                        <Label htmlFor="saveAsDefault">
+                          Save as default address
+                        </Label>
+                      </div>
+                    )}
 
                   <div className="flex items-center justify-end gap-x-4 mt-6">
                     <Button

@@ -18,8 +18,12 @@ const SizeSelection = ({
   setSizeSelection: (size: string) => void;
   setSelectedVariant: (variant: any) => void;
 }) => {
-  const filteredVariants =
-    data.variants?.filter((v) => v.color === colorSelection) ?? [];
+  const hasColors =
+    data.variants?.some((v) => Boolean(v.color && v.color.trim() !== "")) ??
+    false;
+  const filteredVariants = hasColors
+    ? data.variants?.filter((v) => v.color === colorSelection) || []
+    : data.variants || [];
 
   const sizes = Array.from(new Set(filteredVariants.map((v) => v.size)));
 
@@ -36,8 +40,9 @@ const SizeSelection = ({
             <Button
               key={index}
               type="button"
+              title={size}
               className={cn([
-                "bg-[#F0F0F0] flex items-center justify-center px-5 lg:px-6 py-2.5 lg:py-3 text-sm lg:text-base m-1 lg:m-0 max-h-[46px] text-black hover:text-white cursor-pointer",
+                "bg-[#F0F0F0] flex items-center justify-center px-5 lg:px-6 py-2.5 lg:py-3 text-sm lg:text-base m-1 lg:m-0 max-h-[46px] text-black hover:text-white cursor-pointer capitalize",
                 sizeSelection === size &&
                   "bg-deep-green font-medium text-white",
               ])}

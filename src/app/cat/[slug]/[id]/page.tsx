@@ -1,6 +1,5 @@
 "use client";
 
-import { relatedProductData } from "@/lib/data/products";
 import ProductListSec from "@/components/common/product-slider";
 import BreadcrumbProduct from "./partials/product-breadcrumb";
 import ProductContent from "./partials/content";
@@ -21,17 +20,33 @@ export default function ProductPage() {
   const { toastError } = useToast();
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<Product | null>();
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   const fetchProduct = async () => {
     setLoading(true);
     try {
       const res = await api.get(`/products/${productId}`);
       setProduct(res.data);
+      await fetchRelatedProducts(res.data.category_slug, res.data.id);
     } catch (e) {
       toastError("An error occurred while fetching product.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchRelatedProducts = async (slug: string, productId: string) => {
+    try {
+      const res = await api.get(`/categories/${slug}`, {
+        params: { limit: 8 },
+      });
+
+      const related = res.data.products.filter(
+        (item: Product) => item.id !== productId
+      );
+
+      setRelatedProducts(related);
+    } catch (e) {}
   };
 
   useEffect(() => {
@@ -62,7 +77,7 @@ export default function ProductPage() {
               <div>
                 <ProductListSec
                   title="You may also like"
-                  data={relatedProductData}
+                  data={relatedProducts}
                 />
               </div>
             </Fragment>

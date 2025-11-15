@@ -4,6 +4,7 @@ import React from "react";
 import { CartProvider } from "./providers/cart-provider";
 import { WishlistProvider } from "./providers/wishlist-provider";
 import { UserDataProvider } from "./providers/user-provider";
+import { ProductProvider } from "./providers/product-provider";
 
 type Props = {
   children: React.ReactNode;
@@ -12,9 +13,11 @@ type Props = {
 const Providers = ({ children }: Props) => {
   return (
     <UserDataProvider>
-      <CartProvider>
-        <WishlistProvider>{children}</WishlistProvider>
-      </CartProvider>
+      <ProductProvider>
+        <CartProvider>
+          <WishlistProvider>{children}</WishlistProvider>
+        </CartProvider>
+      </ProductProvider>
     </UserDataProvider>
   );
 };

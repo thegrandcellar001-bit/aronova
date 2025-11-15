@@ -16,7 +16,13 @@ const SizeSection = ({
   selectedSizes: string[];
   setSelectedSizes: (sizes: string[]) => void;
 }) => {
-  const [selected, setSelected] = useState<string>("M");
+  const toggleSize = (size: string) => {
+    setSelectedSizes(
+      selectedSizes.includes(size)
+        ? selectedSizes.filter((s) => s !== size)
+        : [...selectedSizes, size]
+    );
+  };
 
   return (
     <Accordion type="single" collapsible>
@@ -33,9 +39,10 @@ const SizeSection = ({
                   type="button"
                   className={cn([
                     "bg-[#F0F0F0] m-1 flex items-center justify-center px-5 py-2.5 text-sm max-h-[39px]",
-                    selected === size && "bg-deep-green font-medium text-white",
+                    selectedSizes.includes(size) &&
+                      "bg-deep-green font-medium text-white",
                   ])}
-                  onClick={() => setSelected(size)}
+                  onClick={() => toggleSize(size)}
                 >
                   {size}
                 </button>

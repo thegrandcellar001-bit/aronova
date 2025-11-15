@@ -12,7 +12,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useAuthStore } from "@/lib/stores/auth";
-import { splitName } from "@/lib/utils";
 import { useCart } from "../providers/cart-provider";
 import { CartItem } from "@/types/cart.types";
 import { useUserData } from "../providers/user-provider";

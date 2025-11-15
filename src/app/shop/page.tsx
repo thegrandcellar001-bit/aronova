@@ -4,9 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCategoryStore } from "@/lib/stores/categories";
 import { Fragment, useEffect, useState } from "react";
 import ApiLoader from "@/components/common/api-loader";
-import api from "@/lib/axios";
 import { Product } from "@/types/product.types";
-import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import Filters from "../cat/[slug]/partials/filters";
 import MobileFilters from "../cat/[slug]/partials/filters/MobileFilters";
@@ -19,6 +17,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useProduct } from "../providers/product-provider";
 
 interface ProductResponse {
   limit: number;
@@ -28,16 +27,20 @@ interface ProductResponse {
 }
 
 interface CategoryMeta {
-  offset: number;
+  page: number;
   limit: number;
   total: number;
 }
 
 const Shop = () => {
+  const {
+    fetchFilteredProducts,
+    loading: { filter: productLoading },
+  } = useProduct();
+
   const [categoryMeta, setCategoryMeta] = useState<CategoryMeta>();
   const { categories, fetchCategories, loading } = useCategoryStore();
   const [products, setProducts] = useState<Product[] | []>();
-  const [productLoading, setProductLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentCategory, setCurrentCategory] = useState<string | null>(
     categories.length > 0 ? categories[0].category_slug : null
@@ -47,55 +50,34 @@ const Shop = () => {
     priceRange: [0, 100000],
     colors: [] as string[],
     sizes: [] as string[],
-    dressStyles: [] as string[],
   });
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
-
-  const { toastError } = useToast();
 
   const fetchProducts = async (
     category_slug: string,
     page: number = 1,
     filters: any
   ) => {
-    setProductLoading(true);
+    const limit = categoryMeta?.limit || 20;
+    const params: any = { category_slug, limit, page };
 
-    try {
-      const limit = categoryMeta?.limit || 20;
-      const offset = (page - 1) * limit;
-
-      const params: any = { limit, offset };
-
-      if (filters) {
-        if (filters.colors.length > 0) params.colors = filters.colors.join(",");
-        if (filters.sizes.length > 0) params.sizes = filters.sizes.join(",");
-        if (filters.dressStyles.length > 0)
-          params.dressStyles = filters.dressStyles.join(",");
-        if (filters.priceRange) {
-          params.price_min = filters.priceRange[0];
-          params.price_max = filters.priceRange[1];
-        }
+    if (filters) {
+      if (filters.colors.length > 0) params.color = filters.colors;
+      if (filters.sizes.length > 0) params.size = filters.sizes;
+      if (filters.priceRange) {
+        params.min_price = filters.priceRange[0];
+        params.max_price = filters.priceRange[1];
       }
-
-      const res = await api.get<ProductResponse>(
-        `/categories/${category_slug}`,
-        {
-          params,
-        }
-      );
-
-      const { total, products } = res.data;
-      setCategoryMeta({ limit, offset, total });
-      setProducts(res.data.products);
-      setCurrentPage(page);
-      setCurrentCategory(category_slug);
-    } catch (err) {
-      console.error("Error fetching category products:", err);
-      toastError("Failed to fetch category products.");
-    } finally {
-      setProductLoading(false);
     }
+
+    const response = await fetchFilteredProducts(params);
+    const { total, products } = response || { total: 0, products: [] };
+
+    setCategoryMeta({ limit, page, total });
+    setProducts(products);
+    setCurrentPage(page);
+    setCurrentCategory(category_slug);
   };
 
   const handleApplyFilters = () => {
@@ -132,7 +114,6 @@ const Shop = () => {
               </p>
             </div>
           </section>
-
           {/* Filter Bar */}
           <section className="border-b border-border bg-background sticky top-20 z-40">
             <div className="max-w-[1400px] mx-auto px-2 lg:px-20 py-6">
@@ -175,7 +156,6 @@ const Shop = () => {
               </div>
             </div>
           </section>
-
           {/* Products Grid */}
           <section className="py-8 lg:py-10 bg-white">
             {productLoading ? (
@@ -202,9 +182,9 @@ const Shop = () => {
                   <div className="mb-8">
                     {categoryMeta && (
                       <span className="text-sm md:text-base text-black/60 mr-3">
-                        Showing {categoryMeta.offset + 1}–
+                        Showing {categoryMeta.page}–
                         {Math.min(
-                          categoryMeta.offset + categoryMeta.limit,
+                          categoryMeta.page + categoryMeta.limit,
                           categoryMeta.total
                         )}{" "}
                         of {categoryMeta.total} products
@@ -264,12 +244,20 @@ const Shop = () => {
                           </Link>
                         ))}
                       </div>
-                      {/* Load More */}
-                      <div className="flex justify-center mt-16">
-                        <Button variant="outline" size="lg" className="px-12">
-                          Load More
-                        </Button>
-                      </div>
+
+                      {categoryMeta &&
+                        categoryMeta.total >
+                          categoryMeta.limit * currentPage && (
+                          <div className="flex justify-center mt-16">
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              className="px-12"
+                            >
+                              Load More
+                            </Button>
+                          </div>
+                        )}
                     </Fragment>
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">

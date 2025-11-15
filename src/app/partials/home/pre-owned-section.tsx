@@ -1,7 +1,12 @@
+"use client";
+
 import { Shield, Award, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const PreOwnedSection = () => {
+  const router = useRouter();
+
   return (
     <section className="py-20 lg:py-32 px-6 lg:px-20 bg-secondary">
       <div className="max-w-[1400px] mx-auto">
@@ -18,7 +23,7 @@ const PreOwnedSection = () => {
             </p>
             <div className="space-y-6 mb-10">
               <div className="flex gap-4 items-start">
-                <Shield className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                <Shield className="h-6 w-6 text-primary mt-1 shrink-0" />
                 <div>
                   <h3 className="font-sans font-semibold text-foreground mb-1">
                     Authentication Guarantee
@@ -29,7 +34,7 @@ const PreOwnedSection = () => {
                 </div>
               </div>
               <div className="flex gap-4 items-start">
-                <Award className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                <Award className="h-6 w-6 text-primary mt-1 shrink-0" />
                 <div>
                   <h3 className="font-sans font-semibold text-foreground mb-1">
                     Provenance Certificate
@@ -40,7 +45,7 @@ const PreOwnedSection = () => {
                 </div>
               </div>
               <div className="flex gap-4 items-start">
-                <RefreshCw className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                <RefreshCw className="h-6 w-6 text-primary mt-1 shrink-0" />
                 <div>
                   <h3 className="font-sans font-semibold text-foreground mb-1">
                     Sustainable Luxury
@@ -54,14 +59,15 @@ const PreOwnedSection = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans tracking-wide"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans tracking-wide cursor-pointer"
+                onClick={() => router.push("/shop")}
               >
                 Shop Pre-Owned
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-sans tracking-wide"
+                className="border-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-sans tracking-wide cursor-pointer"
               >
                 Sell Your Piece
               </Button>

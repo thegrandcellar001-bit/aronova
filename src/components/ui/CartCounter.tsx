@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ type CartCounterProps = {
   className?: string;
   loading: boolean;
   initialValue?: number;
+  limit?: number;
 };
 
 const CartCounter = ({
@@ -22,6 +23,7 @@ const CartCounter = ({
   className,
   loading,
   initialValue = 1,
+  limit,
 }: CartCounterProps) => {
   const [counter, setCounter] = useState<number>(initialValue);
 
@@ -42,6 +44,14 @@ const CartCounter = ({
     setCounter(counter - 1);
   };
 
+  useEffect(() => {
+    if (limit !== undefined && initialValue > limit) {
+      setCounter(limit);
+    } else {
+      setCounter(initialValue);
+    }
+  }, [initialValue, limit]);
+
   return (
     <div
       className={cn(
@@ -59,6 +69,7 @@ const CartCounter = ({
             type="button"
             className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
             onClick={() => remove()}
+            disabled={(counter === 1 && !isZeroDelete) || counter <= 0}
           >
             <FaMinus />
           </Button>
@@ -71,6 +82,7 @@ const CartCounter = ({
             type="button"
             className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
             onClick={() => addToCart()}
+            disabled={limit !== undefined ? counter >= limit : false}
           >
             <FaPlus />
           </Button>

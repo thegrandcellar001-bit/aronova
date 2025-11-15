@@ -10,15 +10,16 @@ import BreadcrumbAccount from "./partials/account-breadcrumb";
 import { CountryDropdown } from "@/components/common/country-dropdown";
 import AuthGuard from "@/lib/auth-guard";
 import api from "@/lib/axios";
-import { useEffect, useRef, useState } from "react";
-import { UserData } from "@/types/account/user";
+import { use, useEffect, useRef, useState } from "react";
+import { UserAddress, UserData } from "@/types/account/user";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/lib/stores/auth";
 import ApiLoader from "@/components/common/api-loader";
-import { em } from "framer-motion/client";
+import { useUserData } from "../providers/user-provider";
 
 export default function Page() {
   const { user, token, setAuth } = useAuthStore();
+  const { userAddresses } = useUserData();
   const { toastError, toastSuccess } = useToast();
 
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -107,15 +108,16 @@ export default function Page() {
     confirmPassword: "",
   });
 
-  const address = {
-    id: "1",
-    name: "John Doe",
-    phone: "123-456-7890",
-    additionalPhone: "555-555-5555",
-    address: "123 Main St, Springfield, IL 62701",
-    state: "Lagos",
-    lga: "Ikeja",
-    isDefault: true,
+  const defaultAddress = userAddresses.find(
+    (address: UserAddress) => address.is_default
+  ) || {
+    id: "",
+    delivery_address: "",
+    lga: "",
+    state: "",
+    phone_number: "",
+    additional_phone_number: "",
+    is_default: false,
   };
 
   useEffect(() => {
@@ -179,32 +181,29 @@ export default function Page() {
                         Your default shipping address:
                       </p>
                       <div
-                        key={address.id}
+                        key={defaultAddress.id}
                         className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
                       >
                         <div className="space-y-1">
-                          <h4 className="font-medium text-lg">
-                            {address.name}
-                          </h4>
                           <p className="space-x-4">
                             <i className="far fa-phone text-md mr-1"></i>{" "}
-                            {address.phone}
-                            {address.additionalPhone && (
-                              <> / {address.additionalPhone}</>
+                            {defaultAddress.phone_number}
+                            {defaultAddress.additional_phone_number && (
+                              <> / {defaultAddress.additional_phone_number}</>
                             )}
                           </p>
                           <p>
                             <i className="far fa-address-card text-md mr-1"></i>{" "}
-                            {address.address}
+                            {defaultAddress.delivery_address}
                           </p>
                           <p>
                             <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
-                            {address.lga}, {address.state}
+                            {defaultAddress.lga}, {defaultAddress.state}
                           </p>
                         </div>
                         <div className="flex items-center gap-x-2 mt-4 md:mt-0">
-                          {address.isDefault && (
-                            <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded ml-auto">
+                          {defaultAddress.is_default && (
+                            <span className="text-xs bg-primary text-white px-2 py-1 rounded ml-auto">
                               Default
                             </span>
                           )}
