@@ -290,6 +290,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
               i.product_id === product_id &&
               (variant_id ? i.variant_id === variant_id : true)
           ),
+        findItems: (productId: string) =>
+          state.items.filter((i) => i.product_id === productId),
       }}
     >
       {children}

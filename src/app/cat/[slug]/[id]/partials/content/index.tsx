@@ -9,10 +9,12 @@ import Link from "next/link";
 import { useWishlist } from "@/app/providers/wishlist-provider";
 import { Spinner } from "@/components/ui/spinner";
 import AddToCartSection from "./AddToCartSection";
+import { useCart } from "@/app/providers/cart-provider";
 
 const Header = ({ data }: { data: Product }) => {
   const { isAuthenticated } = useAuthStore();
   const { addItem, removeItem, itemExists, loading } = useWishlist();
+  const { findItems } = useCart();
 
   const hasVariants = data.variants && data.variants.length > 0;
 
@@ -41,12 +43,26 @@ const Header = ({ data }: { data: Product }) => {
   };
 
   useEffect(() => {
-    if (hasVariants && data.variants.length === 1) {
-      setSelectedVariant(data.variants[0]);
-      setColorSelection(data.variants[0].color);
-      setSizeSelection(data.variants[0].size);
+    const items = findItems(data.id);
+    // Autoselect ONLY when exactly 1 variant in cart
+    if (items && items.length === 1) {
+      const variant = data.variants?.find((v) => v.id === items[0].variantId);
+      if (variant) {
+        setSelectedVariant(variant);
+        setColorSelection(variant.color ?? null);
+        setSizeSelection(variant.size ?? null);
+        return; // stop here — don't overwrite
+      }
     }
-  }, [data]);
+    // No cart items - if product has only 1 variant, autoselect it
+    if (hasVariants && data.variants.length === 1) {
+      const v = data.variants[0];
+      setSelectedVariant(v);
+      setColorSelection(v.color ?? null);
+      setSizeSelection(v.size ?? null);
+      return;
+    }
+  }, [data, findItems]);
 
   return (
     <Fragment>
@@ -56,7 +72,7 @@ const Header = ({ data }: { data: Product }) => {
         </div>
         <div>
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold md:text-[40px] md:leading-10 mb-3 md:mb-3.5 capitalize">
+            <h1 className="text-2xl font-bold md:leading-10 mb-3 md:mb-3.5 capitalize">
               {data.name}
             </h1>
           </div>

@@ -27,13 +27,13 @@ interface OrderData {
 }
 
 export default function StepThree({
-  userAddresses,
+  userAddress,
   deliveryFormData,
   setStep,
   prevStep,
   nextStep,
 }: {
-  userAddresses: UserAddress[];
+  userAddress: UserAddress | null;
   deliveryFormData: {
     address: string;
     city: string;
@@ -76,24 +76,18 @@ export default function StepThree({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <div className="flex flex-col gap-3 rounded-md border-2 border-primary p-4">
-          {userAddresses.length > 0 ? (
+          {userAddress ? (
             <div>
               <p className="text-md font-medium text-black">
                 <i className="far fa-map text-md mr-1"></i> Delivery Address
               </p>
-              {userAddresses
-                .filter((address) => address.is_default)
-                .map((address, index) => (
-                  <div key={index} className="mt-2">
-                    <p className="text-sm text-black font-medium">
-                      {user.name}
-                    </p>
-                    <p className="text-sm text-black">
-                      {`${address.delivery_address}, ${address.lga}, ${address.state}`}
-                    </p>
-                    <p className="text-sm text-black">{address.phone_number}</p>
-                  </div>
-                ))}
+              <div className="mt-2">
+                <p className="text-sm text-black font-medium">{user.name}</p>
+                <p className="text-sm text-black">
+                  {`${userAddress.delivery_address}, ${userAddress.lga}, ${userAddress.state}`}
+                </p>
+                <p className="text-sm text-black">{userAddress.phone_number}</p>
+              </div>
             </div>
           ) : (
             <div>
@@ -107,13 +101,6 @@ export default function StepThree({
               <p className="text-sm text-black">{deliveryFormData.phone}</p>
             </div>
           )}
-          <div
-            className="flex items-center gap-2 text-primary font-medium cursor-pointer"
-            onClick={() => setStep(1)}
-          >
-            <i className="far fa-edit text-md"></i>
-            <span className="text-sm">Change Address</span>
-          </div>
         </div>
 
         <div className="flex flex-col gap-3 rounded-md border-2 border-primary p-4">

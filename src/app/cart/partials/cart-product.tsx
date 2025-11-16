@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import CartCounter from "@/components/ui/CartCounter";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { CartItem, CartVariant } from "@/types/cart.types";
 import { useCart } from "@/app/providers/cart-provider";
 
@@ -17,7 +16,6 @@ type CartProductProps = {
 };
 
 const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
-  const { toastSuccess, toastError } = useToast();
   const { increaseQuantity, decreaseQuantity, removeItem, updateLoading } =
     useCart();
   const imageUrl = item.product.primary_image;
@@ -53,12 +51,16 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
             </Link>
             {variant && (
               <Fragment>
-                <p className="text-black text-sm capitalize">
-                  Color: <span>{variant?.color}</span>
-                </p>
-                <p className="text-black text-sm capitalize">
-                  Size: <span>{variant?.size}</span>
-                </p>
+                {variant.color && (
+                  <p className="text-black text-sm capitalize">
+                    Color: <span>{variant?.color}</span>
+                  </p>
+                )}
+                {variant.size && (
+                  <p className="text-black text-sm capitalize">
+                    Size: <span>{variant?.size}</span>
+                  </p>
+                )}
               </Fragment>
             )}
           </div>
@@ -89,6 +91,7 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
             onRemove={async (value) => {
               await decreaseQuantity(item.id);
             }}
+            limit={item.variant?.available || 0}
             loading={updateLoading}
             className="px-5 py-3 max-h-8 md:max-h-10 min-w-[105px] max-w-[105px] sm:max-w-32"
           />

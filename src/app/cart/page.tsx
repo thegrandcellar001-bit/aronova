@@ -110,7 +110,7 @@ export default function CartPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="flex space-x-3">
+                  {/* <div className="flex space-x-3">
                     <InputGroup className="bg-[#F0F0F0] rounded-none focus-within:shadow-none">
                       <InputGroup.Text>
                         <i className="far fa-tag text-black/40 text-xl" />
@@ -129,7 +129,7 @@ export default function CartPage() {
                     >
                       Apply
                     </Button>
-                  </div>
+                  </div> */}
                   <Button
                     onClick={() => router.push("/checkout")}
                     variant="default"

@@ -25,8 +25,12 @@ import AuthGuard from "@/lib/auth-guard";
 import api from "@/lib/axios";
 import ApiLoader from "@/components/common/api-loader";
 import { useToast } from "@/hooks/use-toast";
+import { useUserData } from "@/app/providers/user-provider";
 
 export default function Page() {
+  const { loading, addresses, fetchUserAddresses, setAddressDefault } =
+    useUserData();
+
   const [editOpen, setEditOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [selectedState, setSelectedState] = useState<string | null>("");
@@ -35,10 +39,9 @@ export default function Page() {
   const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
     null
   );
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
     null
   );
-  const [loading, setLoading] = useState<boolean>(false);
   const [formLoading, setFormLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
@@ -65,20 +68,6 @@ export default function Page() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const fetchUserAddresses = async () => {
-    setLoading(true);
-
-    try {
-      const res = await api.get("/customer/addresses");
-      setAddressList(res.data.addresses.items as AddressData[]);
-    } catch (error) {
-      console.error("Error fetching user addresses:", error);
-      return [];
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleAddAddress = async () => {
@@ -118,18 +107,11 @@ export default function Page() {
     }
   };
 
-  const handleSetDefault = async (id: string) => {
-    setLoading(true);
-    try {
-      await api.patch(`/customer/addresses/${id}`);
-      toastSuccess("Default address updated.");
-      await fetchUserAddresses();
-    } catch (error) {
-      console.error("Error setting default address:", error);
-      toastError("Failed to set default address. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+  const handleSetDefault = async (
+    id: number,
+    data: { is_default: boolean }
+  ) => {
+    await setAddressDefault(id, data);
   };
 
   useEffect(() => {
@@ -154,15 +136,15 @@ export default function Page() {
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="account" className="mt-4">
-                  {loading ? (
-                    <ApiLoader message="Loading your address book" />
+                  {loading.getAddress ? (
+                    <ApiLoader message="Loading your address book..." />
                   ) : (
                     <div>
-                      <h3 className="font-semibold text-xl md:text-2xl">
-                        Address Book ({addressList.length})
+                      <h3 className="font-semibold text-lg md:text-xl">
+                        Address Book ({addresses.length})
                       </h3>
                       <div className="w-full">
-                        {addressList.map((address) => (
+                        {addresses.map((address) => (
                           <div
                             key={address.id}
                             className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
@@ -195,7 +177,9 @@ export default function Page() {
                                   size="sm"
                                   className="cursor-pointer border-primary text-primary bg-white"
                                   onClick={() => {
-                                    handleSetDefault(address.id);
+                                    setAddressDefault(address.id, {
+                                      is_default: true,
+                                    });
                                   }}
                                 >
                                   Set as default
@@ -226,7 +210,8 @@ export default function Page() {
                             </div>
                           </div>
                         ))}
-                        {addressList.length === 0 && (
+
+                        {addresses.length === 0 && (
                           <div className="text-center mt-20">
                             <h2 className="text-2xl font-semibold mb-4">
                               You have no addresses saved.
@@ -242,7 +227,7 @@ export default function Page() {
                   )}
                 </TabsContent>
                 <TabsContent value="password" className="mt-4">
-                  <h3 className="font-semibold text-xl md:text-2xl">
+                  <h3 className="font-semibold text-lg md:text-xl">
                     Add new address
                   </h3>
                   <div className="grid grid-cols-2 gap-x-3 mt-6">

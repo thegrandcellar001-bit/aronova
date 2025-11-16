@@ -7,12 +7,13 @@ import React, {
 } from "react";
 import api from "@/lib/axios";
 import { useToast } from "@/hooks/use-toast";
-import { UserAddress, UserData } from "@/types/account/user";
-import { splitName } from "@/lib/utils";
+import { UserData } from "@/types/account/user";
 import { useAuthStore } from "@/lib/stores/auth";
+import { AddressData, AddressPayload } from "@/types/account/address";
 
 interface UserDataContextType {
   userData: UserData | null;
+  addresses: AddressData[];
   getUserFullName: () => string;
   loading: {
     global: boolean;
@@ -25,15 +26,16 @@ interface UserDataContextType {
     success: boolean;
     message: string | null;
   };
-  userAddresses: UserAddress[];
-  fetchUserAddresses: () => Promise<void>;
+  fetchUserAddresses: () => Promise<AddressData[] | undefined>;
+  fetchDefaultAddress: () => Promise<AddressData | null>;
   refreshUserData: () => Promise<void>;
-  addUserAddress: (data: UserAddress) => Promise<void>;
-  deleteUserAddress: (addressId: string) => Promise<void>;
+  addUserAddress: (data: AddressPayload) => Promise<void>;
+  deleteUserAddress: (addressId: number) => Promise<void>;
   updateUserAddress: (params: {
     addressId: string;
-    data: UserAddress;
+    data: AddressPayload;
   }) => Promise<void>;
+  setAddressDefault: (id: number, data: any) => Promise<void>;
 }
 
 const UserDataContext = createContext<UserDataContextType | undefined>(
@@ -48,8 +50,8 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
   children,
 }) => {
   const { isAuthenticated } = useAuthStore();
+  const [addresses, setAddresses] = useState<AddressData[]>([]);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [userAddresses, setUserAddresses] = useState<UserAddress[]>([]);
   const [loading, setLoading] = useState({
     global: false,
     getAddress: false,
@@ -85,7 +87,9 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
     setLoading((prev) => ({ ...prev, getAddress: true }));
     try {
       const res = await api.get("/customer/addresses");
-      setUserAddresses(res.data.addresses.items);
+      const items = res.data.addresses.items as AddressData[];
+      setAddresses(items);
+      return items;
     } catch (error) {
       console.error("Error fetching user addresses:", error);
       toastError("Failed to fetch user addresses");
@@ -94,7 +98,23 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
     }
   };
 
-  const addUserAddress = async (data: UserAddress) => {
+  const fetchDefaultAddress = async () => {
+    setLoading((prev) => ({ ...prev, getAddress: true }));
+    try {
+      const res = await api.get("/customer/addresses");
+      return res.data.addresses.items.filter(
+        (address: AddressData) => address.is_default
+      )[0] as AddressData;
+    } catch (error) {
+      console.error("Error fetching default address:", error);
+      toastError("Failed to fetch default address");
+      return null;
+    } finally {
+      setLoading((prev) => ({ ...prev, getAddress: false }));
+    }
+  };
+
+  const addUserAddress = async (data: AddressPayload) => {
     setLoading((prev) => ({ ...prev, addAddress: true }));
     try {
       await api.post("/customer/addresses", data);
@@ -110,8 +130,9 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
     }
   };
 
-  const deleteUserAddress = async (addressId: string) => {
+  const deleteUserAddress = async (addressId: number) => {
     setLoading((prev) => ({ ...prev, deleteAddress: true }));
+
     try {
       await api.delete(`/customer/addresses/${addressId}`);
       await fetchUserAddresses();
@@ -148,10 +169,27 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
     }
   };
 
+  const setAddressDefault = async (
+    id: number,
+    data: { is_default: boolean }
+  ) => {
+    setLoading((prev) => ({ ...prev, updateAddress: true }));
+    try {
+      await api.patch(`/customer/addresses/${id}`, data);
+      setStatus({ success: true, message: "Default address updated." });
+      toastSuccess("Default address updated.");
+      await fetchUserAddresses();
+    } catch (error) {
+      console.error("Error setting default address:", error);
+      toastError("Failed to set default address. Please try again.");
+    } finally {
+      setLoading((prev) => ({ ...prev, updateAddress: false }));
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       if (!userData) fetchUserData();
-      if (userAddresses.length === 0) fetchUserAddresses();
     }
   }, [isAuthenticated]);
 
@@ -159,15 +197,17 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
     <UserDataContext.Provider
       value={{
         userData,
-        userAddresses,
+        addresses,
         loading,
         status,
         getUserFullName,
         fetchUserAddresses,
+        fetchDefaultAddress,
         refreshUserData: fetchUserData,
         addUserAddress,
         deleteUserAddress,
         updateUserAddress,
+        setAddressDefault,
       }}
     >
       {children}

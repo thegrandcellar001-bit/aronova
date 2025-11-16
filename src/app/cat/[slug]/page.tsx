@@ -54,24 +54,27 @@ export default function ShopPage() {
     priceRange: [0, 100000],
     colors: [] as string[],
     sizes: [] as string[],
+    sort_by: "rating",
   });
 
-  const fetchProducts = async (page = 1, categorySlug = params.slug) => {
+  const fetchProducts = async (
+    page = 1,
+    categorySlug = params.slug,
+    sortOverride?: string
+  ) => {
     const limit = categoryMeta?.limit || 20;
     const offset = (page - 1) * limit;
 
-    const params: any = { slug: categorySlug, limit, offset };
+    const query: any = { slug: categorySlug, limit, offset };
 
-    if (filters) {
-      if (filters.colors.length > 0) params.color = filters.colors;
-      if (filters.sizes.length > 0) params.size = filters.sizes;
-      if (filters.priceRange) {
-        params.min_price = filters.priceRange[0];
-        params.max_price = filters.priceRange[1];
-      }
-    }
+    if (filters.colors.length > 0) query.color = filters.colors;
+    if (filters.sizes.length > 0) query.size = filters.sizes;
 
-    const response = await fetchCategoryProducts(params.slug, params);
+    query.min_price = filters.priceRange[0];
+    query.max_price = filters.priceRange[1];
+    query.sort_by = sortOverride ?? filters.sort_by;
+
+    const response = await fetchCategoryProducts(categorySlug, query);
     const { total, products } = response || { total: 0, products: [] };
     setCategoryMeta({ limit, offset, total });
     setCategoryProducts(products);
@@ -96,6 +99,13 @@ export default function ShopPage() {
 
   const handleApplyFilters = () => {
     fetchProducts(1, params.slug);
+  };
+
+  const handleSort = (value: string) => {
+    setFilters((prev) => ({ ...prev, sort_by: value }));
+
+    // pass the new value directly
+    fetchProducts(1, params.slug, value);
   };
 
   return (
@@ -154,19 +164,32 @@ export default function ShopPage() {
                       <div className="flex justify-between items-center">
                         <div className="flex items-center">
                           Sort by:{" "}
-                          <Select defaultValue="most-popular">
+                          <Select
+                            value={filters.sort_by}
+                            onValueChange={handleSort}
+                          >
                             <SelectTrigger className="font-medium text-sm px-1.5 sm:text-base w-fit text-black bg-transparent shadow-none border-none">
-                              <SelectValue />
+                              <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="most-popular">
+                              <SelectItem value="rating">
                                 Most Popular
                               </SelectItem>
-                              <SelectItem value="low-price">
-                                Low Price
+                              <SelectItem value="newest">
+                                New Arrivals
                               </SelectItem>
-                              <SelectItem value="high-price">
-                                High Price
+                              <SelectItem value="oldest">Oldest</SelectItem>
+                              <SelectItem value="name">
+                                Name (ascending)
+                              </SelectItem>
+                              <SelectItem value="name_desc">
+                                Name (descending)
+                              </SelectItem>
+                              <SelectItem value="price_desc">
+                                Price (Low to High)
+                              </SelectItem>
+                              <SelectItem value="price">
+                                Price (High to Low)
                               </SelectItem>
                             </SelectContent>
                           </Select>

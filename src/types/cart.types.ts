@@ -25,6 +25,7 @@ export interface CartVariant {
   color: string;
   size: string;
   final_price: number;
+  available: number;
   pricing: {
     base_price: number;
     discount: number;

@@ -18,15 +18,19 @@ import { lgaList } from "@/components/common/location-selector";
 import { useUserData } from "@/app/providers/user-provider";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { UserAddress } from "@/types/account/user";
+import { AddressData } from "@/types/account/address";
 
 export default function StepOne({
   user,
   setStep,
+  userAddress,
   deliveryFormData,
   setDeliveryFormData,
 }: {
   user: { name: string };
   setStep: (step: number) => void;
+  userAddress: UserAddress | null;
   deliveryFormData: {
     address: string;
     city: string;
@@ -36,8 +40,12 @@ export default function StepOne({
   };
   setDeliveryFormData: React.Dispatch<React.SetStateAction<any>>;
 }) {
-  const { addUserAddress, loading: userLoading, userAddresses } = useUserData();
-
+  const {
+    addUserAddress,
+    loading: userLoading,
+    fetchUserAddresses,
+  } = useUserData();
+  const [userAddresses, setUserAddresses] = useState<AddressData[]>([]);
   const [submitLoading, setSubmitLoading] = useState(false);
   const { toastSuccess, toastError } = useToast();
 
@@ -84,28 +92,48 @@ export default function StepOne({
         1. Delivery Details
       </h6>
 
-      {userAddresses.length > 0 ? (
+      {userAddress ? (
         <Fragment>
           <div className="mt-4 mb-6 p-4 border border-black/10">
             <p className="font-medium text-md mb-2 text-black">
-              Saved Address(es):
+              Saved Address:
             </p>
             <hr className="border-t border-black/10 mb-4" />
             <div className="flex flex-col gap-3">
-              {userAddresses.map((address, index) => (
-                <div key={index} className="flex flex-col space-y-1">
+              {userAddress && (
+                <div className="flex flex-col space-y-1">
                   <p className="text-black font-medium">{user.name}</p>
                   <p className="text-black">
-                    {address.delivery_address}, {address.lga}, {address.state}
+                    {userAddress.delivery_address}, {userAddress.lga},{" "}
+                    {userAddress.state} State
                   </p>
-                  <p className="text-black">Phone: {address.phone_number}</p>
-                  <Badge className="w-max px-2 py-1 text-sm rounded-none my-1">
-                    {address.is_default
+                  <p className="text-black">
+                    Phone: {userAddress.phone_number} /{" "}
+                    {userAddress.additional_phone_number}
+                  </p>
+                  <Badge
+                    className="w-max px-2 py-1 text-xs rounded-none my-1"
+                    variant={userAddress.is_default ? "default" : "outline"}
+                  >
+                    {userAddress.is_default
                       ? "Default Address"
                       : "Alternate Address"}
                   </Badge>
                 </div>
-              ))}
+              )}
+
+              <div className="mt-2 text-sm text-black/60">
+                <i className="far fa-info-circle mr-1"></i> If you want to use a
+                different delivery address, change your default address in your
+                account{" "}
+                <Link
+                  href="/account/address"
+                  className="underline underline-offset-4"
+                >
+                  settings
+                </Link>
+                .
+              </div>
             </div>
           </div>
 

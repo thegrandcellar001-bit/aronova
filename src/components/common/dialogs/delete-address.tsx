@@ -20,12 +20,10 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import api from "@/lib/axios";
+import { useUserData } from "@/app/providers/user-provider";
 
 interface DeleteAddressDialogProps {
-  id: string;
+  id: number;
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -37,23 +35,13 @@ const DeleteAddressDialog: React.FC<DeleteAddressDialogProps> = ({
   id,
   onConfirm,
 }) => {
-  const [loading, setLoading] = useState(false);
+  const { loading, deleteUserAddress } = useUserData();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const { toastSuccess, toastError } = useToast();
 
   const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await api.delete(`/customer/addresses/${id}`);
-      toastSuccess("Address deleted.");
-      onClose(); // close the dialog
-      onConfirm();
-    } catch (error) {
-      console.error("Error deleting address:", error);
-      toastError("Failed to delete address.");
-    } finally {
-      setLoading(false);
-    }
+    await deleteUserAddress(id);
+    onClose();
+    onConfirm();
   };
 
   if (isDesktop) {
@@ -72,10 +60,10 @@ const DeleteAddressDialog: React.FC<DeleteAddressDialogProps> = ({
             <Button
               className="cursor-pointer"
               variant={"destructive"}
-              disabled={loading}
+              disabled={loading.deleteAddress}
               onClick={handleSubmit}
             >
-              {loading ? "Deleting..." : "Delete"}
+              {loading.deleteAddress ? "Deleting..." : "Delete"}
             </Button>
             <Button
               variant="outline"
@@ -105,13 +93,17 @@ const DeleteAddressDialog: React.FC<DeleteAddressDialogProps> = ({
           <Button
             className="cursor-pointer"
             variant={"destructive"}
-            disabled={loading}
+            disabled={loading.deleteAddress}
             onClick={handleSubmit}
           >
-            {loading ? "Deleting..." : "Delete"}
+            {loading.deleteAddress ? "Deleting..." : "Delete"}
           </Button>
           <DrawerClose asChild>
-            <Button variant="outline" className="cursor-pointer">
+            <Button
+              variant="outline"
+              className="cursor-pointer"
+              onClick={onClose}
+            >
               Cancel
             </Button>
           </DrawerClose>

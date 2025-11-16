@@ -19,11 +19,13 @@ import ApiLoader from "@/components/common/api-loader";
 import StepOne from "./partials/steps/step-one";
 import StepTwo from "./partials/steps/step-two";
 import StepThree from "./partials/steps/step-three";
+import { UserAddress } from "@/types/account/user";
 
 export default function Page() {
   const { user } = useAuthStore();
   const { state, loading: cartLoading } = useCart();
-  const { loading: userLoading, userAddresses } = useUserData();
+  const { loading: userLoading, fetchDefaultAddress } = useUserData();
+  const [userAddress, setUserAddress] = useState<UserAddress>();
 
   const [deliveryFormData, setDeliveryFormData] = useState({
     address: "",
@@ -36,6 +38,15 @@ export default function Page() {
   const [step, setStep] = useState(1);
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
+
+  const loadUserAddress = async () => {
+    const address = await fetchDefaultAddress();
+    setUserAddress(address as UserAddress);
+  };
+
+  useEffect(() => {
+    loadUserAddress();
+  }, []);
 
   return (
     <main className="py-26 bg-white">
@@ -58,6 +69,7 @@ export default function Page() {
                       <StepOne
                         user={user}
                         setStep={setStep}
+                        userAddress={userAddress || null}
                         deliveryFormData={deliveryFormData}
                         setDeliveryFormData={setDeliveryFormData}
                       />
@@ -69,7 +81,7 @@ export default function Page() {
 
                     {step === 3 && (
                       <StepThree
-                        userAddresses={userAddresses}
+                        userAddress={userAddress || null}
                         deliveryFormData={deliveryFormData}
                         setStep={setStep}
                         prevStep={prevStep}

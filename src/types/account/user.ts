@@ -7,7 +7,7 @@ export interface UserData {
 }
 
 export interface UserAddress {
-  id?: string;
+  id?: number;
   lga: string;
   state: string;
   delivery_address: string;

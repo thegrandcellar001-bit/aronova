@@ -5,6 +5,7 @@ import { MapPin, Phone, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "../partials/home/navigation";
 import Footer from "../partials/home/footer";
+import Link from "next/link";
 
 const Discover = () => {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -82,78 +83,21 @@ const Discover = () => {
       <section className="relative h-[60vh] mt-20 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${"/images/hero/explore-hero.jpg"})` }}
+          style={{
+            backgroundImage: `url(${"/images/hero/discover-hero.jpg"})`,
+          }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40" />
+          <div className="absolute inset-0 bg-linear-to-b from-black/60 to-black/40" />
         </div>
         <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
           <div className="max-w-4xl animate-fade-in">
             <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
-              Discover Lagos, Refined
+              Discover Luxury
             </h1>
             <p className="font-sans text-lg text-cream/90 max-w-2xl mx-auto">
-              Your guide to fine dining, bars, and bespoke experiences. Curated
-              with taste and discretion.
+              Specially curated products and experiences that define luxury
+              living.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Filter Tabs */}
-      <section className="sticky top-20 z-40 bg-background/95 backdrop-blur-sm border-b border-border py-6 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-wrap gap-4 justify-center">
-            {filters.map((filter) => (
-              <Button
-                key={filter}
-                variant={activeFilter === filter ? "default" : "ghost"}
-                onClick={() => setActiveFilter(filter)}
-                className={
-                  activeFilter === filter
-                    ? "bg-gold hover:bg-gold/90 text-foreground"
-                    : ""
-                }
-              >
-                {filter}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Venues Grid */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8">
-            {filteredVenues.map((venue, index) => (
-              <div
-                key={venue.id}
-                className="group cursor-pointer animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="relative aspect-[16/10] mb-6 overflow-hidden rounded-lg">
-                  <img
-                    src={venue.image}
-                    alt={venue.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6 text-cream">
-                    <div className="text-sm text-gold mb-2">
-                      {venue.category}
-                    </div>
-                    <h3 className="text-2xl mb-2">{venue.name}</h3>
-                    <p className="text-sm text-cream/80 mb-3">
-                      {venue.description}
-                    </p>
-                    <div className="flex items-center text-sm text-cream/70">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      {venue.location}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -171,7 +115,7 @@ const Discover = () => {
           <div className="flex flex-wrap gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-gold hover:bg-gold/90 text-foreground"
+              className="bg-gold hover:bg-gold/90 text-foreground cursor-pointer"
             >
               <MessageCircle className="w-5 h-5 mr-2" />
               Request Concierge
@@ -180,15 +124,16 @@ const Discover = () => {
               size="lg"
               variant="outline"
               className="border-cream text-primary hover:bg-cream/10 hover:text-white"
+              asChild
             >
-              <Phone className="w-5 h-5 mr-2" />
-              Call Us
+              <Link href="tel:+1234567890">
+                <Phone className="w-5 h-5 mr-2" />
+                Call Us
+              </Link>
             </Button>
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

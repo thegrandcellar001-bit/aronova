@@ -81,8 +81,17 @@ const CartCounter = ({
             size="icon"
             type="button"
             className="h-5 w-5 sm:h-6 sm:w-6 text-xl hover:bg-transparent cursor-pointer"
-            onClick={() => addToCart()}
-            disabled={limit !== undefined ? counter >= limit : false}
+            onClick={() => {
+              // prevent increment when limit explicitly 0 (not available) or we've reached the limit
+              if (limit === 0 || (limit !== undefined && counter >= limit))
+                return;
+              addToCart();
+            }}
+            disabled={limit === 0 || (limit !== undefined && counter >= limit)}
+            aria-disabled={
+              limit === 0 || (limit !== undefined && counter >= limit)
+            }
+            title={limit === 0 ? "Not available" : undefined}
           >
             <FaPlus />
           </Button>
