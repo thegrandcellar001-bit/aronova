@@ -116,7 +116,7 @@ export default function Page() {
                             )
                           </AccordionTrigger>
                           <AccordionContent>
-                            <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
+                            <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10">
                               {state?.items.map(
                                 (item: CartItem, index: number) => (
                                   <Fragment key={index}>

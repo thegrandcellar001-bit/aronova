@@ -9,7 +9,7 @@ const Concierge = () => {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-gradient-to-b from-cream to-background">
+      <section className="pt-32 pb-20 px-6 bg-linear-to-b from-cream to-background">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
           <p className="text-sm text-gold tracking-[0.2em] uppercase mb-4">
             Concierge Service
@@ -22,57 +22,6 @@ const Concierge = () => {
             our concierge service brings your ideas to life with discretion and
             care.
           </p>
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl mb-12 text-center">
-            What We Offer
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Personal Shopping",
-                description:
-                  "Curated selections tailored to your taste and occasion.",
-              },
-              {
-                title: "Private Dining",
-                description:
-                  "Exclusive access to Lagos's finest tables and chefs.",
-              },
-              {
-                title: "Event Curation",
-                description: "From intimate gatherings to grand celebrations.",
-              },
-              {
-                title: "Art & Culture",
-                description:
-                  "Private gallery tours and collector introductions.",
-              },
-              {
-                title: "Travel Coordination",
-                description: "Bespoke itineraries across Nigeria and beyond.",
-              },
-              {
-                title: "Gift Services",
-                description: "Thoughtfully curated gifts with provenance.",
-              },
-            ].map((service, index) => (
-              <div
-                key={service.title}
-                className="p-8 bg-cream rounded-lg animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <h3 className="font-sans font-semibold text-xl mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-muted-foreground">{service.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

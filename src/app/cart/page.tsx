@@ -41,7 +41,7 @@ export default function CartPage() {
               </p>
 
               <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
-                <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
+                <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10">
                   {state.items.map((item: CartItem, index: number) => (
                     <Fragment key={index}>
                       <ProductCard
@@ -56,7 +56,8 @@ export default function CartPage() {
                     </Fragment>
                   ))}
                 </div>
-                <div className="w-full lg:max-w-[505px] p-5 md:px-6 flex-col space-y-4 md:space-y-6 rounded-[20px] border border-black/10">
+
+                <div className="w-full lg:max-w-[505px] p-5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10">
                   <h6 className="text-xl md:text-2xl font-bold text-black">
                     Order Summary
                   </h6>
