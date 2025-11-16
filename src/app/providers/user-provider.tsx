@@ -21,11 +21,13 @@ interface UserDataContextType {
     getAddress: boolean;
     deleteAddress: boolean;
     updateAddress: boolean;
+    updateUser: boolean;
   };
   status: {
     success: boolean;
     message: string | null;
   };
+  fetchUserData: () => Promise<void>;
   fetchUserAddresses: () => Promise<AddressData[] | undefined>;
   fetchDefaultAddress: () => Promise<AddressData | null>;
   refreshUserData: () => Promise<void>;
@@ -35,6 +37,7 @@ interface UserDataContextType {
     addressId: string;
     data: AddressPayload;
   }) => Promise<void>;
+  updateUserData: (data: Partial<UserData>) => Promise<void>;
   setAddressDefault: (id: number, data: any) => Promise<void>;
 }
 
@@ -54,6 +57,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState({
     global: false,
+    updateUser: false,
     getAddress: false,
     addAddress: false,
     deleteAddress: false,
@@ -95,6 +99,20 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
       toastError("Failed to fetch user addresses");
     } finally {
       setLoading((prev) => ({ ...prev, getAddress: false }));
+    }
+  };
+
+  const updateUserData = async (data: Partial<UserData>) => {
+    setLoading((prev) => ({ ...prev, updateUser: true }));
+    try {
+      const res = await api.patch("/customer/profile", data);
+      setUserData(res.data);
+      toastSuccess("User data updated successfully");
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      toastError("Failed to update user data");
+    } finally {
+      setLoading((prev) => ({ ...prev, updateUser: false }));
     }
   };
 
@@ -201,6 +219,8 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
         loading,
         status,
         getUserFullName,
+        fetchUserData,
+        updateUserData,
         fetchUserAddresses,
         fetchDefaultAddress,
         refreshUserData: fetchUserData,

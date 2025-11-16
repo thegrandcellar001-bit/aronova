@@ -10,66 +10,48 @@ import BreadcrumbAccount from "./partials/account-breadcrumb";
 import { CountryDropdown } from "@/components/common/country-dropdown";
 import AuthGuard from "@/lib/auth-guard";
 import api from "@/lib/axios";
-import { use, useEffect, useRef, useState } from "react";
-import { UserAddress, UserData } from "@/types/account/user";
+import { useEffect, useRef, useState } from "react";
+import { UserData } from "@/types/account/user";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthStore } from "@/lib/stores/auth";
 import ApiLoader from "@/components/common/api-loader";
 import { useUserData } from "../providers/user-provider";
+import { AddressData } from "@/types/account/address";
 
 export default function Page() {
   const { user, token, setAuth } = useAuthStore();
-  const { userAddresses } = useUserData();
+  const {
+    userData,
+    fetchUserData,
+    updateUserData,
+    fetchDefaultAddress,
+    loading,
+  } = useUserData();
   const { toastError, toastSuccess } = useToast();
 
-  const [userData, setUserData] = useState<UserData | null>(null);
   const [editProfile, setEditProfile] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
   const editProfileElem = useRef<HTMLDivElement>(null);
 
-  const fetchUserData = async () => {
-    try {
-      setLoading(true);
-      const { data } = await api.get("/customer/profile");
-      setUserData({
-        name: data.name,
-        email: data.email,
-        country: data.country,
-      });
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-    }
-  };
+  const [defaultAddress, setDefaultAddress] = useState<AddressData>();
 
   const handleUpdateProfile = async () => {
-    setUpdateLoading(true);
-    try {
-      const payload = {
-        name: `${accountFormData.firstName} ${accountFormData.lastName}`,
-        email: accountFormData.email,
-        country: accountFormData.country,
-      };
-      await api.patch("/customer/update", payload);
-      fetchUserData();
-      setEditProfile(false);
-      setAuth(token || "", {
-        ...user,
-        name: payload.name,
-        email: payload.email,
-      });
-      toastSuccess("Profile updated successfully");
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      toastError("Failed to update profile");
-    } finally {
-      setUpdateLoading(false);
-    }
+    const payload = {
+      name: `${accountFormData.firstName} ${accountFormData.lastName}`,
+      email: accountFormData.email,
+      country: accountFormData.country,
+    };
+    await updateUserData(payload);
+    await fetchUserData();
+    setEditProfile(false);
+    setAuth(token || "", {
+      ...user,
+      name: payload.name,
+      email: payload.email,
+    });
+    toastSuccess("Profile updated successfully");
   };
 
   const handleResetPassword = async () => {
-    setUpdateLoading(true);
     try {
       const res = await api.post("/customer/reset-password", {
         email: user.email,
@@ -79,8 +61,6 @@ export default function Page() {
     } catch (err) {
       console.error("Error updating password:", err);
       toastError("Failed to update password");
-    } finally {
-      setUpdateLoading(false);
     }
   };
 
@@ -108,21 +88,10 @@ export default function Page() {
     confirmPassword: "",
   });
 
-  const defaultAddress = userAddresses.find(
-    (address: UserAddress) => address.is_default
-  ) || {
-    id: "",
-    delivery_address: "",
-    lga: "",
-    state: "",
-    phone_number: "",
-    additional_phone_number: "",
-    is_default: false,
+  const loadAddress = async () => {
+    const address = await fetchDefaultAddress();
+    setDefaultAddress(address as AddressData);
   };
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
   useEffect(() => {
     if (userData) {
@@ -135,6 +104,10 @@ export default function Page() {
     }
   }, [userData]);
 
+  useEffect(() => {
+    loadAddress();
+  }, []);
+
   return (
     <AuthGuard>
       <main className="pt-26 pb-10 bg-white">
@@ -142,7 +115,7 @@ export default function Page() {
           <BreadcrumbAccount />
           <div className="flex flex-col md:flex-row items-start justify-between gap-6 mt-10">
             <Sidebar />
-            {loading ? (
+            {loading.global && loading.getAddress ? (
               <ApiLoader message="Loading your account details..." />
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
@@ -180,35 +153,41 @@ export default function Page() {
                       <p className="font-medium">
                         Your default shipping address:
                       </p>
-                      <div
-                        key={defaultAddress.id}
-                        className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
-                      >
-                        <div className="space-y-1">
-                          <p className="space-x-4">
-                            <i className="far fa-phone text-md mr-1"></i>{" "}
-                            {defaultAddress.phone_number}
-                            {defaultAddress.additional_phone_number && (
-                              <> / {defaultAddress.additional_phone_number}</>
+                      {defaultAddress ? (
+                        <div
+                          key={defaultAddress.id}
+                          className="border rounded p-4 mt-4 flex flex-col md:flex-row md:justify-between"
+                        >
+                          <div className="space-y-1">
+                            <p className="space-x-4">
+                              <i className="far fa-phone text-md mr-1"></i>{" "}
+                              {defaultAddress.phone_number}
+                              {defaultAddress.additional_phone_number && (
+                                <> / {defaultAddress.additional_phone_number}</>
+                              )}
+                            </p>
+                            <p>
+                              <i className="far fa-address-card text-md mr-1"></i>{" "}
+                              {defaultAddress.delivery_address}
+                            </p>
+                            <p>
+                              <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
+                              {defaultAddress.lga}, {defaultAddress.state}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-x-2 mt-4 md:mt-0">
+                            {defaultAddress.is_default && (
+                              <span className="text-xs bg-primary text-white px-2 py-1 rounded ml-auto">
+                                Default
+                              </span>
                             )}
-                          </p>
-                          <p>
-                            <i className="far fa-address-card text-md mr-1"></i>{" "}
-                            {defaultAddress.delivery_address}
-                          </p>
-                          <p>
-                            <i className="far fa-map-marker-alt text-md mr-1"></i>{" "}
-                            {defaultAddress.lga}, {defaultAddress.state}
-                          </p>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-x-2 mt-4 md:mt-0">
-                          {defaultAddress.is_default && (
-                            <span className="text-xs bg-primary text-white px-2 py-1 rounded ml-auto">
-                              Default
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                      ) : (
+                        <p className="text-gray-500 mt-2">
+                          You have not set a default shipping address yet.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -301,9 +280,9 @@ export default function Page() {
                             className="cursor-pointer"
                             variant={"default"}
                             onClick={handleUpdateProfile}
-                            disabled={updateLoading}
+                            disabled={loading.updateUser}
                           >
-                            {updateLoading ? "Saving..." : "Save Changes"}
+                            {loading.updateUser ? "Saving..." : "Save Changes"}
                           </Button>
                         </div>
                       </TabsContent>
@@ -371,14 +350,14 @@ export default function Page() {
                             variant={"default"}
                             onClick={handleResetPassword}
                             disabled={
-                              updateLoading ||
+                              loading.updateUser ||
                               !passwordFormData.currentPassword ||
                               !passwordFormData.newPassword ||
                               passwordFormData.newPassword !==
                                 passwordFormData.confirmPassword
                             }
                           >
-                            {updateLoading ? "Saving..." : "Save Changes"}
+                            {loading.updateUser ? "Saving..." : "Save Changes"}
                           </Button>
                         </div>
                       </TabsContent>
