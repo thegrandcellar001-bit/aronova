@@ -6,7 +6,7 @@ import api from "@/lib/axios";
 
 export default function VerifyPaymentPage() {
   const searchParams = useSearchParams();
-  const reference = searchParams.get("reference");
+  const reference = searchParams.get("ref");
 
   const [message, setMessage] = useState("Verifying payment...");
 
