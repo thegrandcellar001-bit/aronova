@@ -20,7 +20,7 @@ const Footer = () => {
     <footer className="bg-primary text-primary-foreground">
       <div className="max-w-[1440px] w-full mx-auto px-2 lg:px-20 py-16 lg:py-20">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-3 md:justify-center gap-8 lg:gap-12 mb-16">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h3 className="font-sans font-semibold text-sm tracking-[0.2em] uppercase mb-6">

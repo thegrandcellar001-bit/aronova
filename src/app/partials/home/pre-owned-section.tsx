@@ -60,7 +60,7 @@ const PreOwnedSection = () => {
               <Button
                 size="lg"
                 className="bg-primary hover:bg-primary/90 text-primary-foreground font-sans tracking-wide cursor-pointer"
-                onClick={() => router.push("/shop")}
+                onClick={() => router.push("/cat/rearonova")}
               >
                 Shop Pre-Owned
               </Button>

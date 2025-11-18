@@ -44,7 +44,7 @@ const Shop = () => {
 
   const [filters, setFilters] = useState({
     category: currentCategoryData,
-    priceRange: [0, 100000],
+    priceRange: [0, 1000000],
     colors: [] as string[],
     sizes: [] as string[],
   });
@@ -54,7 +54,8 @@ const Shop = () => {
   const fetchProducts = async (
     category_slug: string,
     page: number = 1,
-    filters: any
+    filters: any,
+    skipPrice: boolean = false
   ) => {
     const limit = categoryMeta?.limit || 20;
     const params: any = { category_slug, limit, page };
@@ -62,7 +63,7 @@ const Shop = () => {
     if (filters) {
       if (filters.colors.length > 0) params.color = filters.colors;
       if (filters.sizes.length > 0) params.size = filters.sizes;
-      if (filters.priceRange) {
+      if (!skipPrice && filters.priceRange) {
         params.min_price = filters.priceRange[0];
         params.max_price = filters.priceRange[1];
       }
@@ -88,7 +89,7 @@ const Shop = () => {
 
   useEffect(() => {
     if (categories.length > 0) {
-      fetchProducts(categories[0].category_slug, 1, filters);
+      fetchProducts(categories[0].category_slug, 1, filters, true);
     }
   }, [categories]);
 

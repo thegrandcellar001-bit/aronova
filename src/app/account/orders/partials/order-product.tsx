@@ -26,9 +26,12 @@ export default function OrderProductCard({
         height={110}
       />
       <div className="space-y-1.5">
-        {item?.product.name}
+        <div className="text-lg">{item?.product.name}</div>
         <div className="text-sm text-muted-foreground">
           Order No: {order.id}
+        </div>
+        <div className="text-sm">
+          On: {new Date(order.created_at).toLocaleDateString()}
         </div>
         <div className="text-sm text-muted-foreground">
           <Badge
@@ -51,7 +54,6 @@ export default function OrderProductCard({
             {order.status?.toUpperCase()}
           </Badge>
         </div>
-        <div>On: {new Date(order.created_at).toLocaleDateString()}</div>
       </div>
       {order.status.toLowerCase() === "delivered" && (
         <div className="ml-auto self-start">

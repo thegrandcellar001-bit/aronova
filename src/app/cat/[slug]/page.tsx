@@ -30,6 +30,7 @@ import Filters from "./partials/filters";
 import MobileFilters from "./partials/filters/MobileFilters";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useCategories } from "@/app/providers/category-provider";
+import { skip } from "node:test";
 
 interface CategoryMeta {
   offset: number;
@@ -56,7 +57,7 @@ export default function ShopPage() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const [filters, setFilters] = useState({
-    priceRange: [0, 100000],
+    priceRange: [0, 1000000],
     colors: [] as string[],
     sizes: [] as string[],
     sort_by: "rating",
@@ -64,8 +65,9 @@ export default function ShopPage() {
 
   const fetchProducts = async (
     page = 1,
-    categorySlug = params.slug,
-    sortOverride?: string
+    categorySlug: string,
+    sortOverride?: string,
+    skipPrice: boolean = false
   ) => {
     const limit = categoryMeta?.limit || 20;
     const offset = (page - 1) * limit;
@@ -75,12 +77,15 @@ export default function ShopPage() {
     if (filters.colors.length > 0) query.color = filters.colors;
     if (filters.sizes.length > 0) query.size = filters.sizes;
 
-    query.min_price = filters.priceRange[0];
-    query.max_price = filters.priceRange[1];
+    if (!skipPrice && filters.priceRange) {
+      query.min_price = filters.priceRange[0];
+      query.max_price = filters.priceRange[1];
+    }
     query.sort_by = sortOverride ?? filters.sort_by;
 
     const response = await fetchCategoryProducts(categorySlug, query);
     const { total, products } = response || { total: 0, products: [] };
+
     setCategoryMeta({ limit, offset, total });
     setCategoryProducts(products);
     setCurrentPage(page);
@@ -99,7 +104,7 @@ export default function ShopPage() {
   );
 
   useEffect(() => {
-    fetchProducts(1);
+    fetchProducts(1, params.slug, undefined, true);
   }, [params.slug]);
 
   const handleApplyFilters = () => {
@@ -244,7 +249,12 @@ export default function ShopPage() {
                             onClick={(e) => {
                               e.preventDefault();
                               if (currentPage > 1)
-                                fetchProducts(currentPage - 1);
+                                fetchProducts(
+                                  currentPage - 1,
+                                  params.slug,
+                                  undefined,
+                                  true
+                                );
                             }}
                             className={`border border-black/10 ${
                               currentPage === 1
@@ -263,7 +273,12 @@ export default function ShopPage() {
                                     href="#"
                                     onClick={(e) => {
                                       e.preventDefault();
-                                      fetchProducts(page);
+                                      fetchProducts(
+                                        page,
+                                        params.slug,
+                                        undefined,
+                                        true
+                                      );
                                     }}
                                     className={`text-sm font-medium ${
                                       page === currentPage
@@ -288,7 +303,12 @@ export default function ShopPage() {
                             onClick={(e) => {
                               e.preventDefault();
                               if (currentPage < totalPages)
-                                fetchProducts(currentPage + 1);
+                                fetchProducts(
+                                  currentPage + 1,
+                                  params.slug,
+                                  undefined,
+                                  true
+                                );
                             }}
                             className={`border border-black/10 ${
                               currentPage === totalPages

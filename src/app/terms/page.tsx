@@ -9,7 +9,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
 
-export default function ContactPage() {
+export default function TermsPage() {
   const [sending, setSending] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: "",

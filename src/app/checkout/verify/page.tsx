@@ -1,31 +1,42 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import api from "@/lib/axios";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function VerifyPaymentPage() {
   const searchParams = useSearchParams();
   const reference = searchParams.get("trxref") || searchParams.get("reference");
+  const [loading, setLoading] = useState(false);
 
-  const [message, setMessage] = useState("Verifying payment...");
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  }>({ type: "success", text: "Verifying payment..." });
 
   useEffect(() => {
     if (!reference) return;
 
     const verify = async () => {
+      setLoading(true);
+
       try {
         const res = await api.get(`/payments/verify/${reference}`);
 
-        if (res.data.status === "success") {
-          setMessage("Payment successful! Redirecting...");
-          window.location.href = `/account/orders/${res.data.order_id}`;
+        if (res.data.status.toLowerCase() === "completed") {
+          setMessage({
+            type: "success",
+            text: "Payment successful! Redirecting...",
+          });
+          window.location.href = `/account/orders`;
         } else {
-          setMessage("Payment not successful.");
+          setMessage({ type: "error", text: "Payment not successful." });
         }
       } catch (err) {
-        setMessage("Error verifying your payment.");
+        setMessage({ type: "error", text: "Error verifying your payment." });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -33,10 +44,27 @@ export default function VerifyPaymentPage() {
   }, [reference]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="flex flex-col items-center space-y-4">
-        <Spinner className="w-8 h-8" />
-        <h1 className="text-xl font-bold">{message}</h1>
+        {loading ? (
+          <Spinner className="w-8 h-8" />
+        ) : (
+          <Fragment>
+            <i
+              className={
+                message.type === "success"
+                  ? "fas fa-check-circle text-green-500 text-6xl"
+                  : "far fa-ban text-red-500 text-6xl"
+              }
+            />
+            <i
+              className={
+                message.type === "success" ? "text-green-500" : "text-red-500"
+              }
+            />
+            <h1 className="text-xl font-bold">{message.text}</h1>
+          </Fragment>
+        )}
       </div>
     </div>
   );
