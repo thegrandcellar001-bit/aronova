@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function VerifyPaymentPage() {
   const searchParams = useSearchParams();
@@ -19,7 +20,6 @@ export default function VerifyPaymentPage() {
 
         if (res.data.status === "success") {
           setMessage("Payment successful! Redirecting...");
-          // user-friendly: redirect to order details or thank you page
           window.location.href = `/account/orders/${res.data.order_id}`;
         } else {
           setMessage("Payment not successful.");
@@ -34,7 +34,10 @@ export default function VerifyPaymentPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-xl font-bold">{message}</h1>
+      <div className="flex flex-col items-center space-y-4">
+        <Spinner className="w-8 h-8" />
+        <h1 className="text-xl font-bold">{message}</h1>
+      </div>
     </div>
   );
 }
