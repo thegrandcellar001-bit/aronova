@@ -4,10 +4,16 @@ import { Input } from "@/components/ui/input";
 
 const Footer = () => {
   const footerLinks = {
-    Shop: ["Market", "Editions", "Pre-Owned"],
-    Explore: ["Concierge"],
-    Stories: ["Journal", "Collaborations", "Culture"],
-    Company: ["About", "Contact", "Terms & Privacy"],
+    Shop: [
+      { title: "Editions", link: "/cat/editions" },
+      { title: "Pre-Owned", link: "/cat/pre-owned" },
+    ],
+    Explore: [{ title: "Concierge", link: "/concierge" }],
+    Company: [
+      { title: "About", link: "/about" },
+      { title: "Contact", link: "/contact" },
+      { title: "Terms & Privacy", link: "/terms-privacy" },
+    ],
   };
 
   return (
@@ -21,16 +27,13 @@ const Footer = () => {
                 {category}
               </h3>
               <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link}>
+                {links.map((link, index) => (
+                  <li key={index}>
                     <a
-                      href={`/${link
-                        .toLowerCase()
-                        .replace(" & ", "-")
-                        .replace(" ", "-")}`}
+                      href={link.link}
                       className="font-sans text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                     >
-                      {link}
+                      {link.title}
                     </a>
                   </li>
                 ))}
