@@ -21,11 +21,19 @@ const BreadcrumbShop = ({ category }: { category: Category }) => {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>{category.name}</BreadcrumbPage>
+          <BreadcrumbLink asChild>
+            <Link href="/shop">Shop</Link>
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Products</BreadcrumbPage>
+          <BreadcrumbLink asChild>
+            <Link href={`/cat/${category.category_slug}`}>{category.name}</Link>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>Items</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

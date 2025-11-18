@@ -112,12 +112,12 @@ const Header = ({ data }: { data: Product }) => {
             {selectedVariant ? (
               <Fragment>
                 <span className="text-black text-xl xl:text-2xl">
-                  ₦{selectedVariant.pricing.final_price}
+                  ₦{selectedVariant.pricing.final_price.toLocaleString()}
                 </span>
                 {selectedVariant.pricing.discount > 0 && (
                   <Fragment>
                     <span className="text-black/40 line-through text-xl xl:text-2xl">
-                      ₦{selectedVariant.pricing.base_price}
+                      ₦{selectedVariant.pricing.base_price.toLocaleString()}
                     </span>
                     <span className="font-medium text-[10px] xl:text-xs py-1.5 px-3.5 rounded-full bg-[#FF3333]/10 text-[#FF3333]">
                       {`-${selectedVariant.pricing.discount}%`}
@@ -128,12 +128,12 @@ const Header = ({ data }: { data: Product }) => {
             ) : (
               <Fragment>
                 <span className="text-black text-xl xl:text-2xl">
-                  ₦{data.pricing.final_price}
+                  ₦{data.pricing.final_price.toLocaleString()}
                 </span>
                 {data.pricing.discount > 0 && (
                   <>
                     <span className="text-black/40 line-through text-xl xl:text-2xl">
-                      ₦{data.pricing.base_price}
+                      ₦{data.pricing.base_price.toLocaleString()}
                     </span>
                     <span className="font-medium text-[10px] xl:text-xs py-1.5 px-3.5 rounded-full bg-[#FF3333]/10 text-[#FF3333]">
                       {`-${data.pricing.discount}%`}

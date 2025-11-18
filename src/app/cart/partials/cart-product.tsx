@@ -24,7 +24,6 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
 
   return (
     <div className="flex items-start space-x-4">
-      {/* Product Image */}
       <Link
         href={`/shop/product/${item.product_id}`}
         className="bg-[#F0EEED] rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
@@ -39,7 +38,6 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
         />
       </Link>
 
-      {/* Product Details */}
       <div className="flex w-full self-stretch flex-col">
         <div className="flex items-start justify-between">
           <div>
@@ -74,15 +72,13 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
           </Button>
         </div>
 
-        {/* Price + Quantity Counter */}
         <div className="flex items-center flex-wrap justify-between mt-2">
           <div className="flex items-center space-x-[5px] xl:space-x-2.5">
             <span className="text-black text-xl xl:text-2xl">
-              ₦{totalPrice}
+              ₦{Number(totalPrice).toLocaleString()}
             </span>
           </div>
 
-          {/* Quantity Controller */}
           <CartCounter
             initialValue={item.quantity}
             onAdd={async (value) => {
@@ -91,7 +87,9 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
             onRemove={async (value) => {
               await decreaseQuantity(item.id);
             }}
-            limit={item.variant?.available || 0}
+            limit={
+              item.variant ? item.variant?.available : item.inventory?.available
+            }
             loading={updateLoading}
             className="px-5 py-3 max-h-8 md:max-h-10 min-w-[105px] max-w-[105px] sm:max-w-32"
           />

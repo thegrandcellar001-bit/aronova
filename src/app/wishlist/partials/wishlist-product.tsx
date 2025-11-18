@@ -32,7 +32,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
             src={data.primary_image}
             width={295}
             height={298}
-            className="rounded-md w-full h-full object-contain hover:scale-110 transition-all duration-500"
+            className="rounded-md w-full h-full object-cover hover:scale-110 transition-all duration-500"
             alt={data.name}
             priority
           />
@@ -52,7 +52,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <strong className="text-black xl:text-xl">{data.name}</strong>
         <div className="flex items-center space-x-[5px] xl:space-x-2.5">
           <span className="text-black text-xl xl:text-2xl">
-            ₦{data.total_price}
+            ₦{data.total_price.toLocaleString()}
           </span>
         </div>
       </Link>

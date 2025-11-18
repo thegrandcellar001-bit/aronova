@@ -20,7 +20,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import AuthGuard from "@/lib/auth-guard";
-import { useCategoryStore } from "@/lib/stores/categories";
 import { useParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import ApiLoader from "@/components/common/api-loader";
@@ -30,6 +29,7 @@ import { useProduct } from "@/app/providers/product-provider";
 import Filters from "./partials/filters";
 import MobileFilters from "./partials/filters/MobileFilters";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useCategories } from "@/app/providers/category-provider";
 
 interface CategoryMeta {
   offset: number;
@@ -39,7 +39,9 @@ interface CategoryMeta {
 
 export default function ShopPage() {
   const params = useParams<{ slug: string }>();
-  const { findCategoryBySlug } = useCategoryStore();
+  const currentCategory = params.slug;
+
+  const { categories, findCategoryBySlug } = useCategories();
   const categoryData = findCategoryBySlug(params.slug);
 
   const { fetchCategoryProducts, loading } = useProduct();
@@ -47,6 +49,9 @@ export default function ShopPage() {
   const [categoryMeta, setCategoryMeta] = useState<CategoryMeta>();
   const [categoryProducts, setCategoryProducts] = useState<Product[]>();
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentCategoryData, setCurrentCategoryData] = useState<any>(
+    categories.find((cat) => cat.category_slug === currentCategory)
+  );
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -134,6 +139,8 @@ export default function ShopPage() {
                       <FiSliders className="text-2xl text-black/40" />
                     </div>
                     <Filters
+                      categories={categories}
+                      categoryData={currentCategoryData}
                       filters={filters}
                       setFilters={setFilters}
                       onApply={handleApplyFilters}
@@ -198,6 +205,8 @@ export default function ShopPage() {
                         {!isDesktop && (
                           <div>
                             <MobileFilters
+                              categories={categories}
+                              categoryData={currentCategoryData}
                               filters={filters}
                               setFilters={setFilters}
                               onApply={handleApplyFilters}

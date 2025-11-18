@@ -17,6 +17,9 @@ export interface CartItem {
     };
   };
   variant?: CartVariant;
+  inventory?: {
+    available: number;
+  };
 }
 
 export interface CartVariant {

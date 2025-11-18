@@ -1,47 +1,42 @@
 import Link from "next/link";
 import React from "react";
-import { MdKeyboardArrowRight } from "react-icons/md";
 
-type Category = {
-  title: string;
-  slug: string;
-};
+interface CategoryData {
+  id: number;
+  name: string;
+  category_slug: string;
+  parent_id: number | null;
+}
 
-const categoriesData: Category[] = [
-  {
-    title: "T-shirts",
-    slug: "/shop?category=t-shirts",
-  },
-  {
-    title: "Shorts",
-    slug: "/shop?category=shorts",
-  },
-  {
-    title: "Shirts",
-    slug: "/shop?category=shirts",
-  },
-  {
-    title: "Hoodie",
-    slug: "/shop?category=hoodie",
-  },
-  {
-    title: "Jeans",
-    slug: "/shop?category=jeans",
-  },
-];
+const CategoriesSection = ({
+  categoryData,
+  allCategories,
+  setFilters,
+}: {
+  categoryData: CategoryData | null;
+  allCategories: CategoryData[];
+  setFilters: React.Dispatch<React.SetStateAction<any>>;
+}) => {
+  if (!categoryData) return null;
 
-const CategoriesSection = () => {
+  // Find sub-categories by parent_id
+  const subCategories = allCategories.filter(
+    (cat) => cat.parent_id === categoryData.id
+  );
+
   return (
     <div className="flex flex-col space-y-0.5 text-black/60">
-      {categoriesData.map((category, idx) => (
-        <Link
-          key={idx}
-          href={category.slug}
-          className="flex items-center justify-between py-2"
-        >
-          {category.title} <MdKeyboardArrowRight />
-        </Link>
-      ))}
+      {subCategories.length > 0 &&
+        subCategories.map((subcat) => (
+          <Link
+            key={subcat.id}
+            href={`/cat/${subcat.category_slug}`}
+            className="flex items-center justify-between py-2"
+          >
+            {subcat.name}
+            <i className="far fa-chevron-right text-sm" />
+          </Link>
+        ))}
     </div>
   );
 };

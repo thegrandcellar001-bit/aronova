@@ -74,12 +74,14 @@ export default function ProductPage() {
                 </section>
                 <Tabs product={product} />
               </div>
-              <div>
-                <ProductListSec
-                  title="You may also like"
-                  data={relatedProducts}
-                />
-              </div>
+              {relatedProducts.length > 0 && (
+                <div>
+                  <ProductListSec
+                    title="You may also like"
+                    data={relatedProducts}
+                  />
+                </div>
+              )}
             </Fragment>
           ) : (
             <div className="max-w-frame mx-auto px-4 xl:px-0">

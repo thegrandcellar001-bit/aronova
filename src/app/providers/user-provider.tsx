@@ -105,7 +105,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({
   const updateUserData = async (data: Partial<UserData>) => {
     setLoading((prev) => ({ ...prev, updateUser: true }));
     try {
-      const res = await api.patch("/customer/profile", data);
+      const res = await api.patch("/customer/update", data);
       setUserData(res.data);
       toastSuccess("User data updated successfully");
     } catch (error) {

@@ -12,10 +12,14 @@ import Filters from ".";
 import { Button } from "@/components/ui/buttons";
 
 const MobileFilters = ({
+  categories,
+  categoryData,
   filters,
   setFilters,
   onApply,
 }: {
+  categories: any[];
+  categoryData: any;
   filters: any;
   setFilters: React.Dispatch<React.SetStateAction<any>>;
   onApply: (filters: any) => void;
@@ -43,6 +47,8 @@ const MobileFilters = ({
           </DrawerHeader>
           <div className="max-h-[90%] overflow-y-auto w-full px-5 md:px-6 py-5 space-y-5 md:space-y-6">
             <Filters
+              categories={categories}
+              categoryData={categoryData}
               filters={filters}
               setFilters={setFilters}
               onApply={onApply}

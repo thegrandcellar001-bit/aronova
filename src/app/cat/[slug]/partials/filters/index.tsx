@@ -6,18 +6,25 @@ import SizeSection from "./SizeSection";
 import { Button } from "@/components/ui/button";
 
 const Filters = ({
+  categories,
+  categoryData,
   filters,
   setFilters,
   onApply,
 }: {
+  categories: any[];
+  categoryData: any;
   filters: any;
   setFilters: React.Dispatch<React.SetStateAction<any>>;
   onApply: (filters: any) => void;
 }) => {
   return (
     <div className="flex flex-col gap-4">
-      <hr className="border-t-black/10" />
-      <CategoriesSection />
+      <CategoriesSection
+        categoryData={categoryData}
+        allCategories={categories}
+        setFilters={setFilters}
+      />
       <hr className="border-t-black/10" />
       <PriceSection
         priceRange={filters.priceRange}

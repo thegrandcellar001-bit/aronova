@@ -1,5 +1,6 @@
 "use client";
 
+import { useCategories } from "@/app/providers/category-provider";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -8,10 +9,9 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-import { useCategoryStore } from "@/lib/stores/categories";
 
 export default function ShopCategories() {
-  const { categories } = useCategoryStore();
+  const { categories } = useCategories();
 
   return (
     <NavigationMenu className="sticky top-3 mb-8">
