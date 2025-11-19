@@ -76,7 +76,19 @@ export default function Page() {
                             orders.filter(
                               (order) =>
                                 order.status.toLowerCase() === "processing" ||
-                                order.status.toLowerCase() === "pending"
+                                order.status.toLowerCase() === "pending" ||
+                                order.status.toLowerCase() === "confirmed"
+                            ).length
+                          }
+                          )
+                        </TabsTrigger>
+                        <TabsTrigger value="paid" className="w-full">
+                          Paid / Shipped (
+                          {
+                            orders.filter(
+                              (order) =>
+                                order.status.toLowerCase() === "paid" ||
+                                order.status.toLowerCase() === "shipped"
                             ).length
                           }
                           )
@@ -95,7 +107,8 @@ export default function Page() {
                           Cancelled (
                           {
                             orders.filter(
-                              (order) => order.status === "cancelled"
+                              (order) =>
+                                order.status.toLowerCase() === "cancelled"
                             ).length
                           }
                           )
@@ -106,7 +119,8 @@ export default function Page() {
                           {orders.filter(
                             (order) =>
                               order.status.toLowerCase() === "processing" ||
-                              order.status.toLowerCase() === "pending"
+                              order.status.toLowerCase() === "pending" ||
+                              order.status.toLowerCase() === "confirmed"
                           ).length > 0 ? (
                             orders
                               .filter(
@@ -176,6 +190,46 @@ export default function Page() {
                             <div className="text-center text-muted-foreground mt-20 flex flex-col items-center gap-y-6">
                               <i className="fal fa-box-open text-6xl"></i>
                               You have no delivered orders.
+                            </div>
+                          )}
+                        </div>
+                      </TabsContent>
+                      <TabsContent value="paid" className="mt-4">
+                        <div className="flex flex-col gap-3">
+                          {orders.filter(
+                            (order) =>
+                              order.status.toLowerCase() === "paid" ||
+                              order.status.toLowerCase() === "shipped"
+                          ).length > 0 ? (
+                            orders
+                              .filter(
+                                (order) =>
+                                  order.status.toLowerCase() === "paid" ||
+                                  order.status.toLowerCase() === "shipped"
+                              )
+                              .map((order, index) => (
+                                <Fragment key={index}>
+                                  {order.order_items.length > 1 ? (
+                                    order.order_items.map((item, idx) => (
+                                      <OrderProductCard
+                                        key={idx}
+                                        order={order}
+                                        item={item}
+                                      />
+                                    ))
+                                  ) : (
+                                    <OrderProductCard
+                                      key={index}
+                                      order={order}
+                                      item={order.order_items[0]}
+                                    />
+                                  )}
+                                </Fragment>
+                              ))
+                          ) : (
+                            <div className="text-center text-muted-foreground mt-20 flex flex-col items-center gap-y-6">
+                              <i className="fal fa-box-open text-6xl"></i>
+                              You have no paid or shipped orders.
                             </div>
                           )}
                         </div>
