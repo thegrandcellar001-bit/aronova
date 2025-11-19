@@ -1,13 +1,11 @@
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "../partials/home/navigation";
-import Footer from "../partials/home/footer";
 
 const Concierge = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 bg-linear-to-b from-cream to-background">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
@@ -24,7 +22,6 @@ const Concierge = () => {
           </p>
         </div>
       </section>
-
       {/* Contact Form */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-3xl mx-auto">
@@ -108,7 +105,6 @@ const Concierge = () => {
           </form>
         </div>
       </section>
-
       {/* Contact Cards */}
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
@@ -138,8 +134,6 @@ const Concierge = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

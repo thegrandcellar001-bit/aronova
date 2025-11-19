@@ -8,7 +8,6 @@ import Link from "next/link";
 import Filters from "../cat/[slug]/partials/filters";
 import MobileFilters from "../cat/[slug]/partials/filters/MobileFilters";
 import { useMediaQuery } from "@/hooks/use-media-query";
-
 import {
   Carousel,
   CarouselContent,
@@ -27,81 +26,80 @@ interface CategoryMeta {
 
 const Shop = () => {
   const {
+    fetchProducts,
     fetchFilteredProducts,
     loading: { filter: productLoading },
   } = useProduct();
-  const [categoryMeta, setCategoryMeta] = useState<CategoryMeta>();
   const { categories, loading } = useCategories();
-  const [products, setProducts] = useState<Product[] | []>();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categoryMeta, setCategoryMeta] = useState<CategoryMeta>();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [currentCategory, setCurrentCategory] = useState<string | null>(
-    categories.length > 0 ? categories[0].category_slug : null
-  );
-  const [currentCategoryData, setCurrentCategoryData] = useState<any>(
-    categories.find((cat) => cat.category_slug === currentCategory)
-  );
+  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+  const [currentCategoryData, setCurrentCategoryData] = useState<any>(null);
 
   const [filters, setFilters] = useState({
-    category: currentCategoryData,
+    category: null,
     priceRange: [0, 1000000],
     colors: [] as string[],
     sizes: [] as string[],
   });
 
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  useEffect(() => {
+    const loadAll = async () => {
+      const res = await fetchProducts(20);
+      setProducts(res ? res.products : []);
+      setCategoryMeta({
+        page: 1,
+        limit: res?.limit ?? 20,
+        total: res?.total ?? res?.products?.length ?? 0,
+      });
+    };
 
-  const fetchProducts = async (
+    loadAll();
+  }, []);
+
+  const fetchByCategory = async (
     category_slug: string,
     page: number = 1,
-    filters: any,
+    appliedFilters: any = null,
     skipPrice: boolean = false
   ) => {
     const limit = categoryMeta?.limit || 20;
+
     const params: any = { category_slug, limit, page };
 
-    if (filters) {
-      if (filters.colors.length > 0) params.color = filters.colors;
-      if (filters.sizes.length > 0) params.size = filters.sizes;
-      if (!skipPrice && filters.priceRange) {
-        params.min_price = filters.priceRange[0];
-        params.max_price = filters.priceRange[1];
+    if (appliedFilters) {
+      if (appliedFilters.colors?.length > 0)
+        params.color = appliedFilters.colors;
+      if (appliedFilters.sizes?.length > 0) params.size = appliedFilters.sizes;
+
+      if (!skipPrice && appliedFilters.priceRange) {
+        params.min_price = appliedFilters.priceRange[0];
+        params.max_price = appliedFilters.priceRange[1];
       }
     }
 
     const response = await fetchFilteredProducts(params);
     const { total, products } = response || { total: 0, products: [] };
 
-    setCategoryMeta({ limit, page, total });
     setProducts(products);
+    setCategoryMeta({ limit, page, total });
     setCurrentPage(page);
 
-    const data = categories.find((cat) => cat.category_slug === category_slug);
+    const catData = categories.find(
+      (cat) => cat.category_slug === category_slug
+    );
     setCurrentCategory(category_slug);
-    setCurrentCategoryData(data);
+    setCurrentCategoryData(catData);
   };
 
   const handleApplyFilters = () => {
-    if (currentCategory) {
-      fetchProducts(currentCategory, 1, filters);
-    }
+    if (!currentCategory) return;
+    fetchByCategory(currentCategory, 1, filters);
   };
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      fetchProducts(categories[0].category_slug, 1, filters, true);
-    }
-  }, [categories]);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      const defaultCat = categories[0];
-      setCurrentCategory(defaultCat.category_slug);
-      setCurrentCategoryData(defaultCat);
-
-      fetchProducts(defaultCat.category_slug, 1, filters);
-    }
-  }, [categories]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -118,23 +116,53 @@ const Shop = () => {
             </p>
           </div>
         </section>
+
         {loading ? (
           <ApiLoader message="Loading products..." />
         ) : (
           <Fragment>
+            {/* Category Selector */}
             <section className="border-b border-border bg-background sticky top-20 z-40">
               <div className="max-w-[1400px] mx-auto px-2 lg:px-20 py-6">
                 <div className="flex items-center gap-4 w-[95%]">
                   <Carousel
-                    opts={{
-                      align: "start",
-                    }}
+                    opts={{ align: "start" }}
                     className="relative w-full"
                   >
                     <div className="bg-background w-[34px] h-9 absolute left-0 top-0 bottom-0 flex items-center justify-center z-10">
                       <CarouselPrevious className="absolute left-0 z-10 inline-flex rounded-none cursor-pointer bg-primary text-white" />
                     </div>
+
                     <CarouselContent className="ml-7">
+                      {/* "All Products" Button */}
+                      <CarouselItem className="basis-auto shrink-0">
+                        <Button
+                          variant={
+                            currentCategory === null ? "default" : "outline"
+                          }
+                          size="sm"
+                          className={`text-sm cursor-pointer whitespace-nowrap ${
+                            currentCategory === null && "bg-primary text-white"
+                          } border-[1.5px] border-deep-green hover:bg-primary hover:text-white`}
+                          onClick={() => {
+                            setCurrentCategory(null);
+                            setCurrentCategoryData(null);
+
+                            // Reload ALL products
+                            fetchProducts(20).then((res) => {
+                              setProducts(res ? res.products : []);
+                              setCategoryMeta({
+                                page: 1,
+                                limit: res?.limit ?? 20,
+                                total: res?.total ?? res?.products?.length ?? 0,
+                              });
+                            });
+                          }}
+                        >
+                          All Products
+                        </Button>
+                      </CarouselItem>
+
                       {categories.map((category, index) => (
                         <CarouselItem
                           key={index}
@@ -142,7 +170,9 @@ const Shop = () => {
                         >
                           <Button
                             variant={
-                              category.name === "All" ? "default" : "outline"
+                              currentCategory === category.category_slug
+                                ? "default"
+                                : "outline"
                             }
                             size="sm"
                             className={`text-sm cursor-pointer whitespace-nowrap ${
@@ -150,7 +180,11 @@ const Shop = () => {
                               "bg-primary text-white"
                             } border-[1.5px] border-deep-green hover:bg-primary hover:text-white`}
                             onClick={() =>
-                              fetchProducts(category.category_slug, 1, filters)
+                              fetchByCategory(
+                                category.category_slug,
+                                1,
+                                filters
+                              )
                             }
                           >
                             {category.name}
@@ -158,36 +192,43 @@ const Shop = () => {
                         </CarouselItem>
                       ))}
                     </CarouselContent>
+
                     <CarouselNext className="absolute inline-flex cursor-pointer rounded-none bg-primary text-white" />
                   </Carousel>
                 </div>
               </div>
             </section>
+
+            {/* Product List + Filters */}
             <section className="py-8 lg:py-10 bg-white">
               {productLoading ? (
                 <ApiLoader message="Loading products..." />
               ) : (
                 <div className="max-w-[1400px] px-6 lg:px-20 flex flex-col md:flex-row items-start gap-6">
-                  <div className="w-full md:w-1/3">
-                    {isDesktop ? (
-                      <Filters
-                        categories={categories}
-                        categoryData={currentCategoryData}
-                        filters={filters}
-                        setFilters={setFilters}
-                        onApply={handleApplyFilters}
-                      />
-                    ) : (
-                      <MobileFilters
-                        categories={categories}
-                        categoryData={currentCategoryData}
-                        filters={filters}
-                        setFilters={setFilters}
-                        onApply={handleApplyFilters}
-                      />
-                    )}
-                  </div>
+                  {/* Filters */}
+                  {currentCategory !== null && (
+                    <div className="w-full md:w-1/3">
+                      {isDesktop ? (
+                        <Filters
+                          categories={categories}
+                          categoryData={currentCategoryData}
+                          filters={filters}
+                          setFilters={setFilters}
+                          onApply={handleApplyFilters}
+                        />
+                      ) : (
+                        <MobileFilters
+                          categories={categories}
+                          categoryData={currentCategoryData}
+                          filters={filters}
+                          setFilters={setFilters}
+                          onApply={handleApplyFilters}
+                        />
+                      )}
+                    </div>
+                  )}
 
+                  {/* Products */}
                   <div className="grow w-full">
                     <div className="mb-8">
                       {categoryMeta && (
@@ -201,7 +242,7 @@ const Shop = () => {
                         </span>
                       )}
                     </div>
-                    {/* Products */}
+
                     {products && products.length > 0 ? (
                       <Fragment>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -262,7 +303,7 @@ const Shop = () => {
                               <Button
                                 variant="outline"
                                 size="lg"
-                                className="px-12"
+                                className="px-12 cursor-pointer"
                               >
                                 Load More
                               </Button>
@@ -272,9 +313,7 @@ const Shop = () => {
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">
                         <i className="fal fa-box text-4xl"></i>
-                        <p className="text-black/40">
-                          No products yet in this category.
-                        </p>
+                        <p className="text-black/40">No products found.</p>
                       </div>
                     )}
                   </div>

@@ -55,8 +55,6 @@ export default function Page() {
     fetchOrders();
   }, []);
 
-  console.log(orders);
-
   return (
     <AuthGuard>
       <main className="pt-26 pb-10 bg-white">

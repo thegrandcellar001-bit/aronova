@@ -116,9 +116,12 @@ const Discover = () => {
             <Button
               size="lg"
               className="bg-gold hover:bg-gold/90 text-foreground cursor-pointer"
+              asChild
             >
-              <MessageCircle className="w-5 h-5 mr-2" />
-              Request Concierge
+              <Link href="/concierge">
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Request Concierge
+              </Link>
             </Button>
             <Button
               size="lg"

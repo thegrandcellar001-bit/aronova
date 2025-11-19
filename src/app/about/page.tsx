@@ -1,6 +1,5 @@
 import { Target, Eye, Heart } from "lucide-react";
 import Navigation from "../partials/home/navigation";
-import Footer from "../partials/home/footer";
 
 const About = () => {
   const values = [
@@ -60,14 +59,14 @@ const About = () => {
             backgroundImage: `url(${"/images/hero/about-hero.jpg"})`,
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/70 to-black/40" />
         </div>
-        <div className="relative z-10 h-full flex items-center px-6">
-          <div className="max-w-3xl animate-fade-in">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl mb-6 text-cream">
+        <div className="relative z-10 h-full flex items-center justify-center px-6">
+          <div className="max-w-6xl animate-fade-in">
+            <h1 className="text-5xl md:text-5xl lg:text-6xl mb-6 text-cream text-center">
               Redefining Luxury for Nigeria
             </h1>
-            <p className="font-sans text-xl text-cream/90 max-w-2xl">
+            <p className="font-sans text-xl text-cream/90 max-w-4xl text-center">
               ARONOVA is where provenance meets beauty — a marketplace, guide,
               and community for those who value authenticity, craftsmanship, and
               intention.
@@ -173,8 +172,6 @@ const About = () => {
           </p>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

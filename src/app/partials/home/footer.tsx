@@ -12,7 +12,7 @@ const Footer = () => {
     Company: [
       { title: "About", link: "/about" },
       { title: "Contact", link: "/contact" },
-      { title: "Terms & Privacy", link: "/terms-privacy" },
+      { title: "Terms & Privacy", link: "/terms" },
     ],
   };
 

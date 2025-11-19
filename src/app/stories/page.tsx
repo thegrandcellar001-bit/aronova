@@ -1,6 +1,5 @@
 import { ArrowRight } from "lucide-react";
 import Navigation from "../partials/home/navigation";
-import Footer from "../partials/home/footer";
 
 const Stories = () => {
   const featuredStory = {
@@ -78,7 +77,7 @@ const Stories = () => {
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${featuredStory.image})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-black/20" />
         </div>
         <div className="relative z-10 h-full flex items-end pb-20 px-6">
           <div className="max-w-4xl mx-auto text-cream animate-fade-in">
@@ -122,7 +121,7 @@ const Stories = () => {
                 className="group cursor-pointer animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="aspect-[16/10] mb-6 overflow-hidden rounded-lg bg-cream">
+                <div className="aspect-16/10 mb-6 overflow-hidden rounded-lg bg-cream">
                   <img
                     src={story.image}
                     alt={story.title}
@@ -175,8 +174,6 @@ const Stories = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

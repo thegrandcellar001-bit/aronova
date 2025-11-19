@@ -3,7 +3,6 @@
 import { Shield, Award, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navigation from "../partials/home/navigation";
-import Footer from "../partials/home/footer";
 import { useProduct } from "../providers/product-provider";
 import { Product } from "@/types/product.types";
 import { Fragment, useEffect, useState } from "react";
@@ -205,8 +204,6 @@ const PreOwned = () => {
         </Button>
       </div>
     </section> */}
-
-      <Footer />
     </div>
   );
 };

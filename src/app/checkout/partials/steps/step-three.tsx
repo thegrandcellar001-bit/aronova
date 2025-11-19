@@ -52,7 +52,7 @@ export default function StepThree({
   const handleSubmitOrder = async () => {
     setSubmitLoading(true);
     try {
-      const res = await api.post(`/orders`);
+      const res = await api.post(`/orders`, { shipping_method: "standard" });
       const { payment_authorization_url, payment_reference, order } = res.data;
       toastSuccess("Redirecting to our payment gateway.");
       window.location.href = payment_authorization_url;

@@ -6,6 +6,8 @@ import { UserAvatar } from "../layout/navbar/top/user-avatar";
 import CartBtn from "../layout/navbar/top/CartBtn";
 import Link from "next/link";
 import { useWishlist } from "@/app/providers/wishlist-provider";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
 const Navigation = () => {
   const navItems = [
@@ -38,18 +40,88 @@ const Navigation = () => {
       path: "/about",
     },
   ];
-
   const { isAuthenticated } = useAuthStore();
   const { itemsCount } = useWishlist();
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isMobile = window.innerWidth < 1024;
+
+  const mobileNav = () => (
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="px-6 pt-2 pb-3 mb-3 space-y-1">
+        {navItems.map((item) => (
+          <motion.div
+            key={item.name}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          >
+            <Link
+              href={item.path}
+              className="block py-2 text-gray-700 transition-colors duration-200"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          </motion.div>
+        ))}
+
+        <div className="pt-2 space-y-2">
+          <Button className="ring-2 ring-primary" variant={"outline"} asChild>
+            <Link
+              href="/login"
+              className="w-full flex items-center justify-center rounded-md text-primary cursor-pointer"
+            >
+              Sign In
+            </Link>
+          </Button>
+
+          <Button className="mt-2" variant={"default"} asChild>
+            <Link
+              href="/register"
+              className="w-full flex items-center justify-center text-white cursor-pointer"
+            >
+              Register an account
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-20">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="/" className="block hover:opacity-80 transition-opacity">
-            <img src="/icons/logo.png" alt="ARONOVA" className="h-10 w-auto" />
-          </a>
+      <div className="max-w-[1400px] mx-auto lg:px-20">
+        <div className="flex items-center justify-between h-20 pl-2 pr-4">
+          <div className="flex items-center gap-1">
+            {isMobile && (
+              <motion.button
+                className="text-2xl p-2 mr-2 cursor-pointer transition-colors duration-200"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {mobileMenuOpen ? (
+                  <i className="far fa-close" />
+                ) : (
+                  <i className="far fa-bars" />
+                )}
+              </motion.button>
+            )}
+
+            {/* Logo */}
+            <a href="/" className="block hover:opacity-80 transition-opacity">
+              <img
+                src="/icons/logo.png"
+                alt="ARONOVA"
+                className="h-10 w-auto"
+              />
+            </a>
+          </div>
 
           {/* Navigation Links */}
           <div className="hidden lg:flex items-center gap-8">
@@ -93,6 +165,8 @@ const Navigation = () => {
           </div>
         </div>
       </div>
+
+      {mobileMenuOpen && isMobile && mobileNav()}
     </nav>
   );
 };
