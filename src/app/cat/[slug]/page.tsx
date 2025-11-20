@@ -234,11 +234,7 @@ export default function ShopPage() {
                       <>
                         <div className="w-full grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5 mt-6">
                           {categoryProducts.map((product) => (
-                            <ProductCard
-                              key={product.id}
-                              categorySlug={params.slug}
-                              product={product}
-                            />
+                            <ProductCard key={product.id} product={product} />
                           ))}
                         </div>
                         {/* Pagination */}

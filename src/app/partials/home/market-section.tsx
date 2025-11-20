@@ -46,7 +46,7 @@ const MarketSection = () => {
             {productsData ? (
               productsData.map((product, index) => (
                 <Link
-                  href={`/cat/${product.category_slug}/${product.id}`}
+                  href={`/item/${product.id}`}
                   key={index}
                   className="group cursor-pointer animate-scale-in"
                   style={{ animationDelay: `${index * 0.15}s` }}

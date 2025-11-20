@@ -49,8 +49,8 @@ const PriceSection = ({
               setRange(val);
               setPriceRange(val);
             }}
-            min={50}
-            max={100000}
+            min={priceRange[0]}
+            max={priceRange[1]}
             step={50}
             label="₦"
             minStepsBetweenThumbs={1}

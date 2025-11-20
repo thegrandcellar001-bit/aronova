@@ -47,7 +47,6 @@ export default function CartPage() {
                       <ProductCard
                         item={item}
                         variant={item.variant}
-                        category_slug={item.product.category_slug}
                         userId={state.user_id}
                       />
                       {state.items.length - 1 !== index && (
@@ -77,21 +76,6 @@ export default function CartPage() {
                           )
                           .toLocaleString()}
                       </span>
-                    </div>
-                    {/* <div className="flex items-center justify-between">
-                    <span className="md:text-xl text-black/60">
-                      Discount (
-                      {"-" + (itemsDiscountPercentage?.toLocaleString() ?? "0")}
-                      %)
-                    </span>
-                    <span className="md:text-xl font-bold text-red-600">
-                      -$
-                      {itemsDiscountPrice?.toLocaleString()}
-                    </span>
-                  </div> */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-black/60">Delivery Fee</span>
-                      <span className="font-bold">Free</span>
                     </div>
                     <hr className="border-t-black/10" />
                     <div className="flex items-center justify-between">

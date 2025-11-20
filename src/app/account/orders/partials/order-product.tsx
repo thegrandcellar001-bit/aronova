@@ -19,14 +19,16 @@ export default function OrderProductCard({
   return (
     <div className="border p-4 rounded-md mt-4 flex items-center gap-x-4">
       <Image
-        src={item?.image_url || "/images/products/product-1.jpg"}
+        src={item?.product.image_url || "/images/products/product-1.jpg"}
         alt={item?.product.name}
         className="rounded-lg"
         width={110}
         height={110}
       />
       <div className="space-y-1.5">
-        <div className="text-lg">{item?.product.name}</div>
+        <Link href={`/item/${item.product.id}`} className="text-lg">
+          {item?.product.name}
+        </Link>
         <div className="text-sm text-muted-foreground">
           Order No: {order.id}
         </div>
@@ -55,6 +57,32 @@ export default function OrderProductCard({
           </Badge>
         </div>
       </div>
+      {order.status.toLowerCase() === "pending" ||
+        (order.status.toLowerCase() === "processing" && (
+          <div className="ml-auto self-start">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  className="text-sm font-medium rounded-md cursor-pointer"
+                  variant="ghost"
+                >
+                  <i className="fas fa-ellipsis"></i>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem
+                  className="cursor-pointer flex items-center gap-x-2 py-2"
+                  asChild
+                >
+                  <Link href={`/account/orders/${order.id}/cancel`}>
+                    <i className="far fa-pen"></i> Cancel order
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ))}
+
       {order.status.toLowerCase() === "completed" && (
         <div className="ml-auto self-start">
           <DropdownMenu>

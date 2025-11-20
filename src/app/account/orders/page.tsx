@@ -68,50 +68,35 @@ export default function Page() {
               ) : (
                 <Fragment>
                   {orders && orders.length > 0 ? (
-                    <Tabs defaultValue="processing" className="w-full">
-                      <TabsList className="grid grid-cols-2 lg:grid-cols-4 h-auto w-full">
-                        <TabsTrigger value="processing" className="w-full">
-                          Pending / Processing (
-                          {
-                            orders.filter(
-                              (order) =>
-                                order.status.toLowerCase() === "processing" ||
-                                order.status.toLowerCase() === "pending" ||
-                                order.status.toLowerCase() === "confirmed"
-                            ).length
-                          }
-                          )
+                    <Tabs
+                      defaultValue="processing"
+                      orientation="vertical"
+                      className="w-full"
+                    >
+                      <TabsList className="grid grid-cols-2 lg:grid-cols-4 gap-4 h-auto w-full bg-white">
+                        <TabsTrigger
+                          value="processing"
+                          className="w-full h-9 ring-2 ring-primary data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:font-semibold"
+                        >
+                          Pending / Processing
                         </TabsTrigger>
-                        <TabsTrigger value="paid" className="w-full">
-                          Paid / Shipped (
-                          {
-                            orders.filter(
-                              (order) =>
-                                order.status.toLowerCase() === "paid" ||
-                                order.status.toLowerCase() === "shipped"
-                            ).length
-                          }
-                          )
+                        <TabsTrigger
+                          value="paid"
+                          className="w-full h-9 ring-2 ring-primary data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:font-semibold"
+                        >
+                          Paid / Shipped
                         </TabsTrigger>
-                        <TabsTrigger value="delivered" className="w-full">
-                          Delivered (
-                          {
-                            orders.filter(
-                              (order) =>
-                                order.status.toLowerCase() === "completed"
-                            ).length
-                          }
-                          )
+                        <TabsTrigger
+                          value="delivered"
+                          className="w-full h-9 ring-2 ring-primary data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:font-semibold"
+                        >
+                          Delivered
                         </TabsTrigger>
-                        <TabsTrigger value="cancelled" className="w-full">
-                          Cancelled (
-                          {
-                            orders.filter(
-                              (order) =>
-                                order.status.toLowerCase() === "cancelled"
-                            ).length
-                          }
-                          )
+                        <TabsTrigger
+                          value="cancelled"
+                          className="w-full h-9 ring-2 ring-primary data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:font-semibold"
+                        >
+                          Cancelled
                         </TabsTrigger>
                       </TabsList>
                       <TabsContent value="processing" className="mt-4">

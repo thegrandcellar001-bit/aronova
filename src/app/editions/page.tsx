@@ -22,39 +22,6 @@ const Editions = () => {
     fetchProducts("editions");
   }, []);
 
-  // const editions = [
-  //   {
-  //     id: 1,
-  //     image: "/images/products/product-1.jpg",
-  //     title: "Heritage Collection 2025",
-  //     description:
-  //       "A curated selection celebrating Nigeria's textile heritage with contemporary interpretations.",
-  //     pieces: "Limited to 50 pieces",
-  //     status: "Available Now",
-  //     price: "From ₦450,000",
-  //   },
-  //   {
-  //     id: 2,
-  //     image: "/images/products/product-2.jpg",
-  //     title: "Artisan Collaboration Series",
-  //     description:
-  //       "Exclusive pieces co-created with master craftspeople from across Nigeria.",
-  //     pieces: "Limited to 30 pieces",
-  //     status: "Pre-Order",
-  //     price: "From ₦680,000",
-  //   },
-  //   {
-  //     id: 3,
-  //     image: "/images/products/product-3.jpg",
-  //     title: "Contemporary Lagos",
-  //     description:
-  //       "Modern luxury pieces inspired by the vibrant energy of Lagos.",
-  //     pieces: "Limited to 75 pieces",
-  //     status: "Coming Soon",
-  //     price: "From ₦320,000",
-  //   },
-  // ];
-
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -155,7 +122,7 @@ const Editions = () => {
                           </div>
                           <div className="pt-4">
                             <Button className="gap-2" asChild>
-                              <Link href={`/cat/editions/${edition.id}`}>
+                              <Link href={`/item/${edition.id}`}>
                                 Explore Collection
                                 <i className="far fa-arrow-right text-md" />
                               </Link>

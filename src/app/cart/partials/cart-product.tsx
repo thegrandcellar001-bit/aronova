@@ -11,11 +11,10 @@ import { useCart } from "@/app/providers/cart-provider";
 type CartProductProps = {
   item: CartItem;
   variant?: CartVariant;
-  category_slug: string;
   userId: number;
 };
 
-const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
+const CartProduct = ({ item, variant }: CartProductProps) => {
   const { increaseQuantity, decreaseQuantity, removeItem, updateLoading } =
     useCart();
   const imageUrl = item.product.primary_image;
@@ -25,8 +24,8 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
   return (
     <div className="flex items-start space-x-4">
       <Link
-        href={`/shop/product/${item.product_id}`}
-        className="bg-[#F0EEED] rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
+        href={`/item/${item.product_id}`}
+        className="bg-cream rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
       >
         <Image
           src={imageUrl}
@@ -42,7 +41,7 @@ const CartProduct = ({ item, variant, category_slug }: CartProductProps) => {
         <div className="flex items-start justify-between">
           <div>
             <Link
-              href={`/cat/${category_slug}/${item.product_id}`}
+              href={`/item/${item.product_id}`}
               className="text-black text-base xl:text-xl"
             >
               {item.name}

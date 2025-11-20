@@ -24,7 +24,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
   return (
     <div className="flex flex-col space-y-2.5 xl:space-y-4">
       <Link
-        href={`/cat/${data.category_slug}/${data.product_id}`}
+        href={`/item/${data.product_id}`}
         className="flex flex-col items-start aspect-auto"
       >
         <div className="bg-[#F0EEED] w-full lg:max-w-[295px] aspect-square mb-2.5 xl:mb-4 overflow-hidden relative">

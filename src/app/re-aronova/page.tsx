@@ -7,6 +7,7 @@ import { useProduct } from "../providers/product-provider";
 import { Product } from "@/types/product.types";
 import { Fragment, useEffect, useState } from "react";
 import ApiLoader from "@/components/common/api-loader";
+import Link from "next/link";
 
 const PreOwned = () => {
   const { loading, fetchCategoryProducts } = useProduct();
@@ -121,9 +122,8 @@ const PreOwned = () => {
               {products && products.length > 0 ? (
                 <div className="grid md:grid-cols-3 gap-8 mt-12">
                   {products.map((product, index) => (
-                    <div
-                      key={product.id}
-                      className="group cursor-pointer animate-fade-in"
+                    <Link
+                      href={`/item/${product.id}`}
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
                       <div className="relative aspect-4/5 mb-4 overflow-hidden rounded-lg bg-cream">
@@ -148,7 +148,7 @@ const PreOwned = () => {
                           currency: "NGN",
                         })}
                       </p>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               ) : (

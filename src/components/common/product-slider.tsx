@@ -1,7 +1,5 @@
 import React from "react";
 import * as motion from "framer-motion/client";
-import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import {
   Carousel,
   CarouselContent,
@@ -25,7 +23,7 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
         whileInView={{ y: "0", opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="text-[28px] md:text-[32px] mb-2 md:mb-6 pl-4"
+        className="text-[24px] md:text-[28px] mb-6 md:mb-6"
       >
         {title}
       </motion.h2>
@@ -41,16 +39,13 @@ const ProductListSec = ({ title, data, viewAllLink }: ProductListSecProps) => {
           }}
           className="w-full mb-6 md:mb-9"
         >
-          <CarouselContent className="mx-4 xl:mx-0 space-x-4 sm:space-x-5">
+          <CarouselContent className="xl:mx-0 space-x-4 sm:space-x-5">
             {data.map((product) => (
               <CarouselItem
                 key={product.id}
-                className="w-full max-w-[164px] sm:max-w-[219px] pl-0"
+                className="max-w-[148px] md:max-w-[164px]"
               >
-                <ProductCard
-                  product={product}
-                  categorySlug={product.category_slug}
-                />
+                <ProductCard product={product} />
               </CarouselItem>
             ))}
           </CarouselContent>

@@ -3,13 +3,12 @@ import Link from "next/link";
 import { Product } from "@/types/product.types";
 
 type ProductCardProps = {
-  categorySlug: string;
   product: Product;
 };
 
-const ProductCard = ({ categorySlug, product }: ProductCardProps) => {
+const ProductCard = ({ product }: ProductCardProps) => {
   return (
-    <Link key={product.id} href={`/cat/${product.category_slug}/${product.id}`}>
+    <Link key={product.id} href={`/item/${product.id}`}>
       <div className="group cursor-pointer animate-fade-in">
         <div className="relative aspect-3/4 mb-4 overflow-hidden bg-muted">
           <img
