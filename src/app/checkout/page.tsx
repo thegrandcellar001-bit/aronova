@@ -20,12 +20,21 @@ import StepOne from "./partials/steps/step-one";
 import StepTwo from "./partials/steps/step-two";
 import StepThree from "./partials/steps/step-three";
 import { UserAddress } from "@/types/account/user";
+import StepFour from "./partials/steps/step-four";
+import api from "@/lib/axios";
 
 export default function Page() {
   const { user } = useAuthStore();
   const { state, loading: cartLoading } = useCart();
   const { loading: userLoading, fetchDefaultAddress } = useUserData();
   const [userAddress, setUserAddress] = useState<UserAddress>();
+
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] =
+    useState("standard");
+  const [deliveryPrices, setDeliveryPrices] = useState({
+    standard: 0,
+    express: 0,
+  });
 
   const [deliveryFormData, setDeliveryFormData] = useState({
     address: "",
@@ -36,7 +45,7 @@ export default function Page() {
   });
 
   const [step, setStep] = useState(1);
-  const nextStep = () => setStep((prev) => Math.min(prev + 1, 3));
+  const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
   const loadUserAddress = async () => {
@@ -44,8 +53,22 @@ export default function Page() {
     setUserAddress(address as UserAddress);
   };
 
+  const loadDeliveryPrice = async () => {
+    try {
+      const response = await api.get("/settings");
+      const data = response.data;
+      setDeliveryPrices({
+        standard: parseInt(data.shipping_options.standard),
+        express: parseInt(data.shipping_options.express),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     loadUserAddress();
+    loadDeliveryPrice();
   }, []);
 
   return (
@@ -81,8 +104,19 @@ export default function Page() {
 
                     {step === 3 && (
                       <StepThree
+                        prevStep={prevStep}
+                        nextStep={nextStep}
+                        setStep={setStep}
+                        selectedDeliveryMethod={selectedDeliveryMethod}
+                        setSelectedDeliveryMethod={setSelectedDeliveryMethod}
+                      />
+                    )}
+
+                    {step === 4 && (
+                      <StepFour
                         userAddress={userAddress || null}
                         deliveryFormData={deliveryFormData}
+                        selectedDeliveryMethod={selectedDeliveryMethod}
                         setStep={setStep}
                         prevStep={prevStep}
                         nextStep={nextStep}
@@ -102,7 +136,7 @@ export default function Page() {
                             className="text-black/60 cursor-pointer"
                             style={{ textDecoration: "none" }}
                           >
-                            Your items ({state?.items.length} items ~ ₦
+                            Your items ({state?.items.length} items ~
                             {state.items
                               .reduce(
                                 (acc: number, item: CartItem) =>
@@ -112,7 +146,10 @@ export default function Page() {
                                     item.quantity,
                                 0
                               )
-                              .toLocaleString()}
+                              .toLocaleString("en-NG", {
+                                currency: "NGN",
+                                style: "currency",
+                              })}
                             )
                           </AccordionTrigger>
                           <AccordionContent>
@@ -135,26 +172,58 @@ export default function Page() {
                           </AccordionContent>
                         </AccordionItem>
                       </Accordion>
+                      {(selectedDeliveryMethod === "standard" ||
+                        selectedDeliveryMethod === "express") && (
+                        <Fragment>
+                          <div className="flex items-center justify-between">
+                            <span className="text-black/60">
+                              Delivery Method
+                            </span>
+                            <span className="font-bold capitalize">
+                              <i
+                                className={`${
+                                  selectedDeliveryMethod === "standard"
+                                    ? "far fa-truck"
+                                    : "far fa-truck-fast"
+                                } mr-2`}
+                              ></i>{" "}
+                              {selectedDeliveryMethod}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-black/60">Delivery Fee</span>
+                            <span className="font-bold">
+                              {deliveryPrices[
+                                selectedDeliveryMethod as keyof typeof deliveryPrices
+                              ].toLocaleString("en-NG", {
+                                currency: "NGN",
+                                style: "currency",
+                              })}
+                            </span>
+                          </div>
+                          <hr className="border-t-black/10" />
+                        </Fragment>
+                      )}
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-black/60">Delivery Fee</span>
-                        <span className="font-bold">Free</span>
-                      </div>
-                      <hr className="border-t-black/10" />
                       <div className="flex items-center justify-between">
                         <span className="text-black">Total</span>
                         <span className="font-bold">
-                          ₦
-                          {state.items
-                            .reduce(
+                          {(
+                            state.items.reduce(
                               (acc: number, item: CartItem) =>
                                 acc +
                                 (item.variant?.final_price ||
                                   item.product.pricing.final_price) *
                                   item.quantity,
                               0
-                            )
-                            .toLocaleString()}
+                            ) +
+                            deliveryPrices[
+                              selectedDeliveryMethod as keyof typeof deliveryPrices
+                            ]
+                          ).toLocaleString("en-NG", {
+                            currency: "NGN",
+                            style: "currency",
+                          })}
                         </span>
                       </div>
                     </div>

@@ -69,7 +69,7 @@ export default function Page() {
                 <Fragment>
                   {orders && orders.length > 0 ? (
                     <Tabs defaultValue="processing" className="w-full">
-                      <TabsList className="w-full">
+                      <TabsList className="grid grid-cols-2 lg:grid-cols-4 h-auto w-full">
                         <TabsTrigger value="processing" className="w-full">
                           Pending / Processing (
                           {

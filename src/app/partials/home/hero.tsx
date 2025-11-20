@@ -28,7 +28,7 @@ export default function Hero() {
   const router = useRouter();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden mt-20">
       {/* Background Carousel */}
       <Carousel
         className="absolute inset-0"

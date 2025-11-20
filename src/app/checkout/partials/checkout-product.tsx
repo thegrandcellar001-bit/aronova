@@ -71,7 +71,10 @@ const ProductCard = ({ item, variant, category_slug }: ProductCardProps) => {
             <div className="flex items-center flex-wrap justify-between">
               <div className="flex items-center space-x-[5px] xl:space-x-2.5">
                 <span className="text-black text-xl xl:text-2xl">
-                  ₦{item.product.final_price * item.quantity}
+                  ₦
+                  {(item.product.final_price * item.quantity).toLocaleString(
+                    "en-NG"
+                  )}
                 </span>
               </div>
             </div>

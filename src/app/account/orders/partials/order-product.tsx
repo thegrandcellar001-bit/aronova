@@ -55,7 +55,7 @@ export default function OrderProductCard({
           </Badge>
         </div>
       </div>
-      {order.status.toLowerCase() === "delivered" && (
+      {order.status.toLowerCase() === "completed" && (
         <div className="ml-auto self-start">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -67,20 +67,29 @@ export default function OrderProductCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem className="cursor-pointer py-2" asChild>
+              <DropdownMenuItem
+                className="cursor-pointer flex items-center gap-x-2 py-2"
+                asChild
+              >
                 <Link href={`/account/orders/${order.id}/review`}>
                   <i className="far fa-pen"></i> Write a review
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer py-2" asChild>
+              <DropdownMenuItem
+                className="cursor-pointer flex items-center gap-x-2 py-2"
+                asChild
+              >
                 <Link href={`/account/orders/${order.id}/dispute`}>
                   <i className="far fa-flag"></i> Create dispute
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer py-2" asChild>
+              <DropdownMenuItem
+                className="cursor-pointer flex items-center gap-x-2 py-2"
+                asChild
+              >
                 <Link href={`/account/orders/${order.id}/return`}>
                   <i className="far fa-box"></i>
-                  Return this item
+                  Request a return
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>

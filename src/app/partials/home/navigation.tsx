@@ -6,7 +6,7 @@ import { UserAvatar } from "../layout/navbar/top/user-avatar";
 import CartBtn from "../layout/navbar/top/CartBtn";
 import Link from "next/link";
 import { useWishlist } from "@/app/providers/wishlist-provider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 const Navigation = () => {
@@ -36,7 +36,7 @@ const Navigation = () => {
       path: "/re-aronova",
     },
     {
-      name: "About",
+      name: "About Us",
       path: "/about",
     },
   ];
@@ -44,7 +44,17 @@ const Navigation = () => {
   const { itemsCount } = useWishlist();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const isMobile = window.innerWidth < 1024;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const mobileNav = () => (
     <motion.div
@@ -59,42 +69,47 @@ const Navigation = () => {
             key={item.name}
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="hover:ring-2 hover:ring-primary p-2"
           >
             <Link
               href={item.path}
-              className="block py-2 text-gray-700 transition-colors duration-200"
+              className="block py-2 font-semibold transition-colors duration-200 flex items-center justify-between"
               onClick={() => setMobileMenuOpen(false)}
             >
-              {item.name}
+              {item.name} <i className="far fa-chevron-right"></i>
             </Link>
           </motion.div>
         ))}
 
-        <div className="pt-2 space-y-2">
-          <Button className="ring-2 ring-primary" variant={"outline"} asChild>
-            <Link
-              href="/login"
-              className="w-full flex items-center justify-center rounded-md text-primary cursor-pointer"
-            >
-              Sign In
-            </Link>
-          </Button>
+        {isAuthenticated ? (
+          <></>
+        ) : (
+          <div className="pt-2 space-y-2">
+            <Button className="ring-2 ring-primary" variant={"outline"} asChild>
+              <Link
+                href="/login"
+                className="w-full flex items-center justify-center rounded-md text-primary cursor-pointer"
+              >
+                Sign In
+              </Link>
+            </Button>
 
-          <Button className="mt-2" variant={"default"} asChild>
-            <Link
-              href="/register"
-              className="w-full flex items-center justify-center text-white cursor-pointer"
-            >
-              Register an account
-            </Link>
-          </Button>
-        </div>
+            <Button className="mt-2" variant={"default"} asChild>
+              <Link
+                href="/register"
+                className="w-full flex items-center justify-center text-white cursor-pointer"
+              >
+                Register an account
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xs border">
       <div className="max-w-[1400px] mx-auto lg:px-20">
         <div className="flex items-center justify-between h-20 pl-2 pr-4">
           <div className="flex items-center gap-1">

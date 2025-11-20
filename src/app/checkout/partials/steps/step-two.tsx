@@ -23,13 +23,10 @@ export default function StepTwo({
           We only support this payment method for now.
         </h3>
 
-        <RadioGroup
-          className="flex flex-col space-y-4 mt-6"
-          defaultValue="card"
-        >
+        <RadioGroup className="flex flex-col space-y-4" defaultValue="card">
           <Label
             htmlFor="method1"
-            className="flex items-center gap-4 rounded-lg border-2 p-3 has-[data-state=checked]:border-primary h-20"
+            className="flex items-center gap-4 rounded-lg border-2 p-3 has-[data-state=checked]:border-primary h-30 md:h-25 cursor-pointer"
           >
             <RadioGroupItem value="card" className="h-[23px] w-[23px]" />
             <div className="flex items-center justify-between font-normal w-full">
@@ -49,29 +46,6 @@ export default function StepTwo({
               />
             </div>
           </Label>
-          {/* 
-                        <Label
-                          htmlFor="method2"
-                          className="flex items-center gap-4 rounded-lg border-2 p-3 has-[data-state=checked]:border-primary h-20"
-                        >
-                          <RadioGroupItem
-                            value="delivery"
-                            id="method2"
-                            className="h-[23px] w-[23px]"
-                          />
-                          <div className="flex items-center justify-between font-normal w-full">
-                            <div className="flex flex-col gap-1.5">
-                              <p className="leading-none font-medium">
-                                Pay On Delivery
-                              </p>
-                              <p className="text-muted-foreground text-sm">
-                                Go cashless, you can pay by cash or via bank
-                                transfer on delivery.
-                              </p>
-                            </div>
-                            <i className="far fa-dollar-sign text-2xl"></i>
-                          </div>
-                        </Label> */}
         </RadioGroup>
 
         <div className="mt-4 flex items-center gap-4 flex-col md:flex-row">
