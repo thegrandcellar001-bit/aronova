@@ -44,40 +44,93 @@ export default function DisputeForm({ orderId, onSuccess }: DisputeFormProps) {
   };
 
   return (
-    <div className="mt-2 mb-6">
-      <h3 className="text-lg font-semibold">Submit a Dispute for this Order</h3>
-      <form className="flex flex-col gap-y-4 mt-4" onSubmit={handleSubmit}>
-        <div>
-          <label className="block mb-1 font-medium">Dispute Reason</label>
+    <div className="border rounded-lg shadow-sm bg-card overflow-hidden">
+      {/* Header */}
+      <div className="bg-muted/30 px-6 py-4 border-b">
+        <h3 className="text-xl font-bold flex items-center gap-2">
+          <i className="fas fa-file-signature text-primary"></i>
+          Submit a Dispute
+        </h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          Let us know what went wrong with your order
+        </p>
+      </div>
+
+      {/* Form */}
+      <form className="px-6 py-6 space-y-6" onSubmit={handleSubmit}>
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <i className="fas fa-exclamation-circle text-primary text-xs"></i>
+            Dispute Reason
+          </label>
           <Select name="reason" required>
-            <SelectTrigger className="h-12">
-              <SelectValue placeholder="Select reason" />
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select a reason for your dispute" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="wrong_item">Wrong Item Received</SelectItem>
-              <SelectItem value="damaged_item">Damaged Item</SelectItem>
-              <SelectItem value="missing_item">Missing Item</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
+              <SelectItem value="wrong_item">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-exchange-alt text-xs"></i>
+                  Wrong Item Received
+                </div>
+              </SelectItem>
+              <SelectItem value="damaged_item">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-box-open text-xs"></i>
+                  Damaged Item
+                </div>
+              </SelectItem>
+              <SelectItem value="missing_item">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-box text-xs"></i>
+                  Missing Item
+                </div>
+              </SelectItem>
+              <SelectItem value="other">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-ellipsis-h text-xs"></i>
+                  Other
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
+
         <div className="space-y-2">
-          <label className="block mb-1 font-medium">Dispute Description</label>
+          <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <i className="fas fa-align-left text-primary text-xs"></i>
+            Description
+          </label>
           <Textarea
-            className="w-full border rounded-md p-2"
-            rows={4}
-            placeholder="Write your dispute description here..."
+            className="min-h-[120px] resize-none"
+            placeholder="Please provide detailed information about your dispute..."
             name="description"
             required
           />
+          <p className="text-xs text-muted-foreground">
+            Include as much detail as possible to help us resolve your issue
+            quickly.
+          </p>
         </div>
-        <Button
-          type="submit"
-          className="w-fit cursor-pointer"
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Submit Review"}
-        </Button>
+
+        <div className="flex items-center gap-3 pt-2">
+          <Button type="submit" className="gap-2" disabled={loading}>
+            {loading ? (
+              <>
+                <i className="fas fa-spinner fa-spin"></i>
+                Submitting...
+              </>
+            ) : (
+              <>
+                <i className="fas fa-paper-plane"></i>
+                Submit Dispute
+              </>
+            )}
+          </Button>
+          <p className="text-xs text-muted-foreground">
+            We'll review your dispute within 24-48 hours
+          </p>
+        </div>
       </form>
     </div>
   );

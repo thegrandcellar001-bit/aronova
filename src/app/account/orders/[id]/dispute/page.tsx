@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import BreadcrumbDispute from "./partials/dispute-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,42 +19,36 @@ import { useApi } from "@/hooks/use-api";
 import DisputeForm from "./partials/dispute-form";
 import ApiLoader from "@/components/common/api-loader";
 
-interface OrderItems {
-  name: string;
-  image_url: string;
-  product_id: number;
-  quantity: number;
-  price: number;
-}
-
-interface Order {
-  id: number;
-  user_id: number;
+interface DisputeResponse {
+  customer_id: number;
+  disputes: {
+    category_slug: string;
+    created_at: string;
+    description: string;
+    product_id: string;
+    product_image_url: string;
+    product_name: string;
+    reason: string;
+    resolution: string;
+    resolved_at: string;
+  }[];
+  merchant_id: string;
+  order_created_at: string;
+  order_id: string;
   status: string;
-  total_amount: number;
-  payment_status: string;
-  order_items: OrderItems[];
-  created_at: string;
 }
 
 export default function Page() {
   const params = useParams<{ id: string }>();
 
   const {
-    data: order,
-    loading: orderLoading,
-    execute: fetchOrder,
-  } = useApi<Order>(`/orders/${params.id}`);
-
-  const {
     data: dispute,
     loading: disputeLoading,
     execute: fetchDispute,
-  } = useApi<any>(`/disputes/order/${params.id}`);
+  } = useApi<DisputeResponse>(`/disputes/order/${params.id}`);
 
   useEffect(() => {
     if (params.id) {
-      fetchOrder();
       fetchDispute(); // This returns the dispute if it exists, or null/error if not
     }
   }, [params.id]);
@@ -63,7 +57,7 @@ export default function Page() {
     fetchDispute(); // Refresh dispute data after successful submission
   };
 
-  const isLoading = orderLoading || disputeLoading;
+  const isLoading = disputeLoading;
 
   return (
     <AuthGuard>
@@ -73,118 +67,221 @@ export default function Page() {
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
             <Sidebar />
             <div className="flex flex-col gap-y-4 flex-1">
-              {isLoading && !order ? (
-                <ApiLoader message="Loading order details..." />
-              ) : !order ? (
-                <div className="text-center text-muted-foreground mt-20">
-                  Order not found.
+              {isLoading && !dispute ? (
+                <ApiLoader message="Loading dispute details..." />
+              ) : !dispute ? (
+                <div className="flex flex-col items-center justify-center mt-20 px-4">
+                  <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+                    <i className="fas fa-info-circle text-4xl text-muted-foreground"></i>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">
+                    Dispute Not Available
+                  </h2>
+                  <p className="text-muted-foreground mb-6 text-center max-w-md">
+                    Disputes are only available for orders that have been
+                    delivered. Please check back after your order is delivered.
+                  </p>
+                  <Link href="/account/orders">
+                    <Button className="gap-2">
+                      <i className="fas fa-arrow-left"></i>
+                      Back to Orders
+                    </Button>
+                  </Link>
                 </div>
               ) : (
-                <div className="flex flex-col gap-3">
-                  {order.status === "delivered" ? (
-                    <>
-                      <div
-                        key={order.id}
-                        className="border p-4 rounded-md mt-4 flex items-center gap-x-4"
-                      >
-                        <Image
-                          src={order.order_items[0]?.image_url || ""}
-                          alt={order.order_items[0]?.name || ""}
-                          className="rounded-lg"
-                          width={110}
-                          height={110}
-                        />
-                        <div className="space-y-1.5">
-                          {order.order_items[0]?.name}
-                          <div className="text-sm text-muted-foreground">
-                            Order No: {order.id}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            <Badge
-                              variant={
-                                order.status === "delivered" ||
-                                order.status === "shipped"
-                                  ? "secondary"
-                                  : "default"
-                              }
-                              className={`rounded-sm font-semibold ${
-                                order.status === "delivered" ||
-                                order.status === "shipped"
-                                  ? "text-white"
-                                  : ""
-                              }`}
-                            >
-                              {order.status?.toUpperCase()}
+                <div className="flex flex-col gap-4">
+                  {dispute.disputes && dispute.disputes.length > 0 ? (
+                    <Fragment>
+                      {/* Order Summary Card */}
+                      <div className="border rounded-lg shadow-sm bg-card overflow-hidden">
+                        <div className="bg-muted/30 px-6 py-4 border-b">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <div className="flex items-center gap-3">
+                              <i className="fas fa-receipt text-muted-foreground"></i>
+                              <div>
+                                <span className="font-semibold text-foreground">
+                                  Order #{dispute.order_id}
+                                </span>
+                                <span className="text-sm text-muted-foreground ml-3">
+                                  {new Date(
+                                    dispute.disputes[0].created_at
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                            <Badge className="rounded-sm font-semibold">
+                              {dispute.status?.toUpperCase()}
                             </Badge>
                           </div>
-                          <div>On: {order.created_at}</div>
                         </div>
-                        <div className="ml-auto self-start">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                className="text-sm font-medium rounded-md cursor-pointer"
-                                variant="ghost"
-                              >
-                                <i className="fas fa-ellipsis"></i>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem
-                                className="cursor-pointer py-2"
-                                asChild
-                              >
-                                <Link
-                                  href={`/account/orders/${order.id}/review`}
-                                >
-                                  <i className="far fa-star"></i> Write a review
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="cursor-pointer py-2"
-                                asChild
-                              >
-                                <Link
-                                  href={`/account/orders/${order.id}/return`}
-                                >
-                                  <i className="far fa-box"></i>
-                                  Return this item
-                                </Link>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
 
-                      {dispute ? (
-                        <div className="mt-2 mb-6">
-                          <h3 className="text-lg font-semibold">
-                            Your dispute details
-                          </h3>
-                          <div className="mt-2 border p-4 rounded-md">
-                            <div className="flex items-center mb-2">
-                              <span className="font-medium">Reason:</span>{" "}
-                              <span className="ml-2">{dispute.reason}</span>
+                        {/* Product Display */}
+                        <div className="px-6 py-5 border-b bg-background">
+                          <div className="flex items-start gap-4">
+                            <Image
+                              src={dispute.disputes[0].product_image_url || ""}
+                              alt={dispute.disputes[0].product_name || ""}
+                              className="rounded-lg object-cover border"
+                              width={120}
+                              height={120}
+                            />
+                            <div className="flex-1">
+                              <h3 className="font-semibold text-foreground text-xl mb-2">
+                                {dispute.disputes[0].product_name}
+                              </h3>
+                              <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-1.5">
+                                  <i className="far fa-calendar"></i>
+                                  <span>
+                                    Submitted:{" "}
+                                    {new Date(
+                                      dispute.disputes[0].created_at
+                                    ).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
-                            <div className="flex items-center mb-2">
-                              <span className="font-medium">Description:</span>{" "}
-                              <span className="ml-2">
-                                {dispute.description}
-                              </span>
+                            <div className="ml-auto self-start">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    className="text-sm font-medium rounded-md cursor-pointer"
+                                    variant="ghost"
+                                    size="icon"
+                                  >
+                                    <i className="fas fa-ellipsis"></i>
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem
+                                    className="cursor-pointer py-2"
+                                    asChild
+                                  >
+                                    <Link
+                                      href={`/account/orders/${dispute.order_id}/review`}
+                                    >
+                                      <i className="far fa-star mr-2"></i> Write
+                                      a review
+                                    </Link>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    className="cursor-pointer py-2"
+                                    asChild
+                                  >
+                                    <Link
+                                      href={`/account/orders/${dispute.order_id}/return`}
+                                    >
+                                      <i className="far fa-box mr-2"></i>
+                                      Return this item
+                                    </Link>
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </div>
                           </div>
                         </div>
-                      ) : (
-                        <DisputeForm
-                          orderId={params.id}
-                          onSuccess={handleDisputeSuccess}
-                        />
-                      )}
-                    </>
+
+                        {/* Dispute Details */}
+                        <div className="px-6 py-5">
+                          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                            <i className="fas fa-file-alt text-primary"></i>
+                            Dispute Details
+                          </h3>
+                          <div className="space-y-4 bg-muted/20 rounded-lg p-4 border">
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i className="fas fa-exclamation text-primary text-sm"></i>
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-semibold text-foreground block mb-1">
+                                  Reason
+                                </span>
+                                <span className="text-sm text-muted-foreground">
+                                  {dispute.disputes[0].reason
+                                    .split("_")
+                                    .map(
+                                      (word) =>
+                                        word.charAt(0).toUpperCase() +
+                                        word.slice(1)
+                                    )
+                                    .join(" ")}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i className="fas fa-align-left text-primary text-sm"></i>
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-semibold text-foreground block mb-1">
+                                  Description
+                                </span>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                  {dispute.disputes[0].description}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i className="fas fa-info-circle text-primary text-sm"></i>
+                              </div>
+                              <div className="flex-1">
+                                <span className="font-semibold text-foreground block mb-1">
+                                  Status
+                                </span>
+                                {dispute.disputes[0].resolution ? (
+                                  <div className="space-y-2">
+                                    <Badge
+                                      variant="default"
+                                      className="bg-green-500 hover:bg-green-600"
+                                    >
+                                      <i className="fas fa-check-circle mr-1"></i>
+                                      Resolved
+                                    </Badge>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">
+                                      {dispute.disputes[0].resolution}
+                                    </p>
+                                    {dispute.disputes[0].resolved_at && (
+                                      <p className="text-xs text-muted-foreground">
+                                        Resolved on:{" "}
+                                        {new Date(
+                                          dispute.disputes[0].resolved_at
+                                        ).toLocaleDateString("en-US", {
+                                          month: "long",
+                                          day: "numeric",
+                                          year: "numeric",
+                                        })}
+                                      </p>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                  >
+                                    <i className="fas fa-clock mr-1"></i>
+                                    Pending Review
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Fragment>
                   ) : (
-                    <div className="text-center text-muted-foreground mt-20">
-                      Dispute option is available only after delivery.
-                    </div>
+                    <DisputeForm
+                      orderId={params.id}
+                      onSuccess={handleDisputeSuccess}
+                    />
                   )}
                 </div>
               )}

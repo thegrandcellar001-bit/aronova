@@ -109,138 +109,274 @@ export default function Page() {
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
                 {!order ? (
-                  <div className="text-center text-muted-foreground mt-20">
-                    No returns requests found.
+                  <div className="flex flex-col items-center justify-center mt-20 px-4">
+                    <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+                      <i className="fas fa-info-circle text-4xl text-muted-foreground"></i>
+                    </div>
+                    <h2 className="text-2xl font-bold mb-2">
+                      Return Not Available
+                    </h2>
+                    <p className="text-muted-foreground mb-6 text-center max-w-md">
+                      Returns are only available for orders that have been
+                      delivered. Please check back after your order is
+                      delivered.
+                    </p>
+                    <Link href="/account/orders">
+                      <Button className="gap-2">
+                        <i className="fas fa-arrow-left"></i>
+                        Back to Orders
+                      </Button>
+                    </Link>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-3">
-                    {order.status === "completed" ? (
+                  <div className="flex flex-col gap-4">
+                    {returnRequest ? (
                       <>
-                        <div
-                          key={order.id}
-                          className="border p-4 rounded-md mt-4 flex items-center gap-x-4"
-                        >
-                          <Image
-                            src={order.order_items[0]?.image_url || ""}
-                            alt={order.order_items[0]?.name || ""}
-                            className="rounded-lg"
-                            width={110}
-                            height={110}
-                          />
-                          <div className="space-y-1.5">
-                            {order.order_items[0]?.name}
-                            <div className="text-sm text-muted-foreground">
-                              Order No: {order.id}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              <Badge className="rounded-sm font-semibold text-white">
+                        {/* Order Summary Card */}
+                        <div className="border rounded-lg shadow-sm bg-card overflow-hidden">
+                          <div className="bg-muted/30 px-6 py-4 border-b">
+                            <div className="flex items-center justify-between flex-wrap gap-2">
+                              <div className="flex items-center gap-3">
+                                <i className="fas fa-receipt text-muted-foreground"></i>
+                                <div>
+                                  <span className="font-semibold text-foreground">
+                                    Order #{order.id}
+                                  </span>
+                                  <span className="text-sm text-muted-foreground ml-3">
+                                    {new Date(
+                                      order.created_at
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                              <Badge className="rounded-sm font-semibold">
                                 {order.status?.toUpperCase()}
                               </Badge>
                             </div>
-                            <div>On: {order.created_at}</div>
                           </div>
-                          <div className="ml-auto self-start">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button
-                                  className="text-sm font-medium rounded-md cursor-pointer"
-                                  variant="ghost"
-                                >
-                                  <i className="fas fa-ellipsis"></i>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent>
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  asChild
-                                >
-                                  <Link
-                                    href={`/account/orders/${order.id}/review`}
-                                  >
-                                    <i className="far fa-star"></i> Write a
-                                    review
-                                  </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="cursor-pointer py-2"
-                                  asChild
-                                >
-                                  <Link
-                                    href={`/account/orders/${order.id}/dispute`}
-                                  >
-                                    <i className="far fa-flag"></i> Create
-                                    dispute
-                                  </Link>
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
 
-                        {returnRequest ? (
-                          <div className="mt-2 mb-6">
-                            <h3 className="text-lg font-semibold">
-                              Your Return Request
-                            </h3>
-                            <div className="mt-2 border p-4 rounded-md">
-                              <div className="flex items-center mb-2">
-                                <span className="font-medium">Reason:</span>{" "}
-                                <span className="ml-2">
-                                  {returnRequest.reason}
-                                </span>
+                          {/* Product Display */}
+                          <div className="px-6 py-5 border-b bg-background">
+                            <div className="flex items-start gap-4">
+                              <Image
+                                src={order.order_items[0]?.image_url || ""}
+                                alt={order.order_items[0]?.name || ""}
+                                className="rounded-lg object-cover border"
+                                width={120}
+                                height={120}
+                              />
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-foreground text-xl mb-2">
+                                  {order.order_items[0]?.name}
+                                </h3>
+                                <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1.5">
+                                    <i className="far fa-calendar"></i>
+                                    <span>
+                                      Ordered:{" "}
+                                      {new Date(
+                                        order.created_at
+                                      ).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                      })}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="flex items-center mb-2">
-                                <span className="font-medium">Status:</span>{" "}
-                                <span className="ml-2">
-                                  {returnRequest.status}
-                                </span>
+                              <div className="ml-auto self-start">
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button
+                                      className="text-sm font-medium rounded-md cursor-pointer"
+                                      variant="ghost"
+                                      size="icon"
+                                    >
+                                      <i className="fas fa-ellipsis"></i>
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                      className="cursor-pointer py-2"
+                                      asChild
+                                    >
+                                      <Link
+                                        href={`/account/orders/${order.id}/review`}
+                                      >
+                                        <i className="far fa-star mr-2"></i>{" "}
+                                        Write a review
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="cursor-pointer py-2"
+                                      asChild
+                                    >
+                                      <Link
+                                        href={`/account/orders/${order.id}/dispute`}
+                                      >
+                                        <i className="far fa-flag mr-2"></i>
+                                        Create dispute
+                                      </Link>
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </div>
                           </div>
-                        ) : (
-                          <div className="mt-2 mb-6">
-                            <h3 className="text-lg font-semibold">
-                              Request a return for this order
+
+                          {/* Return Request Details */}
+                          <div className="px-6 py-5">
+                            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                              <i className="fas fa-undo-alt text-primary"></i>
+                              Return Request Details
                             </h3>
-                            <form
-                              className="flex flex-col gap-y-4 mt-4"
-                              onSubmit={handleReturnSubmit}
-                            >
-                              <div>
-                                <label className="block mb-1 font-medium">
-                                  Return Reason
-                                </label>
-                                <Select name="reason" required>
-                                  <SelectTrigger className="h-12">
-                                    <SelectValue placeholder="Select reason" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="wrong_item">
-                                      Wrong Item Received
-                                    </SelectItem>
-                                    <SelectItem value="damaged_item">
-                                      Damaged Item
-                                    </SelectItem>
-                                    <SelectItem value="missing_item">
-                                      Missing Item
-                                    </SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
+                            <div className="space-y-4 bg-muted/20 rounded-lg p-4 border">
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <i className="fas fa-exclamation text-primary text-sm"></i>
+                                </div>
+                                <div className="flex-1">
+                                  <span className="font-semibold text-foreground block mb-1">
+                                    Reason
+                                  </span>
+                                  <span className="text-sm text-muted-foreground">
+                                    {returnRequest.reason
+                                      .split("_")
+                                      .map(
+                                        (word: string) =>
+                                          word.charAt(0).toUpperCase() +
+                                          word.slice(1)
+                                      )
+                                      .join(" ")}
+                                  </span>
+                                </div>
                               </div>
-                              <Button
-                                type="submit"
-                                className="w-fit cursor-pointer"
-                              >
-                                Submit Return Request
-                              </Button>
-                            </form>
+                              <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <i className="fas fa-info-circle text-primary text-sm"></i>
+                                </div>
+                                <div className="flex-1">
+                                  <span className="font-semibold text-foreground block mb-1">
+                                    Status
+                                  </span>
+                                  {returnRequest.status === "approved" ? (
+                                    <Badge
+                                      variant="default"
+                                      className="bg-green-500 hover:bg-green-600"
+                                    >
+                                      <i className="fas fa-check-circle mr-1"></i>
+                                      Approved
+                                    </Badge>
+                                  ) : returnRequest.status === "rejected" ? (
+                                    <Badge variant="destructive">
+                                      <i className="fas fa-times-circle mr-1"></i>
+                                      Rejected
+                                    </Badge>
+                                  ) : (
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                    >
+                                      <i className="fas fa-clock mr-1"></i>
+                                      Pending Review
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        )}
+                        </div>
                       </>
                     ) : (
-                      <div className="text-center text-muted-foreground mt-20">
-                        Order return option is available only after delivery.
+                      <div className="border rounded-lg shadow-sm bg-card overflow-hidden">
+                        {/* Header */}
+                        <div className="bg-muted/30 px-6 py-4 border-b">
+                          <h3 className="text-xl font-bold flex items-center gap-2">
+                            <i className="fas fa-undo-alt text-primary"></i>
+                            Request a Return
+                          </h3>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Let us know why you'd like to return this order
+                          </p>
+                        </div>
+
+                        {/* Form */}
+                        <form
+                          className="px-6 py-6 space-y-6"
+                          onSubmit={handleReturnSubmit}
+                        >
+                          <div className="space-y-2">
+                            <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                              <i className="fas fa-exclamation-circle text-primary text-xs"></i>
+                              Return Reason
+                            </label>
+                            <Select name="reason" required>
+                              <SelectTrigger className="h-11">
+                                <SelectValue placeholder="Select a reason for your return" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="wrong_item">
+                                  <div className="flex items-center gap-2">
+                                    <i className="fas fa-exchange-alt text-xs"></i>
+                                    Wrong Item Received
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="damaged_item">
+                                  <div className="flex items-center gap-2">
+                                    <i className="fas fa-box-open text-xs"></i>
+                                    Damaged Item
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="missing_item">
+                                  <div className="flex items-center gap-2">
+                                    <i className="fas fa-box text-xs"></i>
+                                    Missing Item
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="not_as_described">
+                                  <div className="flex items-center gap-2">
+                                    <i className="fas fa-info-circle text-xs"></i>
+                                    Not as Described
+                                  </div>
+                                </SelectItem>
+                                <SelectItem value="other">
+                                  <div className="flex items-center gap-2">
+                                    <i className="fas fa-ellipsis-h text-xs"></i>
+                                    Other
+                                  </div>
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="flex items-center gap-3 pt-2">
+                            <Button
+                              type="submit"
+                              className="gap-2"
+                              disabled={submitting}
+                            >
+                              {submitting ? (
+                                <>
+                                  <i className="fas fa-spinner fa-spin"></i>
+                                  Submitting...
+                                </>
+                              ) : (
+                                <>
+                                  <i className="fas fa-paper-plane"></i>
+                                  Submit Return Request
+                                </>
+                              )}
+                            </Button>
+                            <p className="text-xs text-muted-foreground">
+                              We'll review your request within 24-48 hours
+                            </p>
+                          </div>
+                        </form>
                       </div>
                     )}
                   </div>

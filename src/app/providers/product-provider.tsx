@@ -4,7 +4,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Product, ProductsResponse } from "@/types/product.types";
 
 interface ProductContextType {
-  fetchProducts: (limit: number) => Promise<ProductsResponse | undefined>;
+  fetchProducts: (
+    limit: number,
+    offset: number
+  ) => Promise<ProductsResponse | undefined>;
   fetchCategoryProducts: (
     categorySlug: string,
     params: any
@@ -50,11 +53,11 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({
   });
   const { toastSuccess, toastError } = useToast();
 
-  const fetchProducts = async (limit = 20) => {
+  const fetchProducts = async (limit: number = 20, offset: number = 0) => {
     setLoading((prev) => ({ ...prev, products: true }));
 
     try {
-      const res = await api.get("/products", { params: { limit } });
+      const res = await api.get("/products", { params: { limit, offset } });
       return res.data;
     } catch (error) {
       console.error("Error fetching products:", error);

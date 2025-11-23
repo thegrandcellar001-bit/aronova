@@ -82,85 +82,212 @@ export default function Page() {
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
                 {!disputes || !disputes.length ? (
-                  <div className="text-center text-muted-foreground mt-20">
-                    <h2 className="text-2xl font-semibold mb-4">
-                      You have no submitted disputes yet.
+                  <div className="flex flex-col items-center justify-center mt-20 px-4">
+                    <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
+                      <i className="fas fa-file-contract text-4xl text-muted-foreground"></i>
+                    </div>
+                    <h2 className="text-2xl font-bold mb-2 text-foreground">
+                      No Disputes Yet
                     </h2>
-                    <p className="mb-6">
-                      Once you have purchased products, you can leave disputes
+                    <p className="text-muted-foreground mb-6 text-center max-w-md">
+                      You haven't submitted any disputes. If you have issues
+                      with your orders after delivery, you can submit a dispute
                       here.
                     </p>
                     <Link href="/shop">
-                      <Button>Start Shopping</Button>
+                      <Button className="gap-2">
+                        <i className="fas fa-shopping-bag"></i>
+                        Start Shopping
+                      </Button>
                     </Link>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-y-6">
-                    {disputes?.map((disputeResp, index) => (
-                      <div
-                        key={index}
-                        className="border p-4 rounded-md mt-4 flex flex-col gap-y-4"
-                      >
-                        <div className="flex items-center gap-x-4">
-                          <Image
-                            src={
-                              disputeResp.disputes[0]?.product_image_url || ""
-                            }
-                            alt={disputeResp.disputes[0]?.product_name || ""}
-                            className="rounded-lg"
-                            width={110}
-                            height={110}
-                          />
-                          <div className="space-y-1.5">
-                            {disputeResp.disputes[0]?.product_name}
-                            <div className="text-sm text-muted-foreground">
-                              Order No: {disputeResp.order_id}
+                  <>
+                    <div className="mb-6">
+                      <h2 className="text-2xl font-bold text-foreground">
+                        My Disputes
+                      </h2>
+                      <p className="text-muted-foreground mt-1">
+                        Track and manage your order disputes
+                      </p>
+                    </div>
+                    <div className="flex flex-col gap-y-4">
+                      {disputes?.map((disputeResp, index) => (
+                        <div
+                          key={index}
+                          className="border rounded-lg shadow-sm hover:shadow-md transition-shadow bg-card overflow-hidden"
+                        >
+                          {/* Order Header */}
+                          <div className="bg-muted/30 px-6 py-4 border-b">
+                            <div className="flex items-center justify-between flex-wrap gap-2">
+                              <div className="flex items-center gap-3">
+                                <i className="fas fa-receipt text-muted-foreground"></i>
+                                <div>
+                                  <span className="font-semibold text-foreground">
+                                    Order #{disputeResp.order_id}
+                                  </span>
+                                  <span className="text-sm text-muted-foreground ml-3">
+                                    {new Date(
+                                      disputeResp.order_created_at
+                                    ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "long",
+                                      day: "numeric",
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                              <Badge
+                                variant="secondary"
+                                className="font-medium"
+                              >
+                                {disputeResp.disputes.length}{" "}
+                                {disputeResp.disputes.length === 1
+                                  ? "Dispute"
+                                  : "Disputes"}
+                              </Badge>
                             </div>
-                            <div>On: {disputeResp.order_created_at}</div>
+                          </div>
+
+                          {/* Product Info */}
+                          <div className="px-6 py-4 border-b bg-background">
+                            <div className="flex items-center gap-4">
+                              <Image
+                                src={
+                                  disputeResp.disputes[0]?.product_image_url ||
+                                  ""
+                                }
+                                alt={
+                                  disputeResp.disputes[0]?.product_name || ""
+                                }
+                                className="rounded-lg object-cover border"
+                                width={80}
+                                height={80}
+                              />
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-foreground text-lg">
+                                  {disputeResp.disputes[0]?.product_name}
+                                </h3>
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  Primary disputed item
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Disputes List */}
+                          <div className="px-6 py-4 space-y-4">
+                            {disputeResp.disputes.map((dispute, revIndex) => (
+                              <div
+                                key={revIndex}
+                                className={`pb-4 ${
+                                  revIndex !== disputeResp.disputes.length - 1
+                                    ? "border-b"
+                                    : ""
+                                }`}
+                              >
+                                <div className="flex items-start justify-between gap-4 mb-3">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <i className="fas fa-box text-primary text-sm"></i>
+                                      <span className="font-semibold text-foreground">
+                                        {dispute.product_name}
+                                      </span>
+                                    </div>
+                                    <div className="space-y-2 ml-6">
+                                      <div className="flex items-start gap-2">
+                                        <span className="text-sm font-medium text-muted-foreground min-w-[100px]">
+                                          Reason:
+                                        </span>
+                                        <span className="text-sm text-foreground font-medium">
+                                          {dispute.reason
+                                            .split("_")
+                                            .map(
+                                              (word) =>
+                                                word.charAt(0).toUpperCase() +
+                                                word.slice(1)
+                                            )
+                                            .join(" ")}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-start gap-2">
+                                        <span className="text-sm font-medium text-muted-foreground min-w-[100px]">
+                                          Description:
+                                        </span>
+                                        <span className="text-sm text-foreground">
+                                          {dispute.description}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-start gap-2">
+                                        <span className="text-sm font-medium text-muted-foreground min-w-[100px]">
+                                          Status:
+                                        </span>
+                                        {dispute.resolution ? (
+                                          <div className="flex flex-col gap-1">
+                                            <Badge
+                                              variant="default"
+                                              className="w-fit bg-green-500 hover:bg-green-600"
+                                            >
+                                              <i className="fas fa-check-circle mr-1"></i>
+                                              Resolved
+                                            </Badge>
+                                            <span className="text-sm text-foreground mt-1">
+                                              {dispute.resolution}
+                                            </span>
+                                          </div>
+                                        ) : (
+                                          <Badge
+                                            variant="secondary"
+                                            className="w-fit bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                                          >
+                                            <i className="fas fa-clock mr-1"></i>
+                                            Pending Review
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Timestamps */}
+                                <div className="flex flex-wrap gap-4 text-xs text-muted-foreground ml-6 mt-3">
+                                  <div className="flex items-center gap-1.5">
+                                    <i className="far fa-calendar"></i>
+                                    <span>
+                                      Submitted:{" "}
+                                      {new Date(
+                                        dispute.created_at
+                                      ).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                      })}
+                                    </span>
+                                  </div>
+                                  {dispute.resolution &&
+                                    dispute.resolved_at && (
+                                      <div className="flex items-center gap-1.5">
+                                        <i className="far fa-check-circle"></i>
+                                        <span>
+                                          Resolved:{" "}
+                                          {new Date(
+                                            dispute.resolved_at
+                                          ).toLocaleDateString("en-US", {
+                                            month: "short",
+                                            day: "numeric",
+                                            year: "numeric",
+                                          })}
+                                        </span>
+                                      </div>
+                                    )}
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-
-                        <div className="flex flex-col gap-y-2">
-                          <h3 className="font-semibold text-lg">
-                            Your Disputes:
-                          </h3>
-                          {disputeResp.disputes.map((dispute, revIndex) => (
-                            <div key={revIndex} className="border-t pt-2 mt-2">
-                              <div className="flex items-center gap-x-2">
-                                <span className="font-medium">
-                                  {dispute.product_name}
-                                </span>
-                              </div>
-                              <p className="mt-1">{dispute.reason}</p>
-                              <p className="mt-1">{dispute.description}</p>
-                              <div className="mt-1">
-                                Resolution:{" "}
-                                {dispute.resolution ? (
-                                  <span>{dispute.resolution}</span>
-                                ) : (
-                                  <Badge variant="outline">Pending</Badge>
-                                )}
-                              </div>
-                              {dispute.resolution && dispute.resolved_at && (
-                                <div className="text-sm text-muted-foreground">
-                                  Resolved on:{" "}
-                                  {new Date(
-                                    dispute.resolved_at
-                                  ).toLocaleDateString()}
-                                </div>
-                              )}
-                              <div className="text-sm text-muted-foreground">
-                                Submitted on:{" "}
-                                {new Date(
-                                  dispute.created_at
-                                ).toLocaleDateString()}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             )}

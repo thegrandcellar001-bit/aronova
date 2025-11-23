@@ -116,7 +116,7 @@ export default function Page() {
         console.error("Error fetching order:", error);
         toastError("Failed to fetch order. Please try again later.");
       });
-  }, [fetchOrder, toastError]);
+  }, []);
 
   return (
     <AuthGuard>

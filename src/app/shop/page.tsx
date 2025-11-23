@@ -37,7 +37,7 @@ const Shop = () => {
   const {
     fetchProducts,
     fetchFilteredProducts,
-    loading: { filter: productLoading },
+    loading: { filter: productLoading, products: productsLoading },
   } = useProduct();
   const { categories, loading: categoriesLoading } = useCategories();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -70,29 +70,46 @@ const Shop = () => {
 
   // Update products and metadata
   const updateProductsState = useCallback(
-    (newProducts: Product[], meta: Partial<CategoryMeta>) => {
-      setProducts(newProducts);
+    (
+      newProducts: Product[],
+      meta: Partial<CategoryMeta>,
+      append: boolean = false
+    ) => {
+      setProducts((prev) => (append ? [...prev, ...newProducts] : newProducts));
       setCategoryMeta((prev) => ({ ...prev, ...meta }));
 
-      // Auto-update price range
-      const priceRange = calculatePriceRange(newProducts);
-      setFilters((prev) => ({ ...prev, priceRange }));
+      // Auto-update price range only when not appending (initial load or filter change)
+      if (!append) {
+        const priceRange = calculatePriceRange(newProducts);
+        setFilters((prev) => ({ ...prev, priceRange }));
+      }
     },
     [calculatePriceRange]
   );
 
   // Load all products (initial load or "All Products" button)
-  const loadAllProducts = useCallback(async () => {
-    const res = await fetchProducts(ITEMS_PER_PAGE);
-    if (res) {
-      updateProductsState(res.products || [], {
-        page: 1,
-        limit: res.limit ?? ITEMS_PER_PAGE,
-        total: res.total ?? res.products?.length ?? 0,
-      });
-    }
-    setCurrentCategory(null);
-  }, [fetchProducts, updateProductsState]);
+  const loadAllProducts = useCallback(
+    async (page: number = 1) => {
+      const offset = (page - 1) * ITEMS_PER_PAGE;
+      const res = await fetchProducts(ITEMS_PER_PAGE, offset);
+
+      if (res) {
+        updateProductsState(
+          res.products || [],
+          {
+            page,
+            limit: ITEMS_PER_PAGE,
+            total: res.total ?? res.products?.length ?? 0,
+          },
+          page > 1 // append if page > 1
+        );
+      }
+      if (page === 1) {
+        setCurrentCategory(null);
+      }
+    },
+    [fetchProducts, updateProductsState]
+  );
 
   // Load products by category with filters
   const loadCategoryProducts = useCallback(
@@ -115,18 +132,24 @@ const Shop = () => {
         if (appliedFilters.sizes?.length > 0) {
           params.size = appliedFilters.sizes;
         }
-        if (appliedFilters.priceRange) {
+        if (
+          appliedFilters.priceRange &&
+          appliedFilters.priceRange[0] > 0 &&
+          appliedFilters.priceRange[1] > 0
+        ) {
           params.min_price = appliedFilters.priceRange[0];
-          if (appliedFilters.priceRange[1] > 0) {
-            params.max_price = appliedFilters.priceRange[1];
-          }
+          params.max_price = appliedFilters.priceRange[1];
         }
       }
 
       const response = await fetchFilteredProducts(params);
       if (response) {
         const { total, products: fetchedProducts } = response;
-        updateProductsState(fetchedProducts || [], { page, total: total ?? 0 });
+        updateProductsState(
+          fetchedProducts || [],
+          { page, total: total ?? 0 },
+          page > 1 // append if page > 1
+        );
       }
 
       setCurrentCategory(categorySlug);
@@ -137,9 +160,9 @@ const Shop = () => {
   // Handle category selection
   const handleCategorySelect = useCallback(
     (categorySlug: string) => {
-      loadCategoryProducts(categorySlug, 1, filters);
+      loadCategoryProducts(categorySlug, 1, null);
     },
-    [loadCategoryProducts, filters]
+    [loadCategoryProducts]
   );
 
   // Handle filter application
@@ -190,7 +213,7 @@ const Shop = () => {
                     opts={{ align: "start" }}
                     className="relative w-full"
                   >
-                    <div className="bg-white w-[34px] h-9 absolute left-0 top-0 bottom-0 flex items-center justify-center z-10">
+                    <div className="bg-white w-[34px] h-9 absolute left-0 top-0 bottom-0 items-center justify-center z-10 hidden md:flex">
                       <CarouselPrevious className="absolute left-0 z-10 inline-flex rounded-md cursor-pointer bg-primary text-white hover:bg-primary/90" />
                     </div>
 
@@ -205,7 +228,7 @@ const Shop = () => {
                           className={`text-sm font-medium cursor-pointer whitespace-nowrap ${
                             currentCategory === null && "bg-primary text-white"
                           } hover:bg-primary hover:text-white transition-all`}
-                          onClick={loadAllProducts}
+                          onClick={() => loadAllProducts(1)}
                         >
                           All Products
                         </Button>
@@ -238,7 +261,7 @@ const Shop = () => {
                       ))}
                     </CarouselContent>
 
-                    <CarouselNext className="absolute inline-flex cursor-pointer rounded-md bg-primary text-white hover:bg-primary/90" />
+                    <CarouselNext className="absolute cursor-pointer rounded-md bg-primary text-white hover:bg-primary/90 hidden md:inline-flex" />
                   </Carousel>
                 </div>
               </div>
@@ -346,6 +369,7 @@ const Shop = () => {
                               variant="outline"
                               size="lg"
                               className="px-12 cursor-pointer font-semibold hover:bg-primary hover:text-white transition-all"
+                              disabled={productsLoading || productLoading}
                               onClick={() =>
                                 currentCategory
                                   ? loadCategoryProducts(
@@ -353,11 +377,20 @@ const Shop = () => {
                                       categoryMeta.page + 1,
                                       filters
                                     )
-                                  : loadAllProducts()
+                                  : void loadAllProducts(categoryMeta.page + 1)
                               }
                             >
-                              <i className="fas fa-plus mr-2"></i>
-                              Load More Products
+                              {productsLoading || productLoading ? (
+                                <>
+                                  <i className="fas fa-spinner fa-spin mr-2"></i>
+                                  Loading...
+                                </>
+                              ) : (
+                                <>
+                                  <i className="fas fa-plus mr-2"></i>
+                                  Load More Products
+                                </>
+                              )}
                             </Button>
                           </div>
                         )}
