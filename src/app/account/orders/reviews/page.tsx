@@ -6,74 +6,37 @@ import { Badge } from "@/components/ui/badge";
 import BreadcrumbOrder from "../partials/orders-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
 import { useAuthStore } from "@/lib/stores/auth";
-import api from "@/lib/axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ApiLoader from "@/components/common/api-loader";
-
-interface OrderItems {
-  name: string;
-  image_url: string;
-  product_id?: string;
-  quantity?: number;
-  price?: number;
-}
-
-interface Order {
-  id: number;
-  user_id: number;
-  status: string;
-  total_amount: number;
-  payment_status: string;
-  order_items: OrderItems[];
-  created_at: string;
-}
+import { useApi } from "@/hooks/use-api";
 
 interface ReviewItems {
   product_id: string;
   product_name: string;
-  product_image_url: string;
-  category_slug: string;
+  image_url: string;
   rating: number;
   comment: string;
   created_at: string;
   user_name: string;
 }
 
-interface ReviewResponse {
-  order_id: number;
-  order_created_at: string;
-  user_id: number;
-  reviews: ReviewItems[];
-}
-
 export default function Page() {
   const { user } = useAuthStore();
   const { toastError } = useToast();
-  const [reviews, setReviews] = useState<ReviewResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const fetchReviews = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get("/reviews");
-      setReviews(res.data);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-      toastError("Failed to fetch reviews. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: reviews,
+    loading,
+    execute: fetchReviews,
+  } = useApi<ReviewItems[]>("/reviews", "GET", []);
 
   useEffect(() => {
-    fetchReviews();
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setReviews([]);
-    // }, 1500);
+    fetchReviews().catch((error) => {
+      console.error("Error fetching reviews:", error);
+      toastError("Failed to fetch reviews. Please try again later.");
+    });
   }, []);
 
   return (
@@ -89,7 +52,7 @@ export default function Page() {
               <ApiLoader message="Loading your reviews..." />
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
-                {!reviews.length ? (
+                {!reviews || !reviews.length ? (
                   <div className="text-center text-muted-foreground mt-20">
                     <h2 className="text-2xl font-semibold mb-4">
                       You have no orders to review yet.
@@ -103,55 +66,88 @@ export default function Page() {
                     </Link>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-y-6">
-                    {reviews.map((reviewResp, index) => (
-                      <div
-                        key={index}
-                        className="border p-4 rounded-md mt-4 flex flex-col gap-y-4"
-                      >
-                        <div className="flex items-center gap-x-4">
-                          <Image
-                            src={reviewResp.reviews[0]?.product_image_url || ""}
-                            alt={reviewResp.reviews[0]?.product_name || ""}
-                            className="rounded-lg"
-                            width={110}
-                            height={110}
-                          />
-                          <div className="space-y-1.5">
-                            {reviewResp.reviews[0]?.product_name}
-                            <div className="text-sm text-muted-foreground">
-                              Order No: {reviewResp.order_id}
+                  <div className="flex flex-col gap-y-4 flex-1">
+                    <div className="mb-2">
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Your Reviews
+                      </h2>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {reviews.length}{" "}
+                        {reviews.length === 1 ? "review" : "reviews"}
+                      </p>
+                    </div>
+
+                    <div className="grid gap-4">
+                      {reviews?.map((review, index) => (
+                        <div
+                          key={index}
+                          className="bg-white border p-6 hover:shadow-md transition-shadow duration-200"
+                        >
+                          <div className="flex gap-5">
+                            {/* Product Image */}
+                            <div className="flex-shrink-0">
+                              <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gray-100">
+                                <Image
+                                  src={review.image_url}
+                                  alt={review.product_name}
+                                  className="object-cover"
+                                  fill
+                                  sizes="96px"
+                                />
+                              </div>
                             </div>
-                            <div>On: {reviewResp.order_created_at}</div>
+
+                            {/* Review Content */}
+                            <div className="flex-1 min-w-0">
+                              {/* Product Name */}
+                              <h3 className="font-semibold text-lg text-gray-900 mb-1">
+                                <Link href={`/item/${review.product_id}`}>
+                                  {review.product_name}
+                                </Link>
+                              </h3>
+
+                              {/* Rating */}
+                              <div className="flex items-center gap-2 mb-3">
+                                <div className="flex items-center text-xl">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <span key={i}>
+                                      <i
+                                        className={`fas fa-star text-lg ${
+                                          i < review.rating
+                                            ? "text-yellow-400"
+                                            : "text-gray-300"
+                                        }`}
+                                      ></i>
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Review Comment */}
+                              <div className="mb-3">
+                                <p className="text-gray-700 leading-relaxed">
+                                  {review.comment}
+                                </p>
+                              </div>
+
+                              {/* Review Date */}
+                              <div className="flex items-center gap-2 text-sm text-gray-500">
+                                <i className="far fa-calendar text-md" />
+                                <span>
+                                  {new Date(
+                                    review.created_at
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-
-                        <div className="flex flex-col gap-y-2">
-                          <h3 className="font-semibold text-lg">
-                            Your Reviews:
-                          </h3>
-                          {reviewResp.reviews.map((review, revIndex) => (
-                            <div key={revIndex} className="border-t pt-2 mt-2">
-                              <div className="flex items-center gap-x-2">
-                                <span className="font-medium">
-                                  {review.product_name}
-                                </span>
-                                <Badge variant="default" className="text-sm">
-                                  {review.rating} / 5
-                                </Badge>
-                              </div>
-                              <p className="mt-1">{review.comment}</p>
-                              <div className="text-sm text-muted-foreground">
-                                Reviewed on:{" "}
-                                {new Date(
-                                  review.created_at
-                                ).toLocaleDateString()}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

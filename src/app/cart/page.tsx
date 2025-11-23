@@ -32,16 +32,27 @@ export default function CartPage() {
           {state.items.length > 0 ? (
             <Fragment>
               <BreadcrumbCart />
-              <h2 className="font-bold text-[28px] md:text-4xl mb-1">
-                Your cart
-              </h2>
-              <p className="text-black/60 mb-5">
-                You have {state.items.length} item
-                {state.items.length > 1 ? "s" : ""} in your cart.
-              </p>
+              <div className="mb-8">
+                <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-2">
+                  Shopping Cart
+                </h2>
+                <p className="text-gray-600">
+                  {state.items.length}{" "}
+                  {state.items.length === 1 ? "item" : "items"} in your cart
+                </p>
+              </div>
 
-              <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 items-start">
-                <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10">
+              <div className="flex flex-col lg:flex-row gap-6 items-start">
+                <div className="w-full bg-white border p-6 space-y-5 hover:shadow-md transition-shadow duration-200">
+                  <div className="flex items-center justify-between pb-4 border-b">
+                    <h3 className="font-semibold text-lg text-gray-900">
+                      Cart Items
+                    </h3>
+                    <span className="text-sm text-gray-500">
+                      {state.items.length}{" "}
+                      {state.items.length === 1 ? "item" : "items"}
+                    </span>
+                  </div>
                   {state.items.map((item: CartItem, index: number) => (
                     <Fragment key={index}>
                       <ProductCard
@@ -50,20 +61,26 @@ export default function CartPage() {
                         userId={state.user_id}
                       />
                       {state.items.length - 1 !== index && (
-                        <hr className="border-t-black/10" />
+                        <hr className="border-gray-200" />
                       )}
                     </Fragment>
                   ))}
                 </div>
 
-                <div className="w-full lg:max-w-[505px] p-5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10">
-                  <h6 className="text-xl md:text-2xl font-bold text-black">
-                    Order Summary
-                  </h6>
-                  <div className="flex flex-col space-y-5">
-                    <div className="flex items-center justify-between">
-                      <span className=" text-black/60">Sub-total</span>
-                      <span className="font-bold">
+                <div className="w-full lg:max-w-[420px] bg-white border p-6 space-y-6 sticky top-24 hover:shadow-md transition-shadow duration-200">
+                  <div className="flex items-center gap-3 pb-4 border-b">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <i className="fas fa-receipt text-primary"></i>
+                    </div>
+                    <h3 className="font-semibold text-xl text-gray-900">
+                      Order Summary
+                    </h3>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between py-3">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span className="font-semibold text-gray-900">
                         ₦
                         {state.items
                           .reduce(
@@ -77,10 +94,19 @@ export default function CartPage() {
                           .toLocaleString()}
                       </span>
                     </div>
-                    <hr className="border-t-black/10" />
-                    <div className="flex items-center justify-between">
-                      <span className="text-black">Total</span>
-                      <span className="font-bold">
+
+                    <div className="flex items-center justify-between py-3 border-t border-gray-200">
+                      <span className="text-gray-600">Shipping</span>
+                      <span className="text-sm text-gray-500">
+                        Calculated at checkout
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between py-4 border-t-2 border-gray-300">
+                      <span className="text-lg font-semibold text-gray-900">
+                        Total
+                      </span>
+                      <span className="text-2xl font-bold text-primary">
                         ₦
                         {state.items
                           .reduce(
@@ -95,51 +121,49 @@ export default function CartPage() {
                       </span>
                     </div>
                   </div>
-                  {/* <div className="flex space-x-3">
-                    <InputGroup className="bg-[#F0F0F0] rounded-none focus-within:shadow-none">
-                      <InputGroup.Text>
-                        <i className="far fa-tag text-black/40 text-xl" />
-                      </InputGroup.Text>
-                      <InputGroup.Input
-                        type="text"
-                        name="code"
-                        placeholder="Add promo code"
-                        className="bg-transparent rounded-none placeholder:text-black/40"
-                      />
-                    </InputGroup>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="text-white w-full max-w-[119px] h-12 cursor-pointer"
-                    >
-                      Apply
-                    </Button>
-                  </div> */}
+
                   <Button
                     onClick={() => router.push("/checkout")}
                     variant="default"
-                    className="text-sm md:text-base text-white font-medium w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
+                    className="text-base font-semibold w-full py-6 h-auto group cursor-pointer"
                   >
-                    Checkout{" "}
-                    <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+                    Proceed to Checkout
+                    <FaArrowRight className="text-lg ml-2 group-hover:translate-x-1 transition-all" />
                   </Button>
+
                   <Button
                     type="button"
-                    variant="ghost"
-                    className="text-sm md:text-base font-medium w-full py-4 h-[54px] md:h-[60px]"
+                    variant="outline"
+                    className="text-base font-medium w-full py-6 h-auto hover:bg-gray-50"
                     asChild
                   >
-                    <Link href="/shop">Continue Browsing →</Link>
+                    <Link href="/shop">
+                      <i className="far fa-arrow-left mr-2"></i>
+                      Continue Shopping
+                    </Link>
                   </Button>
                 </div>
               </div>
             </Fragment>
           ) : (
-            <div className="flex items-center flex-col gap-y-6 text-gray-500 mt-32">
-              <i className="fal fa-shopping-cart text-6xl" />
-              <span className="block mb-4">No items in your cart yet.</span>
-              <Button className="rounded-full" asChild>
-                <Link href="/shop">Shop</Link>
+            <div className="flex items-center flex-col gap-y-6 text-center mt-32 mb-20">
+              <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gray-100 mb-4">
+                <i className="fal fa-shopping-cart text-6xl text-gray-400" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Your Cart is Empty
+                </h3>
+                <p className="text-gray-500 max-w-md mx-auto mb-6">
+                  Looks like you haven't added anything to your cart yet. Start
+                  shopping to fill it up!
+                </p>
+              </div>
+              <Button size="lg" className="font-semibold px-8" asChild>
+                <Link href="/shop">
+                  <i className="far fa-shopping-bag mr-2"></i>
+                  Start Shopping
+                </Link>
               </Button>
             </div>
           )}

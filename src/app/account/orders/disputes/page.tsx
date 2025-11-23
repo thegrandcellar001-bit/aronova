@@ -6,12 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import BreadcrumbOrder from "../partials/orders-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
 import { useAuthStore } from "@/lib/stores/auth";
-import api from "@/lib/axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ApiLoader from "@/components/common/api-loader";
+import { useApi } from "@/hooks/use-api";
 
 interface OrderItems {
   name: string;
@@ -55,24 +55,17 @@ interface DisputeResponse {
 export default function Page() {
   const { user } = useAuthStore();
   const { toastError } = useToast();
-  const [disputes, setDisputes] = useState<DisputeResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const fetchDisputes = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get("/disputes");
-      setDisputes(res.data);
-    } catch (error) {
-      console.error("Error fetching disputes:", error);
-      toastError("Failed to fetch disputes. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: disputes,
+    loading,
+    execute: fetchDisputes,
+  } = useApi<DisputeResponse[]>("/disputes", "GET", []);
 
   useEffect(() => {
-    fetchDisputes();
+    fetchDisputes().catch((error) => {
+      console.error("Error fetching disputes:", error);
+      toastError("Failed to fetch disputes. Please try again later.");
+    });
   }, []);
 
   return (
@@ -88,7 +81,7 @@ export default function Page() {
               <ApiLoader message="Loading your disputes..." />
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
-                {!disputes.length ? (
+                {!disputes || !disputes.length ? (
                   <div className="text-center text-muted-foreground mt-20">
                     <h2 className="text-2xl font-semibold mb-4">
                       You have no submitted disputes yet.
@@ -103,7 +96,7 @@ export default function Page() {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-y-6">
-                    {disputes.map((disputeResp, index) => (
+                    {disputes?.map((disputeResp, index) => (
                       <div
                         key={index}
                         className="border p-4 rounded-md mt-4 flex flex-col gap-y-4"

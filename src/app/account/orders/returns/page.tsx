@@ -6,12 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import BreadcrumbOrder from "../partials/orders-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
 import { useAuthStore } from "@/lib/stores/auth";
-import api from "@/lib/axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ApiLoader from "@/components/common/api-loader";
+import { useApi } from "@/hooks/use-api";
 
 interface OrderItems {
   name: string;
@@ -50,24 +50,17 @@ interface ReturnResponse {
 
 export default function Page() {
   const { toastError } = useToast();
-  const [returns, setReturns] = useState<ReturnResponse[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const fetchReturns = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get("/return-requests");
-      setReturns(res.data);
-    } catch (error) {
-      console.error("Error fetching returns:", error);
-      toastError("Failed to fetch returns. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: returns,
+    loading,
+    execute: fetchReturns,
+  } = useApi<ReturnResponse[]>("/return-requests", "GET", []);
 
   useEffect(() => {
-    fetchReturns();
+    fetchReturns().catch((error) => {
+      console.error("Error fetching returns:", error);
+      toastError("Failed to fetch returns. Please try again later.");
+    });
   }, []);
 
   return (
@@ -83,7 +76,7 @@ export default function Page() {
               <ApiLoader message="Loading your return requests..." />
             ) : (
               <div className="flex flex-col gap-y-4 flex-1">
-                {!returns.length ? (
+                {!returns || !returns.length ? (
                   <div className="text-center text-muted-foreground mt-20">
                     <h2 className="text-2xl font-semibold mb-4">
                       You have no orders to return yet.
@@ -98,7 +91,7 @@ export default function Page() {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-y-6">
-                    {returns.map((returnResp, index) => (
+                    {returns?.map((returnResp, index) => (
                       <div
                         key={index}
                         className="border p-4 rounded-md mt-4 flex flex-col gap-y-4"

@@ -14,27 +14,33 @@ export default function StepTwo({
   nextStep: () => void;
 }) {
   return (
-    <div>
-      <h6 className="text-xl md:text-2xl font-bold text-black">
-        2. Payment Method
-      </h6>
-      <div className="flex flex-col space-y-4 mt-6">
-        <h3 className="text-md flex items-center gap-2">
-          We only support this payment method for now.
-        </h3>
+    <div className="bg-white border p-6">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b">
+        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <span className="text-primary font-bold">2</span>
+        </div>
+        <h3 className="font-semibold text-xl text-gray-900">Payment Method</h3>
+      </div>
+      <div className="space-y-4 mt-6">
+        <p className="text-gray-600 flex items-center gap-2">
+          <i className="fas fa-credit-card text-primary"></i>
+          We currently support the following payment method:
+        </p>
 
-        <RadioGroup className="flex flex-col space-y-4" defaultValue="card">
+        <RadioGroup className="space-y-3" defaultValue="card">
           <Label
             htmlFor="method1"
-            className="flex items-center gap-4 rounded-lg border-2 p-3 has-[data-state=checked]:border-primary h-30 md:h-25 cursor-pointer"
+            className="flex items-center gap-4 border-2 p-5 has-[data-state=checked]:border-primary has-[data-state=checked]:bg-primary/5 cursor-pointer transition-all hover:border-primary/50"
           >
-            <RadioGroupItem value="card" className="h-[23px] w-[23px]" />
+            <RadioGroupItem value="card" className="h-5 w-5" />
             <div className="flex items-center justify-between font-normal w-full">
-              <div className="flex flex-col gap-1.5">
-                <p className="leading-none font-medium">Credit or debit card</p>
-                <p className="text-muted-foreground text-sm">
-                  Prepay with your credit or debit card. We accept all major
-                  cards (VISA, MasterCard & Verve).
+              <div className="flex flex-col gap-2">
+                <p className="font-semibold text-gray-900">
+                  Credit or Debit Card
+                </p>
+                <p className="text-gray-600 text-sm">
+                  Securely pay with your credit or debit card. We accept all
+                  major cards (VISA, MasterCard & Verve).
                 </p>
               </div>
               <Image
@@ -48,24 +54,24 @@ export default function StepTwo({
           </Label>
         </RadioGroup>
 
-        <div className="mt-4 flex items-center gap-4 flex-col md:flex-row">
+        <div className="mt-6 flex items-center gap-3">
           <Button
             type="button"
-            variant="ghost"
-            className="text-sm md:text-base font-medium w-full py-4 h-[54px] md:h-[60px] cursor-pointer"
+            variant="outline"
+            className="text-base font-medium w-full py-6 h-auto hover:bg-gray-50"
             onClick={prevStep}
           >
-            <FaArrowLeft className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+            <FaArrowLeft className="text-lg mr-2" />
             Back
           </Button>
           <Button
             type="button"
-            variant="secondary"
-            className="text-sm md:text-base text-white font-medium w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
+            variant="default"
+            className="text-base font-semibold w-full py-6 h-auto group cursor-pointer"
             onClick={nextStep}
           >
-            Next{" "}
-            <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+            Continue
+            <FaArrowRight className="text-lg ml-2 group-hover:translate-x-1 transition-all" />
           </Button>
         </div>
       </div>

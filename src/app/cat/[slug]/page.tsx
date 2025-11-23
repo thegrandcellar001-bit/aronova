@@ -30,7 +30,6 @@ import Filters from "./partials/filters";
 import MobileFilters from "./partials/filters/MobileFilters";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { useCategories } from "@/app/providers/category-provider";
-import { skip } from "node:test";
 
 interface CategoryMeta {
   offset: number;
@@ -123,8 +122,17 @@ export default function ShopPage() {
       <main className="pt-26 bg-white pb-10">
         {!categoryData ? (
           <div className="h-96 flex flex-col gap-y-6 items-center justify-center">
-            <i className="fal fa-folder-open text-6xl text-gray-400" />
-            <p className="text-black/40">Category does not exist.</p>
+            <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gray-100">
+              <i className="fal fa-folder-open text-6xl text-gray-400" />
+            </div>
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Category Not Found
+              </h3>
+              <p className="text-gray-500">
+                The category you're looking for doesn't exist.
+              </p>
+            </div>
           </div>
         ) : (
           <div className="max-w-frame mx-auto px-4 xl:px-0">
@@ -136,12 +144,14 @@ export default function ShopPage() {
             >
               <div>
                 {isDesktop && (
-                  <div className="min-w-[295px] max-w-[295px] border border-black/10 px-5 md:px-6 py-5 space-y-5 md:space-y-6">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-black text-xl">
+                  <div className="min-w-[295px] max-w-[295px] bg-white border p-6 space-y-6">
+                    <div className="flex items-center gap-3 pb-4 border-b">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <FiSliders className="text-primary" />
+                      </div>
+                      <span className="font-semibold text-xl text-gray-900">
                         Filters
                       </span>
-                      <FiSliders className="text-2xl text-black/40" />
                     </div>
                     <Filters
                       categories={categories}
@@ -156,31 +166,40 @@ export default function ShopPage() {
 
               <div className="flex flex-col w-full space-y-5">
                 <div className="flex flex-col lg:flex-row lg:justify-between">
-                  <div className="flex items-center justify-between">
-                    <h1 className="font-bold text-2xl md:text-[32px]">
+                  <div className="mb-6">
+                    <h1 className="font-bold text-3xl md:text-4xl text-gray-900">
                       {categoryData.name}
                     </h1>
                   </div>
                   {categoryProducts && categoryProducts.length > 0 && (
-                    <div className="flex flex-col sm:items-center sm:flex-row">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-gray-50 border border-gray-200 p-4">
                       {categoryMeta && (
-                        <span className="text-sm md:text-base text-black/60 mr-3">
-                          Showing {categoryMeta.offset + 1}–
-                          {Math.min(
-                            categoryMeta.offset + categoryMeta.limit,
-                            categoryMeta.total
-                          )}{" "}
-                          of {categoryMeta.total} products
+                        <span className="text-sm text-gray-600">
+                          Showing{" "}
+                          <span className="font-semibold text-gray-900">
+                            {categoryMeta.offset + 1}–
+                            {Math.min(
+                              categoryMeta.offset + categoryMeta.limit,
+                              categoryMeta.total
+                            )}
+                          </span>{" "}
+                          of{" "}
+                          <span className="font-semibold text-gray-900">
+                            {categoryMeta.total}
+                          </span>{" "}
+                          products
                         </span>
                       )}
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center">
-                          Sort by:{" "}
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-600">
+                            Sort by:
+                          </span>
                           <Select
                             value={filters.sort_by}
                             onValueChange={handleSort}
                           >
-                            <SelectTrigger className="font-medium text-sm px-1.5 sm:text-base w-fit text-black bg-transparent shadow-none border-none">
+                            <SelectTrigger className="font-medium text-sm h-10 w-[180px] bg-white">
                               <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
                             <SelectContent>
@@ -208,15 +227,13 @@ export default function ShopPage() {
                         </div>
 
                         {!isDesktop && (
-                          <div>
-                            <MobileFilters
-                              categories={categories}
-                              categoryData={currentCategoryData}
-                              filters={filters}
-                              setFilters={setFilters}
-                              onApply={handleApplyFilters}
-                            />
-                          </div>
+                          <MobileFilters
+                            categories={categories}
+                            categoryData={currentCategoryData}
+                            filters={filters}
+                            setFilters={setFilters}
+                            onApply={handleApplyFilters}
+                          />
                         )}
                       </div>
                     </div>
@@ -238,8 +255,8 @@ export default function ShopPage() {
                           ))}
                         </div>
                         {/* Pagination */}
-                        <hr className="border-t-black/10" />
-                        <Pagination className="justify-between">
+                        <hr className="border-gray-200 my-6" />
+                        <Pagination className="justify-between mt-6">
                           <PaginationPrevious
                             href="#"
                             onClick={(e) => {
@@ -252,17 +269,17 @@ export default function ShopPage() {
                                   true
                                 );
                             }}
-                            className={`border border-black/10 ${
+                            className={`border hover:bg-gray-50 ${
                               currentPage === 1
                                 ? "opacity-50 pointer-events-none"
                                 : ""
                             }`}
-                            size="sm"
+                            size="default"
                           />
 
                           <PaginationContent>
                             {Array.from({ length: totalPages }, (_, i) => i + 1)
-                              .slice(0, 5) // show only first 5 pages for now (can make dynamic)
+                              .slice(0, 5)
                               .map((page) => (
                                 <PaginationItem key={page}>
                                   <PaginationLink
@@ -276,13 +293,13 @@ export default function ShopPage() {
                                         true
                                       );
                                     }}
-                                    className={`text-sm font-medium ${
+                                    className={`border ${
                                       page === currentPage
-                                        ? "text-black font-semibold"
-                                        : "text-black/50"
+                                        ? "border-primary bg-primary text-white font-semibold"
+                                        : "border-gray-200 text-gray-700 hover:bg-gray-50"
                                     }`}
                                     isActive={page === currentPage}
-                                    size="sm"
+                                    size="default"
                                   >
                                     {page}
                                   </PaginationLink>
@@ -290,7 +307,7 @@ export default function ShopPage() {
                               ))}
 
                             {totalPages > 5 && (
-                              <PaginationEllipsis className="text-black/50 font-medium text-sm" />
+                              <PaginationEllipsis className="text-gray-500" />
                             )}
                           </PaginationContent>
 
@@ -306,21 +323,29 @@ export default function ShopPage() {
                                   true
                                 );
                             }}
-                            className={`border border-black/10 ${
+                            className={`border hover:bg-gray-50 ${
                               currentPage === totalPages
                                 ? "opacity-50 pointer-events-none"
                                 : ""
                             }`}
-                            size="sm"
+                            size="default"
                           />
                         </Pagination>
                       </>
                     ) : (
-                      <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">
-                        <i className="fal fa-box text-4xl"></i>
-                        <p className="text-black/40">
-                          No products yet in this category.
-                        </p>
+                      <div className="flex flex-col items-center justify-center gap-y-6 w-full py-20">
+                        <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gray-100">
+                          <i className="fal fa-box text-6xl text-gray-400"></i>
+                        </div>
+                        <div className="text-center">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            No Products Found
+                          </h3>
+                          <p className="text-gray-500 max-w-md">
+                            There are no products in this category yet. Check
+                            back soon!
+                          </p>
+                        </div>
                       </div>
                     )}
                   </>

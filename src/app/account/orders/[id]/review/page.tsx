@@ -29,6 +29,7 @@ import { useAuthStore } from "@/lib/stores/auth";
 import { formatDate } from "@/lib/utils";
 import { Review } from "@/types/review.types";
 import ApiLoader from "@/components/common/api-loader";
+import { useApi } from "@/hooks/use-api";
 
 interface OrderItems {
   name: string;
@@ -52,27 +53,19 @@ export default function Page() {
   const { user } = useAuthStore();
   const params = useParams<{ id: string }>();
   const { toastSuccess, toastError } = useToast();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [order, setOrder] = useState<Order | null>(null);
   const [review, setReview] = useState<Review[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   const userName = user.name ?? "";
 
-  const fetchOrder = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get(`/orders/${params.id}`);
-      setOrder(res.data);
-      await fetchReview(res.data.order_items[0].product_id);
-    } catch (error) {
-      console.error("Error fetching order:", error);
-      toastError("Failed to fetch order. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: order,
+    loading,
+    execute: fetchOrder,
+  } = useApi<Order>(`/orders/${params.id}`);
+  const { execute: submitReview } = useApi("/review", "POST");
 
-  const fetchReview = async (product_id: string) => {
+  const fetchReviews = async (product_id: number) => {
     try {
       const res = await api.get(`/${product_id}/reviews`);
       setReview(
@@ -86,7 +79,7 @@ export default function Page() {
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
     const ratingValue = formData.get("rating");
@@ -95,24 +88,35 @@ export default function Page() {
     const reviewText = reviewValue ? String(reviewValue) : "";
 
     try {
-      const res = await api.post(`/review`, {
-        product_id: order?.order_items[0].product_id,
-        rating,
-        comment: reviewText,
+      const res = await submitReview({
+        data: {
+          product_id: order?.order_items[0].product_id,
+          rating,
+          comment: reviewText,
+        },
       });
-      setReview([res.data]);
+      setReview([res]);
       toastSuccess("Review submitted successfully.");
     } catch (error) {
       console.error("Error submitting review:", error);
       toastError("Failed to submit review. Please try again later.");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   useEffect(() => {
-    fetchOrder();
-  }, []);
+    fetchOrder()
+      .then((data) => {
+        if (data?.order_items?.[0]?.product_id) {
+          fetchReviews(data.order_items[0].product_id);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching order:", error);
+        toastError("Failed to fetch order. Please try again later.");
+      });
+  }, [fetchOrder, toastError]);
 
   return (
     <AuthGuard>

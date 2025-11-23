@@ -2,8 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
-import api from "@/lib/axios";
 import { Spinner } from "@/components/ui/spinner";
+import { useApi } from "@/hooks/use-api";
 
 export default function VerifyPaymentPage() {
   const searchParams = useSearchParams();
@@ -15,6 +15,8 @@ export default function VerifyPaymentPage() {
     text: string;
   }>({ type: "success", text: "Verifying payment..." });
 
+  const { execute: verifyPayment } = useApi(`/payments/verify/${reference}`);
+
   useEffect(() => {
     if (!reference) return;
 
@@ -22,9 +24,9 @@ export default function VerifyPaymentPage() {
       setLoading(true);
 
       try {
-        const res = await api.get(`/payments/verify/${reference}`);
+        const res = await verifyPayment();
 
-        if (res.data.status.toLowerCase() === "completed") {
+        if (res.status.toLowerCase() === "completed") {
           setMessage({
             type: "success",
             text: "Payment successful! Redirecting...",

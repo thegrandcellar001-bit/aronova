@@ -19,70 +19,79 @@ export default function StepThree({
   setSelectedDeliveryMethod: (method: string) => void;
 }) {
   return (
-    <div>
-      <h6 className="text-xl md:text-2xl font-bold text-black">
-        3. Shipping Method
-      </h6>
-      <div className="flex flex-col space-y-4 mt-6">
+    <div className="bg-white border p-6">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b">
+        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <span className="text-primary font-bold">3</span>
+        </div>
+        <h3 className="font-semibold text-xl text-gray-900">Shipping Method</h3>
+      </div>
+      <div className="space-y-4 mt-6">
         <ToggleGroup
           type="single"
-          className="flex flex-col space-y-4"
+          className="gap-3 flex-wrap"
           defaultValue={selectedDeliveryMethod}
           onValueChange={setSelectedDeliveryMethod}
         >
           <ToggleGroupItem
             value="standard"
             aria-label="Standard"
-            className="flex items-center justify-between font-normal w-full h-[80px] text-left data-[state=on]:ring-primary data-[state=on]:ring-2 data-[state=on]:bg-primary/10"
+            className="flex items-center justify-between font-normal w-full h-auto p-5 text-left border-2 data-[state=on]:border-primary data-[state=on]:bg-primary/5 hover:border-primary/50 transition-all"
           >
             <div className="flex items-center justify-between font-normal w-full">
-              <div className="flex flex-col gap-1.5">
-                <p className="leading-none font-medium">Standard</p>
-                <p className="text-muted-foreground text-sm">
-                  Standard shipping takes 3-5 business days.
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-truck text-primary"></i>
+                  <p className="font-semibold text-gray-900">
+                    Standard Shipping
+                  </p>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  Delivery in 3-5 business days
                 </p>
               </div>
-
-              <i className="far fa-truck text-lg"></i>
             </div>
           </ToggleGroupItem>
 
           <ToggleGroupItem
             value="express"
             aria-label="Express"
-            className="flex items-center justify-between font-normal w-full h-[80px] text-left data-[state=on]:ring-primary data-[state=on]:ring-2 data-[state=on]:bg-primary/10"
+            className="flex items-center justify-between font-normal w-full h-auto p-5 text-left border-2 data-[state=on]:border-primary data-[state=on]:bg-primary/5 hover:border-primary/50 transition-all"
           >
             <div className="flex items-center justify-between font-normal w-full">
-              <div className="flex flex-col gap-1.5">
-                <p className="leading-none font-medium">Express</p>
-                <p className="text-muted-foreground text-sm">
-                  Express shipping takes 1-2 business days.
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-truck-fast text-primary"></i>
+                  <p className="font-semibold text-gray-900">
+                    Express Shipping
+                  </p>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  Delivery in 1-2 business days
                 </p>
               </div>
-
-              <i className="far fa-truck-fast text-lg"></i>
             </div>
           </ToggleGroupItem>
         </ToggleGroup>
 
-        <div className="mt-4 flex items-center gap-4 flex-col md:flex-row">
+        <div className="mt-6 flex items-center gap-3">
           <Button
             type="button"
-            variant="ghost"
-            className="text-sm md:text-base font-medium w-full py-4 h-[54px] md:h-[60px] cursor-pointer"
+            variant="outline"
+            className="text-base font-medium w-full py-6 h-auto hover:bg-gray-50"
             onClick={prevStep}
           >
-            <FaArrowLeft className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+            <FaArrowLeft className="text-lg mr-2" />
             Back
           </Button>
           <Button
             type="button"
-            variant="secondary"
-            className="text-sm md:text-base text-white font-medium w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
+            variant="default"
+            className="text-base font-semibold w-full py-6 h-auto group cursor-pointer"
             onClick={nextStep}
           >
-            Next{" "}
-            <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+            Continue
+            <FaArrowRight className="text-lg ml-2 group-hover:translate-x-1 transition-all" />
           </Button>
         </div>
       </div>

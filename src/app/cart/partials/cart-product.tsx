@@ -22,59 +22,64 @@ const CartProduct = ({ item, variant }: CartProductProps) => {
   const totalPrice = (price * item.quantity).toFixed(2);
 
   return (
-    <div className="flex items-start space-x-4">
+    <div className="flex items-start gap-5">
       <Link
         href={`/item/${item.product_id}`}
-        className="bg-cream rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
+        className="flex-shrink-0 bg-gray-50 rounded-lg w-28 h-28 overflow-hidden group"
       >
         <Image
           src={imageUrl}
-          width={124}
-          height={124}
-          className="rounded-md w-full h-full object-cover hover:scale-110 transition-all duration-500"
+          width={112}
+          height={112}
+          className="w-full h-full object-cover group-hover:scale-110 transition-all duration-300"
           alt={item.name}
           priority
         />
       </Link>
 
-      <div className="flex w-full self-stretch flex-col">
-        <div className="flex items-start justify-between">
-          <div>
+      <div className="flex w-full flex-col gap-3">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
             <Link
               href={`/item/${item.product_id}`}
-              className="text-black text-base xl:text-xl"
+              className="font-semibold text-gray-900 text-base xl:text-lg hover:text-primary transition-colors line-clamp-2"
             >
               {item.name}
             </Link>
             {variant && (
-              <Fragment>
+              <div className="flex flex-wrap gap-2 mt-2">
                 {variant.color && (
-                  <p className="text-black text-sm capitalize">
-                    Color: <span>{variant?.color}</span>
-                  </p>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 capitalize">
+                    <i className="fas fa-palette text-gray-500"></i>
+                    {variant.color}
+                  </span>
                 )}
                 {variant.size && (
-                  <p className="text-black text-sm capitalize">
-                    Size: <span>{variant?.size}</span>
-                  </p>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 capitalize">
+                    <i className="fas fa-ruler text-gray-500"></i>
+                    {variant.size}
+                  </span>
                 )}
-              </Fragment>
+              </div>
             )}
           </div>
           <Button
             variant="ghost"
             size="icon"
-            className="h-5 w-5 md:h-9 md:w-9"
+            className="h-9 w-9 hover:bg-red-50 flex-shrink-0"
             onClick={() => removeItem(item.id)}
           >
-            <i className="far fa-trash text-lg text-red-600 cursor-pointer" />
+            <i className="far fa-trash-alt text-lg text-red-600 cursor-pointer" />
           </Button>
         </div>
 
-        <div className="flex items-center flex-wrap justify-between mt-2">
-          <div className="flex items-center space-x-[5px] xl:space-x-2.5">
-            <span className="text-black text-xl xl:text-2xl">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-baseline gap-2">
+            <span className="text-gray-900 text-xl xl:text-2xl font-bold">
               ₦{Number(totalPrice).toLocaleString()}
+            </span>
+            <span className="text-sm text-gray-500">
+              ₦{price.toLocaleString()} each
             </span>
           </div>
 
@@ -90,7 +95,7 @@ const CartProduct = ({ item, variant }: CartProductProps) => {
               item.variant ? item.variant?.available : item.inventory?.available
             }
             loading={updateLoading}
-            className="px-5 py-3 max-h-8 md:max-h-10 min-w-[105px] max-w-[105px] sm:max-w-32"
+            className="px-4 py-2 h-10 min-w-[120px] max-w-[120px]"
           />
         </div>
       </div>

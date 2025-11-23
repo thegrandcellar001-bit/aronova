@@ -13,28 +13,20 @@ import ApiLoader from "@/components/common/api-loader";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import * as motion from "framer-motion/client";
+import { useApi } from "@/hooks/use-api";
 
 export default function ProductPage() {
   const params = useParams<{ id: string }>();
   const productId = params.id;
 
   const { toastError } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [product, setProduct] = useState<Product | null>();
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
-  const fetchProduct = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get(`/products/${productId}`);
-      setProduct(res.data);
-      await fetchRelatedProducts(res.data.category_slug, res.data.id);
-    } catch (e) {
-      toastError("An error occurred while fetching product.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: product,
+    loading,
+    execute: fetchProduct,
+  } = useApi<Product>(`/products/${productId}`);
 
   const fetchRelatedProducts = async (slug: string, productId: string) => {
     try {
@@ -51,7 +43,15 @@ export default function ProductPage() {
   };
 
   useEffect(() => {
-    fetchProduct();
+    fetchProduct()
+      .then((data) => {
+        if (data?.category_slug && data?.id) {
+          fetchRelatedProducts(data.category_slug, data.id);
+        }
+      })
+      .catch(() => {
+        toastError("An error occurred while fetching product.");
+      });
   }, [productId]);
 
   return (

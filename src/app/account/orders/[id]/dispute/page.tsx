@@ -5,10 +5,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import BreadcrumbDispute from "./partials/dispute-breadcrumb";
 import AuthGuard from "@/lib/auth-guard";
-import { useAuthStore } from "@/lib/stores/auth";
-import api from "@/lib/axios";
-import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,15 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "next/navigation";
+import { useApi } from "@/hooks/use-api";
+import DisputeForm from "./partials/dispute-form";
+import ApiLoader from "@/components/common/api-loader";
 
 interface OrderItems {
   name: string;
@@ -47,70 +39,45 @@ interface Order {
 
 export default function Page() {
   const params = useParams<{ id: string }>();
-  const { toastSuccess, toastError } = useToast();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [dispute, setDispute] = useState<any>(null);
 
-  const order = {
-    id: 386285731,
-    created_at: "2025-09-10",
-    status: "delivered",
-    order_items: [
-      {
-        name: "Color Screen Smart Bracelet D13 Waterproof Bracelet Waterproof",
-        image_url: "/images/orders/2.jpg",
-      },
-    ],
-  };
+  const {
+    data: order,
+    loading: orderLoading,
+    execute: fetchOrder,
+  } = useApi<Order>(`/orders/${params.id}`);
 
-  const fetchDispute = async () => {
-    try {
-      const res = await api.get(`/disputes/${params.id}`);
-      setDispute(res.data);
-    } catch (error) {
-      console.error("Error fetching disputes:", error);
-      toastError("Failed to fetch disputes. Please try again later.");
-    }
-  };
-
-  const handleDisputeSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(e.target as HTMLFormElement);
-    const reason = formData.get("reason");
-    const description = formData.get("description");
-
-    try {
-      const res = await api.post(`/disputes`, {
-        order_id: params.id,
-        reason,
-        description,
-      });
-      toastSuccess("Dispute submitted successfully.");
-    } catch (error) {
-      console.error("Error submitting dispute:", error);
-      toastError("Failed to submit dispute. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: dispute,
+    loading: disputeLoading,
+    execute: fetchDispute,
+  } = useApi<any>(`/disputes/order/${params.id}`);
 
   useEffect(() => {
-    // fetchDispute();
-  }, []);
+    if (params.id) {
+      fetchOrder();
+      fetchDispute(); // This returns the dispute if it exists, or null/error if not
+    }
+  }, [params.id]);
+
+  const handleDisputeSuccess = () => {
+    fetchDispute(); // Refresh dispute data after successful submission
+  };
+
+  const isLoading = orderLoading || disputeLoading;
 
   return (
     <AuthGuard>
-      <main>
+      <main className="pt-26 pb-10">
         <section className="px-6 max-w-7xl mx-auto">
           <BreadcrumbDispute />
           <div className="flex flex-col md:flex-row justify-between gap-6 mt-10">
             <Sidebar />
             <div className="flex flex-col gap-y-4 flex-1">
-              {!order ? (
+              {isLoading && !order ? (
+                <ApiLoader message="Loading order details..." />
+              ) : !order ? (
                 <div className="text-center text-muted-foreground mt-20">
-                  No disputes found.
+                  Order not found.
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
@@ -208,56 +175,10 @@ export default function Page() {
                           </div>
                         </div>
                       ) : (
-                        <div className="mt-2 mb-6">
-                          <h3 className="text-lg font-semibold">
-                            Submit a Dispute for this Order
-                          </h3>
-                          <form
-                            className="flex flex-col gap-y-4 mt-4"
-                            onSubmit={handleDisputeSubmit}
-                          >
-                            <div>
-                              <label className="block mb-1 font-medium">
-                                Dispute Reason
-                              </label>
-                              <Select name="reason" required>
-                                <SelectTrigger className="h-12">
-                                  <SelectValue placeholder="Select reason" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="wrong_item">
-                                    Wrong Item Received
-                                  </SelectItem>
-                                  <SelectItem value="damaged_item">
-                                    Damaged Item
-                                  </SelectItem>
-                                  <SelectItem value="missing_item">
-                                    Missing Item
-                                  </SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="space-y-2">
-                              <label className="block mb-1 font-medium">
-                                Dispute Description
-                              </label>
-                              <Textarea
-                                className="w-full border rounded-md p-2"
-                                rows={4}
-                                placeholder="Write your dispute description here..."
-                                name="description"
-                                required
-                              />
-                            </div>
-                            <Button
-                              type="submit"
-                              className="w-fit cursor-pointer"
-                            >
-                              Submit Review
-                            </Button>
-                          </form>
-                        </div>
+                        <DisputeForm
+                          orderId={params.id}
+                          onSuccess={handleDisputeSuccess}
+                        />
                       )}
                     </>
                   ) : (

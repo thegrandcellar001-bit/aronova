@@ -22,59 +22,69 @@ const ProductCard = ({ item, variant, category_slug }: ProductCardProps) => {
       {removeLoading ? (
         <ApiLoader message="Removing item..." />
       ) : (
-        <div className="flex items-start space-x-4">
+        <div className="flex items-start gap-4">
           <Link
-            href={`/cat/${category_slug}/${item.product_id}}`}
-            className="bg-[#F0EEED] rounded-lg w-full min-w-[100px] max-w-[100px] sm:max-w-[124px] aspect-square overflow-hidden"
+            href={`/item/${item.product_id}}`}
+            className="flex-shrink-0 bg-gray-50 rounded-lg w-20 h-20 overflow-hidden group"
           >
             <Image
               src={item.product.primary_image}
-              width={124}
-              height={124}
-              className="rounded-md w-full h-full object-cover hover:scale-110 transition-all duration-500"
+              width={80}
+              height={80}
+              className="w-full h-full object-cover group-hover:scale-110 transition-all duration-300"
               alt={item.name}
               priority
             />
           </Link>
 
-          <div className="flex w-full self-stretch flex-col">
-            <div className="flex items-center justify-between">
-              <div className="mb-2">
+          <div className="flex w-full flex-col gap-2">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
                 <Link
-                  href={`/cat/${category_slug}/${item.product_id}}`}
-                  className="text-black text-base xl:text-xl"
+                  href={`/item/${item.product_id}}`}
+                  className="font-semibold text-gray-900 text-sm hover:text-primary transition-colors line-clamp-2 block"
                 >
                   {item.name}
                 </Link>
 
                 {variant && (
-                  <Fragment>
-                    <p className="text-black text-sm capitalize">
-                      Color: <span>{variant?.color}</span>
-                    </p>
-                    <p className="text-black text-sm capitalize">
-                      Size: <span>{variant?.size}</span>
-                    </p>
-                  </Fragment>
+                  <div className="flex flex-wrap gap-1.5 mt-1.5">
+                    {variant.color && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700 capitalize">
+                        <i className="fas fa-palette text-gray-500 text-[10px]"></i>
+                        {variant.color}
+                      </span>
+                    )}
+                    {variant.size && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700 capitalize">
+                        <i className="fas fa-ruler text-gray-500 text-[10px]"></i>
+                        {variant.size}
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-5 w-5 md:h-9 md:w-9"
+                className="h-8 w-8 hover:bg-red-50 flex-shrink-0"
                 onClick={() => removeItem(item.id)}
               >
-                <i className="far fa-trash text-lg text-red-600 cursor-pointer" />
+                <i className="far fa-trash-alt text-sm text-red-600 cursor-pointer" />
               </Button>
             </div>
-            <div className="flex items-center flex-wrap justify-between">
-              <div className="flex items-center space-x-[5px] xl:space-x-2.5">
-                <span className="text-black text-xl xl:text-2xl">
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-gray-900 text-base font-bold">
                   ₦
                   {(item.product.final_price * item.quantity).toLocaleString(
                     "en-NG"
                   )}
+                </span>
+                <span className="text-xs text-gray-500">
+                  (Qty: {item.quantity})
                 </span>
               </div>
             </div>

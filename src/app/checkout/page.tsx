@@ -19,9 +19,9 @@ import ApiLoader from "@/components/common/api-loader";
 import StepOne from "./partials/steps/step-one";
 import StepTwo from "./partials/steps/step-two";
 import StepThree from "./partials/steps/step-three";
-import { UserAddress } from "@/types/account/user";
 import StepFour from "./partials/steps/step-four";
-import api from "@/lib/axios";
+import { UserAddress } from "@/types/account/user";
+import { useApi } from "@/hooks/use-api";
 
 export default function Page() {
   const { user } = useAuthStore();
@@ -48,6 +48,8 @@ export default function Page() {
   const nextStep = () => setStep((prev) => Math.min(prev + 1, 4));
   const prevStep = () => setStep((prev) => Math.max(prev - 1, 1));
 
+  const { execute: fetchSettings } = useApi("/settings");
+
   const loadUserAddress = async () => {
     const address = await fetchDefaultAddress();
     setUserAddress(address as UserAddress);
@@ -55,8 +57,7 @@ export default function Page() {
 
   const loadDeliveryPrice = async () => {
     try {
-      const response = await api.get("/settings");
-      const data = response.data;
+      const data = await fetchSettings();
       setDeliveryPrices({
         standard: parseInt(data.shipping_options.standard),
         express: parseInt(data.shipping_options.express),
@@ -81,13 +82,17 @@ export default function Page() {
             {state && state.items.length > 0 ? (
               <Fragment>
                 <BreadcrumbCart />
-                <h2 className="font-bold text-[28px] md:text-4xl mb-1">
-                  Checkout
-                </h2>
-                <p className="text-black/60 mb-5">Checkout your items.</p>
-                <div className="flex flex-col lg:flex-row gap-x-4 space-y-5 lg:space-y-0 lg:space-x-5 items-start relative">
+                <div className="mb-8">
+                  <h2 className="font-bold text-3xl md:text-4xl text-gray-900 mb-2">
+                    Checkout
+                  </h2>
+                  <p className="text-gray-600">
+                    Complete your purchase securely
+                  </p>
+                </div>
+                <div className="flex flex-col lg:flex-row gap-6 items-start relative">
                   {/* Left Section */}
-                  <div className="w-full mt-6">
+                  <div className="w-full">
                     {step === 1 && (
                       <StepOne
                         user={user}
@@ -125,35 +130,45 @@ export default function Page() {
                   </div>
 
                   {/* Right Section */}
-                  <div className="w-full lg:max-w-[505px] p-5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10 sticky top-[100px]">
-                    <h6 className="text-xl md:text-2xl font-bold text-black">
-                      Order Summary
-                    </h6>
-                    <div className="flex flex-col space-y-5">
+                  <div className="w-full lg:max-w-[420px] bg-white border p-6 space-y-6 sticky top-24 hover:shadow-md transition-shadow duration-200">
+                    <div className="flex items-center gap-3 pb-4 border-b">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <i className="fas fa-receipt text-primary"></i>
+                      </div>
+                      <h3 className="font-semibold text-xl text-gray-900">
+                        Order Summary
+                      </h3>
+                    </div>
+                    <div className="space-y-5">
                       <Accordion type="single" collapsible>
                         <AccordionItem value="items">
                           <AccordionTrigger
-                            className="text-black/60 cursor-pointer"
+                            className="text-gray-700 hover:text-gray-900 cursor-pointer font-medium"
                             style={{ textDecoration: "none" }}
                           >
-                            Your items ({state?.items.length} items ~
-                            {state.items
-                              .reduce(
-                                (acc: number, item: CartItem) =>
-                                  acc +
-                                  (item.variant?.final_price ||
-                                    item.product.pricing.final_price) *
-                                    item.quantity,
-                                0
-                              )
-                              .toLocaleString("en-NG", {
-                                currency: "NGN",
-                                style: "currency",
-                              })}
-                            )
+                            <div className="flex items-center gap-2">
+                              <i className="fas fa-shopping-bag text-gray-500"></i>
+                              <span>
+                                {state?.items.length}{" "}
+                                {state?.items.length === 1 ? "item" : "items"} •
+                                {state.items
+                                  .reduce(
+                                    (acc: number, item: CartItem) =>
+                                      acc +
+                                      (item.variant?.final_price ||
+                                        item.product.pricing.final_price) *
+                                        item.quantity,
+                                    0
+                                  )
+                                  .toLocaleString("en-NG", {
+                                    currency: "NGN",
+                                    style: "currency",
+                                  })}
+                              </span>
+                            </div>
                           </AccordionTrigger>
                           <AccordionContent>
-                            <div className="w-full p-3.5 md:px-6 flex-col space-y-4 md:space-y-6 border border-black/10">
+                            <div className="w-full bg-gray-50 p-4 space-y-4 border border-gray-200 rounded-lg mt-2">
                               {state?.items.map(
                                 (item: CartItem, index: number) => (
                                   <Fragment key={index}>
@@ -163,7 +178,7 @@ export default function Page() {
                                       category_slug={item.product.category_slug}
                                     />
                                     {state.items.length - 1 !== index && (
-                                      <hr className="border-t-black/10" />
+                                      <hr className="border-gray-200" />
                                     )}
                                   </Fragment>
                                 )
@@ -175,24 +190,25 @@ export default function Page() {
                       {(selectedDeliveryMethod === "standard" ||
                         selectedDeliveryMethod === "express") && (
                         <Fragment>
-                          <div className="flex items-center justify-between">
-                            <span className="text-black/60">
+                          <div className="flex items-center justify-between py-3">
+                            <span className="text-gray-600 flex items-center gap-2">
+                              <i className="fas fa-shipping-fast text-gray-500"></i>
                               Delivery Method
                             </span>
-                            <span className="font-bold capitalize">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary capitalize">
                               <i
                                 className={`${
                                   selectedDeliveryMethod === "standard"
-                                    ? "far fa-truck"
-                                    : "far fa-truck-fast"
-                                } mr-2`}
-                              ></i>{" "}
+                                    ? "fas fa-truck"
+                                    : "fas fa-truck-fast"
+                                }`}
+                              ></i>
                               {selectedDeliveryMethod}
                             </span>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-black/60">Delivery Fee</span>
-                            <span className="font-bold">
+                          <div className="flex items-center justify-between py-3">
+                            <span className="text-gray-600">Delivery Fee</span>
+                            <span className="font-semibold text-gray-900">
                               {deliveryPrices[
                                 selectedDeliveryMethod as keyof typeof deliveryPrices
                               ].toLocaleString("en-NG", {
@@ -201,13 +217,15 @@ export default function Page() {
                               })}
                             </span>
                           </div>
-                          <hr className="border-t-black/10" />
+                          <hr className="border-gray-200" />
                         </Fragment>
                       )}
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-black">Total</span>
-                        <span className="font-bold">
+                      <div className="flex items-center justify-between py-4 border-t-2 border-gray-300">
+                        <span className="text-lg font-semibold text-gray-900">
+                          Total
+                        </span>
+                        <span className="text-2xl font-bold text-primary">
                           {(
                             state.items.reduce(
                               (acc: number, item: CartItem) =>
@@ -231,13 +249,24 @@ export default function Page() {
                 </div>
               </Fragment>
             ) : (
-              <div className="flex items-center flex-col gap-y-4 text-gray-300 mt-32">
-                <i className="fal fa-shopping-cart text-5xl" />
-                <span className="block">
-                  You have no items in your cart to checkout yet.
-                </span>
-                <Button className="rounded-full" asChild>
-                  <Link href="/shop">Shop</Link>
+              <div className="flex items-center flex-col gap-y-6 text-center mt-32 mb-20">
+                <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gray-100 mb-4">
+                  <i className="fal fa-shopping-cart text-6xl text-gray-400" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    Your Cart is Empty
+                  </h3>
+                  <p className="text-gray-500 max-w-md mx-auto mb-6">
+                    You have no items in your cart to checkout. Start shopping
+                    to add items!
+                  </p>
+                </div>
+                <Button size="lg" className="font-semibold px-8" asChild>
+                  <Link href="/shop">
+                    <i className="far fa-shopping-bag mr-2"></i>
+                    Start Shopping
+                  </Link>
                 </Button>
               </div>
             )}

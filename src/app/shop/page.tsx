@@ -164,15 +164,17 @@ const Shop = () => {
     <div className="min-h-screen bg-background">
       <main className="pt-20">
         {/* Hero Section */}
-        <section className="bg-primary text-primary-foreground py-20 lg:py-24">
+        <section className="bg-gradient-to-r from-primary to-primary/90 text-primary-foreground py-16 lg:py-20">
           <div className="max-w-[1400px] mx-auto px-6 lg:px-20">
-            <h1 className="text-5xl lg:text-6xl mb-6 animate-fade-in">
-              The Market
-            </h1>
-            <p className="font-sans text-lg text-primary-foreground/90 max-w-2xl animate-fade-in-slow">
-              Discover exceptional pieces from Nigeria's most celebrated
-              artisans and luxury brands.
-            </p>
+            <div className="max-w-3xl">
+              <h1 className="text-4xl lg:text-5xl font-bold mb-4 animate-fade-in">
+                The Market
+              </h1>
+              <p className="text-lg text-primary-foreground/90 animate-fade-in-slow">
+                Discover exceptional pieces from Nigeria's most celebrated
+                artisans and luxury brands.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -181,15 +183,15 @@ const Shop = () => {
         ) : (
           <Fragment>
             {/* Category Selector */}
-            <section className="border-b border-border bg-background sticky top-20 z-40">
-              <div className="max-w-[1400px] mx-auto px-2 lg:px-20 py-6">
+            <section className="border-b bg-white sticky top-20 z-40 shadow-sm">
+              <div className="max-w-[1400px] mx-auto px-2 lg:px-20 py-5">
                 <div className="flex items-center gap-4 w-[95%]">
                   <Carousel
                     opts={{ align: "start" }}
                     className="relative w-full"
                   >
-                    <div className="bg-background w-[34px] h-9 absolute left-0 top-0 bottom-0 flex items-center justify-center z-10">
-                      <CarouselPrevious className="absolute left-0 z-10 inline-flex rounded-none cursor-pointer bg-primary text-white" />
+                    <div className="bg-white w-[34px] h-9 absolute left-0 top-0 bottom-0 flex items-center justify-center z-10">
+                      <CarouselPrevious className="absolute left-0 z-10 inline-flex rounded-md cursor-pointer bg-primary text-white hover:bg-primary/90" />
                     </div>
 
                     <CarouselContent className="ml-7">
@@ -199,10 +201,10 @@ const Shop = () => {
                           variant={
                             currentCategory === null ? "default" : "outline"
                           }
-                          size="sm"
-                          className={`text-sm cursor-pointer whitespace-nowrap ${
+                          size="default"
+                          className={`text-sm font-medium cursor-pointer whitespace-nowrap ${
                             currentCategory === null && "bg-primary text-white"
-                          } border-[1.5px] border-deep-green hover:bg-primary hover:text-white`}
+                          } hover:bg-primary hover:text-white transition-all`}
                           onClick={loadAllProducts}
                         >
                           All Products
@@ -221,11 +223,11 @@ const Shop = () => {
                                 ? "default"
                                 : "outline"
                             }
-                            size="sm"
-                            className={`text-sm cursor-pointer whitespace-nowrap ${
+                            size="default"
+                            className={`text-sm font-medium cursor-pointer whitespace-nowrap ${
                               currentCategory === category.category_slug &&
                               "bg-primary text-white"
-                            } border-[1.5px] border-deep-green hover:bg-primary hover:text-white`}
+                            } hover:bg-primary hover:text-white transition-all`}
                             onClick={() =>
                               handleCategorySelect(category.category_slug)
                             }
@@ -236,7 +238,7 @@ const Shop = () => {
                       ))}
                     </CarouselContent>
 
-                    <CarouselNext className="absolute inline-flex cursor-pointer rounded-none bg-primary text-white" />
+                    <CarouselNext className="absolute inline-flex cursor-pointer rounded-md bg-primary text-white hover:bg-primary/90" />
                   </Carousel>
                 </div>
               </div>
@@ -247,7 +249,7 @@ const Shop = () => {
               {productLoading ? (
                 <ApiLoader message="Loading products..." />
               ) : (
-                <div className="max-w-[1400px] px-6 lg:px-20 flex flex-col md:flex-row items-start gap-6">
+                <div className="max-w-[1400px] mx-auto px-6 lg:px-20 flex flex-col md:flex-row items-start gap-6">
                   {/* Filters */}
                   {currentCategory !== null && (
                     <div className="w-full md:w-1/3">
@@ -274,14 +276,21 @@ const Shop = () => {
                   {/* Products */}
                   <div className="grow w-full">
                     {/* Product Count */}
-                    <div className="mb-8">
-                      <span className="text-sm md:text-base text-black/60">
-                        Showing {categoryMeta.page}–
-                        {Math.min(
-                          categoryMeta.page + categoryMeta.limit,
-                          categoryMeta.total
-                        )}{" "}
-                        of {categoryMeta.total} products
+                    <div className="bg-gray-50 border border-gray-200 p-4 mb-6">
+                      <span className="text-sm text-gray-600">
+                        Showing{" "}
+                        <span className="font-semibold text-gray-900">
+                          {categoryMeta.page}–
+                          {Math.min(
+                            categoryMeta.page + categoryMeta.limit,
+                            categoryMeta.total
+                          )}
+                        </span>{" "}
+                        of{" "}
+                        <span className="font-semibold text-gray-900">
+                          {categoryMeta.total}
+                        </span>{" "}
+                        products
                       </span>
                     </div>
 
@@ -292,28 +301,28 @@ const Shop = () => {
                           {products.map((product) => (
                             <Link key={product.id} href={`/item/${product.id}`}>
                               <div className="group cursor-pointer animate-fade-in">
-                                <div className="relative aspect-3/4 mb-4 overflow-hidden bg-muted rounded-lg">
+                                <div className="relative aspect-3/4 mb-4 overflow-hidden bg-gray-100 rounded-lg">
                                   <img
                                     src={product.images[0]}
                                     alt={product.name}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                   />
                                 </div>
-                                <div className="space-y-1">
-                                  <p className="font-sans text-xs tracking-[0.2em] uppercase text-muted-foreground">
+                                <div className="space-y-2">
+                                  <p className="text-xs tracking-wider uppercase text-gray-500">
                                     {product.merchant_store_name}
                                   </p>
-                                  <h3 className="font-sans text-base text-foreground group-hover:text-primary transition-colors">
+                                  <h3 className="text-base font-medium text-gray-900 group-hover:text-primary transition-colors line-clamp-2">
                                     {product.name}
                                   </h3>
-                                  <div className="flex items-center gap-2 flex-wrap">
-                                    <span className="text-black text-xl xl:text-2xl font-semibold">
+                                  <div className="flex items-center gap-2 flex-wrap mt-2">
+                                    <span className="text-gray-900 text-lg font-bold">
                                       ₦
                                       {product.pricing.final_price.toLocaleString()}
                                     </span>
                                     {product.pricing.discount > 0 && (
                                       <>
-                                        <span className="text-black/40 line-through text-lg">
+                                        <span className="text-gray-500 line-through text-sm">
                                           ₦
                                           {product.pricing.base_price.toLocaleString()}
                                         </span>
@@ -332,11 +341,11 @@ const Shop = () => {
                         {/* Load More Button */}
                         {categoryMeta.total >
                           categoryMeta.limit * categoryMeta.page && (
-                          <div className="flex justify-center mt-16">
+                          <div className="flex justify-center mt-12">
                             <Button
                               variant="outline"
                               size="lg"
-                              className="px-12 cursor-pointer"
+                              className="px-12 cursor-pointer font-semibold hover:bg-primary hover:text-white transition-all"
                               onClick={() =>
                                 currentCategory
                                   ? loadCategoryProducts(
@@ -347,15 +356,26 @@ const Shop = () => {
                                   : loadAllProducts()
                               }
                             >
-                              Load More
+                              <i className="fas fa-plus mr-2"></i>
+                              Load More Products
                             </Button>
                           </div>
                         )}
                       </Fragment>
                     ) : (
-                      <div className="flex flex-col items-center justify-center gap-y-3 w-full py-12">
-                        <i className="fal fa-box text-4xl"></i>
-                        <p className="text-black/40">No products found.</p>
+                      <div className="flex flex-col items-center justify-center gap-y-6 w-full py-20">
+                        <div className="inline-flex items-center justify-center w-32 h-32 rounded-full bg-gray-100">
+                          <i className="fal fa-box text-6xl text-gray-400"></i>
+                        </div>
+                        <div className="text-center">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            No Products Found
+                          </h3>
+                          <p className="text-gray-500 max-w-md">
+                            We couldn't find any products matching your
+                            criteria. Try adjusting your filters.
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>

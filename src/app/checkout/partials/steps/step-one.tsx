@@ -87,183 +87,245 @@ export default function StepOne({
   };
 
   return (
-    <div>
-      <h6 className="text-xl md:text-2xl font-bold text-black">
-        1. Delivery Details
-      </h6>
+    <div className="bg-white border p-6">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b">
+        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <span className="text-primary font-bold">1</span>
+        </div>
+        <h3 className="font-semibold text-xl text-gray-900">
+          Delivery Details
+        </h3>
+      </div>
 
       {userAddress ? (
         <Fragment>
-          <div className="mt-4 mb-6 p-4 border border-black/10">
-            <p className="font-medium text-md mb-2 text-black">
-              Saved Address:
-            </p>
-            <hr className="border-t border-black/10 mb-4" />
-            <div className="flex flex-col gap-3">
+          <div className="bg-gray-50 border border-gray-200 p-5 space-y-4">
+            <div className="flex items-center gap-2 pb-3 border-b border-gray-300">
+              <i className="fas fa-map-marker-alt text-primary"></i>
+              <p className="font-semibold text-gray-900">Saved Address</p>
+            </div>
+            <div className="space-y-3">
               {userAddress && (
-                <div className="flex flex-col space-y-1">
-                  <p className="text-black font-medium">{user.name}</p>
-                  <p className="text-black">
-                    {userAddress.delivery_address}, {userAddress.lga},{" "}
-                    {userAddress.state} State
-                  </p>
-                  <p className="text-black">
-                    Phone: {userAddress.phone_number} /{" "}
-                    {userAddress.additional_phone_number}
-                  </p>
-                  <Badge
-                    className="w-max px-2 py-1 text-xs rounded-none my-1"
-                    variant={userAddress.is_default ? "default" : "outline"}
-                  >
-                    {userAddress.is_default
-                      ? "Default Address"
-                      : "Alternate Address"}
-                  </Badge>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <i className="fas fa-user text-gray-500 text-sm"></i>
+                    <p className="font-medium text-gray-900">{user.name}</p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <i className="fas fa-home text-gray-500 text-sm mt-0.5"></i>
+                    <p className="text-gray-700">
+                      {userAddress.delivery_address}, {userAddress.lga},{" "}
+                      {userAddress.state} State
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <i className="fas fa-phone text-gray-500 text-sm"></i>
+                    <p className="text-gray-700">
+                      {userAddress.phone_number}
+                      {userAddress.additional_phone_number && (
+                        <span> • {userAddress.additional_phone_number}</span>
+                      )}
+                    </p>
+                  </div>
+                  {userAddress.is_default && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary text-white mt-2">
+                      <i className="fas fa-star"></i>
+                      Default Address
+                    </span>
+                  )}
                 </div>
               )}
 
-              <div className="mt-2 text-sm text-black/60">
-                <i className="far fa-info-circle mr-1"></i> If you want to use a
-                different delivery address, change your default address in your
-                account{" "}
-                <Link
-                  href="/account/address"
-                  className="underline underline-offset-4"
-                >
-                  settings
-                </Link>
-                .
+              <div className="pt-3 border-t border-gray-200">
+                <div className="flex items-start gap-2 text-sm text-gray-600">
+                  <i className="fas fa-info-circle text-primary mt-0.5"></i>
+                  <p>
+                    To use a different delivery address, change your default
+                    address in your{" "}
+                    <Link
+                      href="/account/address"
+                      className="text-primary font-medium hover:underline"
+                    >
+                      account settings
+                    </Link>
+                    .
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-4 flex items-center gap-4 flex-col md:flex-row">
+          <div className="mt-6 flex items-center gap-3">
             <Button
               type="button"
-              variant="ghost"
-              className="text-sm md:text-base font-medium w-full py-4 h-[54px] md:h-[60px] cursor-pointer"
+              variant="outline"
+              className="text-base font-medium w-full py-6 h-auto hover:bg-gray-50"
               asChild
             >
               <Link href="/cart">
-                <FaArrowLeft className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
-                Back to cart
+                <FaArrowLeft className="text-lg mr-2" />
+                Back to Cart
               </Link>
             </Button>
             <Button
               type="button"
-              variant="secondary"
-              className="text-sm md:text-base text-white font-medium w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
+              variant="default"
+              className="text-base font-semibold w-full py-6 h-auto group cursor-pointer"
               onClick={() => setStep(2)}
             >
-              Next{" "}
-              <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
+              Continue
+              <FaArrowRight className="text-lg ml-2 group-hover:translate-x-1 transition-all" />
             </Button>
           </div>
         </Fragment>
       ) : (
-        <div className="flex flex-col space-y-4 mt-6">
-          <Input
-            type="text"
-            placeholder="Delivery Address"
-            className="h-12 bg-white"
-            onChange={(e) =>
-              setDeliveryFormData({
-                ...deliveryFormData,
-                address: e.target.value,
-              })
-            }
-            value={deliveryFormData.address}
-            required
-          />
-          <div className="flex items-center gap-x-4">
-            <Select
-              autoComplete="off"
-              defaultValue={deliveryFormData.state}
-              onValueChange={(e) => handleStateChange(e)}
-            >
-              <SelectTrigger className="w-full h-12 bg-white">
-                <SelectValue placeholder="- Select state -" />
-              </SelectTrigger>
-              <SelectContent id="state">
-                <SelectGroup>
-                  {Object.keys(lgaList).map((state, index) => (
-                    <SelectItem value={state} key={index}>
-                      {state}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <Select
-              autoComplete="off"
-              defaultValue={deliveryFormData.city}
-              onValueChange={(e) => handleLGAChange(e)}
-              disabled={deliveryFormData.state === ""}
-            >
-              <SelectTrigger className="w-full h-12 bg-white">
-                <SelectValue placeholder="- Select city -" />
-              </SelectTrigger>
-              <SelectContent id="lga">
-                <SelectGroup>
-                  {lgaList[deliveryFormData.state]?.map((lga, index) => (
-                    <SelectItem value={lga} key={index}>
-                      {lga}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+        <div className="space-y-4 mt-6">
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">
+              Delivery Address <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <i className="fas fa-map-marker-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <Input
+                type="text"
+                placeholder="Enter your delivery address"
+                className="h-12 bg-white pl-10"
+                onChange={(e) =>
+                  setDeliveryFormData({
+                    ...deliveryFormData,
+                    address: e.target.value,
+                  })
+                }
+                value={deliveryFormData.address}
+                required
+              />
+            </div>
           </div>
-          <Input
-            type="tel"
-            placeholder="Phone"
-            className="h-12 bg-white"
-            onChange={(e) =>
-              setDeliveryFormData({
-                ...deliveryFormData,
-                phone: e.target.value,
-              })
-            }
-            value={deliveryFormData.phone}
-            required
-          />
 
-          <Input
-            type="tel"
-            placeholder="Additional phone number"
-            className="h-12 bg-white"
-            onChange={(e) =>
-              setDeliveryFormData({
-                ...deliveryFormData,
-                additionalPhone: e.target.value,
-              })
-            }
-            value={deliveryFormData.additionalPhone}
-            required
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                State <span className="text-red-500">*</span>
+              </label>
+              <Select
+                autoComplete="off"
+                defaultValue={deliveryFormData.state}
+                onValueChange={(e) => handleStateChange(e)}
+              >
+                <SelectTrigger className="w-full h-12 bg-white">
+                  <SelectValue placeholder="Select your state" />
+                </SelectTrigger>
+                <SelectContent id="state">
+                  <SelectGroup>
+                    {Object.keys(lgaList).map((state, index) => (
+                      <SelectItem value={state} key={index}>
+                        {state}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <p className="text-sm">
-            <i className="far fa-info-circle mr-1" /> This information will be
-            saved for faster check-out next time.
-          </p>
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                LGA <span className="text-red-500">*</span>
+              </label>
+              <Select
+                autoComplete="off"
+                defaultValue={deliveryFormData.city}
+                onValueChange={(e) => handleLGAChange(e)}
+                disabled={deliveryFormData.state === ""}
+              >
+                <SelectTrigger className="w-full h-12 bg-white">
+                  <SelectValue
+                    placeholder={
+                      deliveryFormData.state
+                        ? "Select your LGA"
+                        : "Select state first"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent id="lga">
+                  <SelectGroup>
+                    {lgaList[deliveryFormData.state]?.map((lga, index) => (
+                      <SelectItem value={lga} key={index}>
+                        {lga}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-          <div className="mt-4 flex items-center gap-4 flex-col md:flex-row">
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">
+              Phone Number <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <i className="fas fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <Input
+                type="tel"
+                placeholder="Enter phone number"
+                className="h-12 bg-white pl-10"
+                onChange={(e) =>
+                  setDeliveryFormData({
+                    ...deliveryFormData,
+                    phone: e.target.value,
+                  })
+                }
+                value={deliveryFormData.phone}
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-2 block">
+              Additional Phone Number
+            </label>
+            <div className="relative">
+              <i className="fas fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <Input
+                type="tel"
+                placeholder="Optional"
+                className="h-12 bg-white pl-10"
+                onChange={(e) =>
+                  setDeliveryFormData({
+                    ...deliveryFormData,
+                    additionalPhone: e.target.value,
+                  })
+                }
+                value={deliveryFormData.additionalPhone}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <i className="fas fa-info-circle text-blue-600 mt-0.5" />
+            <p className="text-sm text-blue-900">
+              This information will be saved for faster checkout next time.
+            </p>
+          </div>
+
+          <div className="mt-6 flex items-center gap-3">
             <Button
               type="button"
-              variant="ghost"
-              className="text-sm md:text-base font-medium w-full py-4 h-[54px] md:h-[60px] cursor-pointer"
+              variant="outline"
+              className="text-base font-medium w-full py-6 h-auto hover:bg-gray-50"
               asChild
             >
               <Link href="/cart">
-                <FaArrowLeft className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
-                Back to cart
+                <FaArrowLeft className="text-lg mr-2" />
+                Back to Cart
               </Link>
             </Button>
             <Button
               type="button"
-              variant="secondary"
-              className="text-sm md:text-base text-white font-medium w-full py-4 h-[54px] md:h-[60px] group cursor-pointer"
+              variant="default"
+              className="text-base font-semibold w-full py-6 h-auto group cursor-pointer"
               onClick={handleSubmitDeliveryAddress}
               disabled={
                 deliveryFormData.address === "" ||
@@ -274,12 +336,15 @@ export default function StepOne({
               }
             >
               {submitLoading ? (
-                <Spinner className="w-8 h-8 mx-auto" />
+                <>
+                  <Spinner className="w-5 h-5 mr-2" />
+                  Saving...
+                </>
               ) : (
-                <Fragment>
-                  Next{" "}
-                  <FaArrowRight className="text-xl ml-2 group-hover:translate-x-1 transition-all" />
-                </Fragment>
+                <>
+                  Continue
+                  <FaArrowRight className="text-lg ml-2 group-hover:translate-x-1 transition-all" />
+                </>
               )}
             </Button>
           </div>
