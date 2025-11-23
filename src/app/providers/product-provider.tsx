@@ -6,7 +6,7 @@ import { Product, ProductsResponse } from "@/types/product.types";
 interface ProductContextType {
   fetchProducts: (
     limit: number,
-    offset: number
+    offset?: number
   ) => Promise<ProductsResponse | undefined>;
   fetchCategoryProducts: (
     categorySlug: string,
@@ -53,11 +53,13 @@ export const ProductProvider: React.FC<ProductProviderProps> = ({
   });
   const { toastSuccess, toastError } = useToast();
 
-  const fetchProducts = async (limit: number = 20, offset: number = 0) => {
+  const fetchProducts = async (limit: number = 20, offset?: number) => {
     setLoading((prev) => ({ ...prev, products: true }));
 
     try {
-      const res = await api.get("/products", { params: { limit, offset } });
+      const res = await api.get("/products", {
+        params: { limit, offset: offset ?? 0 },
+      });
       return res.data;
     } catch (error) {
       console.error("Error fetching products:", error);
