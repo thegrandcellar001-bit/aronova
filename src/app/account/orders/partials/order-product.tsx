@@ -7,12 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useApi } from "@/hooks/use-api";
 import { useToast } from "@/hooks/use-toast";
 import api from "@/lib/axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 
 // Helper function to get status badge styling
 const getStatusConfig = (status: string) => {
@@ -90,7 +88,7 @@ export default function OrderProductCard({
     <div className="bg-white border p-5 hover:shadow-md transition-all duration-200 group">
       <div className="flex gap-5">
         {/* Product Image */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Link href={`/item/${item.product.id}`}>
             <div className="relative w-28 h-28 rounded-lg overflow-hidden bg-gray-100 group-hover:ring-2 group-hover:ring-primary/20 transition-all">
               <Image
@@ -154,7 +152,7 @@ export default function OrderProductCard({
             </div>
 
             {/* Action Menu */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               {(status === "pending" || status === "processing") && (
                 <DropdownMenu>
                   <DropdownMenuTrigger className="cursor-pointer" asChild>
@@ -202,7 +200,7 @@ export default function OrderProductCard({
                         className="flex items-center gap-2 cursor-pointer"
                       >
                         <i className="far fa-star w-4"></i>
-                        <span>Write a Review</span>
+                        <span>Write a review</span>
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
@@ -216,7 +214,7 @@ export default function OrderProductCard({
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link
-                        href={`/account/orders/${order.id}/return`}
+                        href={`/account/orders/${order.id}/${item.id}/return`}
                         className="flex items-center gap-2 cursor-pointer"
                       >
                         <i className="far fa-undo w-4"></i>

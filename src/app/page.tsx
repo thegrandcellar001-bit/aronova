@@ -1,10 +1,8 @@
-import Navigation from "./partials/home/navigation";
 import Hero from "./partials/home/hero";
 import MarketSection from "./partials/home/market-section";
 import PreOwnedSection from "./partials/home/pre-owned-section";
 import ExploreSection from "./partials/home/explore-section";
 import StoriesSection from "./partials/home/stories-section";
-import Footer from "./partials/home/footer";
 
 export default function Home() {
   return (
