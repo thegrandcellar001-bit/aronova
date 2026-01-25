@@ -8,6 +8,9 @@ import HydrationGuard from "@/lib/hydration-guard";
 import localFont from "next/font/local";
 import Navigation from "./partials/home/navigation";
 import Footer from "./partials/home/footer";
+import ComingSoonPage from "./coming-soon/page";
+
+const COMING_SOON_MODE = true;
 
 const satoshi = localFont({
   src: [
@@ -99,15 +102,19 @@ export default function RootLayout({
       </head>
 
       <body className={satoshi.variable}>
-        <HydrationGuard>
-          <HolyLoader color="#C9A227" />
-          <Providers>
-            <Navigation />
-            {children}
-            <Footer />
-          </Providers>
-        </HydrationGuard>
-        <Toaster />
+        {COMING_SOON_MODE ? (
+          <ComingSoonPage />
+        ) : (
+          <HydrationGuard>
+            <HolyLoader color="#C9A227" />
+            <Providers>
+              <Navigation />
+              {children}
+              <Footer />
+            </Providers>
+          </HydrationGuard>
+        )}
+        {!COMING_SOON_MODE && <Toaster />}
       </body>
     </html>
   );
