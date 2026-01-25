@@ -10,6 +10,6 @@ echo "Building TypeScript..."
 yarn build
 
 echo "Restarting app with PM2..."
-pm2 restart 4
+pm2 restart 0
 
 echo "✅ Deployment complete."
